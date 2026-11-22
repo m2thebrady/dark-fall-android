@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import androidx.core.content.FileProvider;
 import org.json.JSONArray;
@@ -32,6 +34,40 @@ public final class GameUpdater {
     private BroadcastReceiver receiver;
     private boolean prompted = false;
     private boolean permissionPending = false;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean checkingDownload = false;
+    private int downloadChecks = 0;
+    private DownloadManager activeManager;
+    private final Runnable pollDownload = new Runnable() {
+        @Override public void run() {
+            if (!checkingDownload || activeManager == null || downloadId < 0) return;
+            try (android.database.Cursor cursor = activeManager.query(new DownloadManager.Query().setFilterById(downloadId))) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
+                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                        checkingDownload = false;
+                        if (downloadedFile != null && downloadedFile.isFile() && downloadedFile.length() > 0) install();
+                        else message("Update downloaded but the APK could not be found.");
+                        return;
+                    }
+                    if (status == DownloadManager.STATUS_FAILED) {
+                        int reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON));
+                        checkingDownload = false;
+                        message("Update download failed (Android code " + reason + ").");
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                checkingDownload = false;
+                message("Could not check the update download: " + e.getClass().getSimpleName());
+                return;
+            }
+            if (++downloadChecks >= 180) {
+                checkingDownload = false;
+                message("The update is taking too long. Check your internet connection and try again.");
+            } else handler.postDelayed(this, 1000);
+        }
+    };
 
     public GameUpdater(Activity activity) { this.activity = activity; }
 
@@ -101,23 +137,12 @@ public final class GameUpdater {
             request.setDestinationUri(Uri.fromFile(downloadedFile));
             DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
             downloadId = manager.enqueue(request);
-            receiver = new BroadcastReceiver() {
-                @Override public void onReceive(Context context, Intent intent) {
-                    if (intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) != downloadId) return;
-                    DownloadManager.Query query = new DownloadManager.Query().setFilterById(downloadId);
-                    try (android.database.Cursor cursor = manager.query(query)) {
-                        if (cursor != null && cursor.moveToFirst()) {
-                            int status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
-                            if (status == DownloadManager.STATUS_SUCCESSFUL && downloadedFile.isFile()) install();
-                            else if (status == DownloadManager.STATUS_FAILED) message("Update download failed. Please retry later.");
-                        }
-                    }
-                    stopReceiver();
-                }
-            };
-            IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-            if (Build.VERSION.SDK_INT >= 33) activity.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
-            else activity.registerReceiver(receiver, filter);
+            activeManager = manager;
+            downloadChecks = 0;
+            checkingDownload = true;
+            handler.removeCallbacks(pollDownload);
+            handler.postDelayed(pollDownload, 1000);
+            message("Downloading Dark Fall " + version + ". Android will open the installer when ready.");
         } catch (Exception e) {
             message("Unable to download update.");
         }
@@ -156,7 +181,7 @@ public final class GameUpdater {
             activity.getPackageManager().canRequestPackageInstalls())) install();
     }
 
-    public void close() { stopReceiver(); }
+    public void close() { checkingDownload = false; handler.removeCallbacks(pollDownload); stopReceiver(); }
 
     private void stopReceiver() {
         if (receiver == null) return;
