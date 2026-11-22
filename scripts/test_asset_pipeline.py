@@ -17,6 +17,11 @@ with tempfile.TemporaryDirectory() as tmp:
     subprocess.run([sys.executable,str(root/"scripts/validate_asset.py"),str(path)],check=True)
     subprocess.run([sys.executable,str(root/"scripts/preview_asset.py"),str(path)],check=True)
     assert (folder/"test-contact-sheet.png").stat().st_size>100
+    manifest["transitions"]=[["idle","missing"]]
+    path.write_text(json.dumps(manifest))
+    bad_transition=subprocess.run([sys.executable,str(root/"scripts/validate_asset.py"),str(path)],capture_output=True)
+    assert bad_transition.returncode!=0,"Expected unknown transition to be rejected"
+    manifest.pop("transitions")
     manifest["anchors"]["1"]["feet"]=[31,27]
     path.write_text(json.dumps(manifest))
     bad=subprocess.run([sys.executable,str(root/"scripts/validate_asset.py"),str(path)],capture_output=True)
