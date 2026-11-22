@@ -8,7 +8,7 @@ gradle=(root/'app/build.gradle').read_text()
 manifest=(root/'app/src/main/AndroidManifest.xml').read_text()
 activity=(root/'app/src/main/java/com/darkfall/game/MainActivity.java').read_text()
 assert html.is_file() and html.stat().st_size>1_000_000, 'Bundled game is missing or too small'
-assert "versionCode 991" in gradle and "versionName '0.991'" in gradle
+assert "versionCode 992" in gradle and "versionName '0.992'" in gradle
 assert "applicationId 'com.darkfall.game'" in gradle
 assert 'android:screenOrientation="sensorLandscape"' in manifest
 assert 'file:///android_asset/index.html' in activity
