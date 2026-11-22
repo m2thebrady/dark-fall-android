@@ -1,0 +1,77 @@
+name: Build Dark Fall Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '*.gradle'
+      - 'gradle.properties'
+      - '.github/workflows/android-debug-apk.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android SDK 35
+        run: sdkmanager --install 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Validate project and bundled game
+        run: python3 scripts/validate_project.py
+      - name: Build debug APK (first installation fallback)
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Inspect debug APK
+        run: |
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          unzip -t app/build/outputs/apk/debug/app-debug.apk | tail -n 1
+          unzip -l app/build/outputs/apk/debug/app-debug.apk | grep -q assets/index.html
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dark-Fall-V988-Debug-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+      - name: Decode persistent signing key
+        if: ${{ env.HAS_SIGNING_KEY == 'true' }}
+        env:
+          KEYSTORE_B64: ${{ secrets.DARKFALL_KEYSTORE_BASE64 }}
+        run: printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/darkfall-release.jks"
+      - name: Build signed updateable APK
+        if: ${{ env.HAS_SIGNING_KEY == 'true' }}
+        env:
+          DARKFALL_KEYSTORE_PATH: ${{ runner.temp }}/darkfall-release.jks
+          DARKFALL_STORE_PASSWORD: ${{ secrets.DARKFALL_STORE_PASSWORD }}
+          DARKFALL_KEY_ALIAS: ${{ secrets.DARKFALL_KEY_ALIAS }}
+          DARKFALL_KEY_PASSWORD: ${{ secrets.DARKFALL_KEY_PASSWORD }}
+        run: gradle --no-daemon :app:assembleRelease
+      - name: Inspect signed APK
+        if: ${{ env.HAS_SIGNING_KEY == 'true' }}
+        run: |
+          test -s app/build/outputs/apk/release/app-release.apk
+          unzip -t app/build/outputs/apk/release/app-release.apk | tail -n 1
+          unzip -l app/build/outputs/apk/release/app-release.apk | grep -q assets/index.html
+      - name: Upload signed APK
+        if: ${{ env.HAS_SIGNING_KEY == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dark-Fall-V988-Signed-APK
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
+    env:
+      HAS_SIGNING_KEY: ${{ secrets.DARKFALL_KEYSTORE_BASE64 != '' }}
