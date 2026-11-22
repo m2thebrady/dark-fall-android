@@ -17,6 +17,11 @@ with tempfile.TemporaryDirectory() as tmp:
     subprocess.run([sys.executable,str(root/"scripts/validate_asset.py"),str(path)],check=True)
     subprocess.run([sys.executable,str(root/"scripts/preview_asset.py"),str(path)],check=True)
     assert (folder/"test-contact-sheet.png").stat().st_size>100
+    staged=folder/"staged"
+    subprocess.run([sys.executable,str(root/"scripts/stage_asset.py"),str(path),"--destination",str(staged)],check=True)
+    revisions=list((staged/"test").iterdir())
+    assert len(revisions)==1 and (revisions[0]/"test.png").is_file()
+    assert (revisions[0]/"test.json").is_file()
     manifest["transitions"]=[["idle","missing"]]
     path.write_text(json.dumps(manifest))
     bad_transition=subprocess.run([sys.executable,str(root/"scripts/validate_asset.py"),str(path)],capture_output=True)
