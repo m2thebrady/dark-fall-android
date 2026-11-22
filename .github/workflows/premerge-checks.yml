@@ -29,6 +29,10 @@ jobs:
         run: python3 scripts/preflight_game.py
       - name: Audit sprite and rendering sources
         run: python3 scripts/audit_sprites.py
+      - name: Install asset-tool dependencies
+        run: python3 -m pip install Pillow
+      - name: Self-test sprite validation and previews
+        run: python3 scripts/test_asset_pipeline.py
       - name: Install Android SDK 35
         run: |
           "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-35" "build-tools;35.0.0"
