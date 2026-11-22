@@ -5,3 +5,7 @@ local.properties
 build/
 app/build/
 .DS_Store
+
+.private-signing/
+*.jks
+*.keystore
