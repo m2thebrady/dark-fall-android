@@ -14,6 +14,7 @@ def main():
     src = Image.open(p.parent / m["image"]).convert("RGBA")
     fw, fh, cols = int(m["frame_width"]), int(m["frame_height"]), int(m["columns"])
     margin = int(m.get("safe_margin", 2))
+    anchors = m.get("anchors", {})
     entries = [(name, index) for name, frames in m["actions"].items() for index in frames]
     if not entries:
         raise ValueError("No frames to preview")
@@ -35,6 +36,10 @@ def main():
         preview.paste(frame, (x,y), frame)
         if margin:
             draw.rectangle((x+margin,y+margin,x+fw-margin-1,y+fh-margin-1),outline=(245,181,65),width=1)
+        for label, pt in anchors.get(str(index), {}).items():
+            px, py = x + round(pt[0]), y + round(pt[1])
+            draw.line((px-4,py,px+4,py),fill=(255,85,85),width=2)
+            draw.line((px,py-4,px,py+4),fill=(255,85,85),width=2)
         draw.text((x,y+fh+5),f"{action}  #{index}",fill=(255,255,255))
     dest = Path(args.output).resolve() if args.output else p.with_name(p.stem+"-contact-sheet.png")
     dest.parent.mkdir(parents=True, exist_ok=True)
