@@ -16,6 +16,7 @@ try {
     title: document.title,
     canvases: document.querySelectorAll('canvas').length,
     canvasDimensions: [...document.querySelectorAll('canvas')].map(c => ({ width: c.width, height: c.height, cssWidth: c.getBoundingClientRect().width, cssHeight: c.getBoundingClientRect().height })),
+    canvasPixelSamples: [...document.querySelectorAll('canvas')].map(c => { try { const ctx = c.getContext('2d', { willReadFrequently: true }); if (!ctx || c.width < 2 || c.height < 2) return { available: false }; const w = Math.min(24, c.width), h = Math.min(24, c.height); const data = ctx.getImageData(Math.floor((c.width-w)/2), Math.floor((c.height-h)/2), w, h).data; let opaque=0, nonzero=0; for (let i=0;i<data.length;i+=4) { if (data[i+3]>0) opaque++; if (data[i]||data[i+1]||data[i+2]||data[i+3]) nonzero++; } return { available:true, sampledPixels:w*h, opaque, nonzero }; } catch(e) { return { available:false, reason:String(e).slice(0,100) }; } }),
     visibleButtons: [...document.querySelectorAll('button, [role="button"]')].filter(el => { const r = el.getBoundingClientRect(); const st = getComputedStyle(el); return r.width > 0 && r.height > 0 && st.visibility !== 'hidden' && st.display !== 'none'; }).map(el => (el.textContent || el.getAttribute('aria-label') || '').trim().slice(0, 60)).slice(0, 30),
     bodyText: document.body?.innerText?.slice(0, 500) ?? '',
     width: innerWidth,
@@ -38,6 +39,8 @@ try {
   await writeFile(resolve(out, 'report.json'), JSON.stringify({ status, errors }, null, 2));
   console.log(JSON.stringify({ status, errors: errors.slice(0, 12) }, null, 2));
   if (!status.canvases) throw new Error('Game canvas not found');
+  // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.
+  // Do not fail on transparent samples until the active rendering canvas is identified.
   if (status.canvasDimensions.some(c => c.width <= 0 || c.height <= 0)) throw new Error('Invalid canvas pixel dimensions');
   if (errors.some(e => /ReferenceError|SyntaxError|not defined/i.test(e))) throw new Error('Fatal JavaScript error during startup');
 } finally {
