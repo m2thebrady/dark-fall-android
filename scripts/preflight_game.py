@@ -32,8 +32,8 @@ assert HTML.stat().st_size > 1_000_000, "Game asset missing/truncated"
 html = HTML.read_text(encoding="utf-8")
 assert html.lower().count("<html") >= 1 and "</html>" in html.lower(), "Malformed HTML document"
 assert "Fighter" in html, "Fighter class label missing after patch"
-version = re.search(r"\\bversionCode\\s+(\\d+)\\b", GRADLE)
-name = re.search(r"\\bversionName\\s+['\"]([^'\"]+)['\"]", GRADLE)
+version = re.search(r"\bversionCode\s+(\d+)\b", GRADLE)
+name = re.search(r"\bversionName\s+['\"]([^'\"]+)['\"]", GRADLE)
 assert version and name, "Missing Android version metadata"
 assert name.group(1) == "0." + version.group(1), "Android versionName/versionCode mismatch"
 assert f'versionCode {version.group(1)}' in VALIDATOR, "Static validator version mismatch"
