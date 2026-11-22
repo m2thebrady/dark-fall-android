@@ -82,5 +82,47 @@
         60
       ]
     }
-  }
+  },
+  "transitions": [
+    [
+      "idle",
+      "run"
+    ],
+    [
+      "run",
+      "idle"
+    ],
+    [
+      "idle",
+      "attack"
+    ],
+    [
+      "run",
+      "attack"
+    ],
+    [
+      "attack",
+      "idle"
+    ],
+    [
+      "idle",
+      "cast"
+    ],
+    [
+      "cast",
+      "idle"
+    ],
+    [
+      "idle",
+      "hit"
+    ],
+    [
+      "hit",
+      "idle"
+    ],
+    [
+      "hit",
+      "death"
+    ]
+  ]
 }
