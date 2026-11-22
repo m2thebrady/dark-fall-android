@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 const out = resolve('browser-smoke-results');
 await mkdir(out, { recursive: true });
@@ -25,6 +26,14 @@ try {
   await page.waitForTimeout(500);
   await page.screenshot({ path: resolve(out, 'keyboard-probe.png'), fullPage: false, timeout: 20000 });
   await page.keyboard.up('ArrowRight');
+  const startupPng = await readFile(resolve(out, 'startup.png'));
+  const probePng = await readFile(resolve(out, 'keyboard-probe.png'));
+  const startupHash = createHash('sha256').update(startupPng).digest('hex');
+  const probeHash = createHash('sha256').update(probePng).digest('hex');
+  const screenshotAudit = { startupHash, probeHash, startupBytes: startupPng.length, probeBytes: probePng.length, screenshotsDiffer: startupHash !== probeHash };
+  await writeFile(resolve(out, 'screenshot-audit.json'), JSON.stringify(screenshotAudit, null, 2));
+  console.log('Screenshot audit:', screenshotAudit);
+  if (startupPng.length < 1000 || probePng.length < 1000) throw new Error('Screenshot unexpectedly empty');
   await writeFile(resolve(out, 'report.json'), JSON.stringify({ status, errors }, null, 2));
   console.log(JSON.stringify({ status, errors: errors.slice(0, 12) }, null, 2));
   if (!status.canvases) throw new Error('Game canvas not found');
