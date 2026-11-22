@@ -19,6 +19,7 @@ import android.view.Gravity;
 /** V988 Android shell. Embedded V983 game remains unchanged. */
 public class MainActivity extends Activity {
     private WebView gameView;
+    private GameUpdater updater;
     private TextView errorView;
     private static final String GAME_URL = "file:///android_asset/index.html";
 
@@ -94,6 +95,8 @@ public class MainActivity extends Activity {
         });
         setContentView(root);
         gameView.loadUrl(GAME_URL);
+        updater = new GameUpdater(this);
+        updater.check();
     }
 
     @Override public void onWindowFocusChanged(boolean hasFocus) {
@@ -108,12 +111,14 @@ public class MainActivity extends Activity {
         super.onResume();
         if (gameView != null) gameView.onResume();
         immersive();
+        if (updater != null) updater.onResume();
     }
     @Override public void onBackPressed() {
         // Preserve gameplay state; back is intentionally ignored in the prototype.
         // The Android system can still close the app via overview / app settings.
     }
     @Override protected void onDestroy() {
+        if (updater != null) updater.close();
         if (gameView != null) {
             gameView.stopLoading();
             gameView.destroy();
