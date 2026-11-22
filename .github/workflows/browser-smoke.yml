@@ -1,0 +1,35 @@
+name: Dark Fall browser smoke test (experimental)
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/browser_smoke.mjs'
+      - '.github/workflows/browser-smoke.yml'
+permissions:
+  contents: read
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test runner
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Apply display patch
+        run: python3 scripts/patch_fighter_label.py
+      - name: Run browser startup test
+        run: node scripts/browser_smoke.mjs
+      - name: Upload screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dark-fall-browser-smoke
+          path: browser-smoke-results/
+          if-no-files-found: ignore
+          retention-days: 14
