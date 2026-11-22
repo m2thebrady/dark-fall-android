@@ -50,6 +50,12 @@ def validate(manifest_path):
                     raise ValueError(f"Frame {frame_key}: {label} must be [x,y]")
                 if not (0 <= coords[0] < fw and 0 <= coords[1] < fh):
                     raise ValueError(f"Frame {frame_key}: {label} outside frame")
+        transitions = m.get("transitions", [])
+        if not isinstance(transitions, list):
+            raise ValueError("transitions must be a list")
+        for item in transitions:
+            if not isinstance(item, list) or len(item) != 2 or any(name not in actions for name in item):
+                raise ValueError(f"Invalid action transition {item}")
         warnings = []
         for i in sorted(used):
             x, y = (i % cols) * fw, (i // cols) * fh
@@ -70,7 +76,7 @@ def validate(manifest_path):
                 tolerance = float(m.get("anchor_tolerance", 8))
                 if dx > tolerance or dy > tolerance:
                     warnings.append(f"{action}: feet anchor drift {dx:g}px x {dy:g}px exceeds {tolerance:g}px")
-        result = {"asset": m.get("name", p.stem), "frames": len(used), "actions": list(actions), "anchored_frames": len(anchors), "warnings": warnings}
+        result = {"asset": m.get("name", p.stem), "frames": len(used), "actions": list(actions), "transitions": len(transitions), "anchored_frames": len(anchors), "warnings": warnings}
         print(json.dumps(result, indent=2))
         if warnings and not m.get("allow_margin_warnings", False):
             raise ValueError("Sprite safety validation failed; adjust padding or review manifest")
