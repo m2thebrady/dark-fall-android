@@ -21,7 +21,7 @@ try {
     height: innerHeight,
   }));
   await page.screenshot({ path: resolve(out, 'startup.png'), fullPage: false, timeout: 20000 });
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.down('ArrowRight');
   await page.waitForTimeout(500);
   await page.screenshot({ path: resolve(out, 'keyboard-probe.png'), fullPage: false, timeout: 20000 });
   await page.keyboard.up('ArrowRight');
