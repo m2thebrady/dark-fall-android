@@ -31,6 +31,7 @@ try {
   const startupHash = createHash('sha256').update(startupPng).digest('hex');
   const probeHash = createHash('sha256').update(probePng).digest('hex');
   const screenshotAudit = { startupHash, probeHash, startupBytes: startupPng.length, probeBytes: probePng.length, screenshotsDiffer: startupHash !== probeHash };
+  // Pixel-level comparisons require a deterministic scene and are intentionally not enforced yet.
   await writeFile(resolve(out, 'screenshot-audit.json'), JSON.stringify(screenshotAudit, null, 2));
   console.log('Screenshot audit:', screenshotAudit);
   if (startupPng.length < 1000 || probePng.length < 1000) throw new Error('Screenshot unexpectedly empty');
