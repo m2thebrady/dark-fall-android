@@ -10,7 +10,7 @@ activity=(root/'app/src/main/java/com/darkfall/game/MainActivity.java').read_tex
 assert html.is_file() and html.stat().st_size>1_000_000, 'Bundled game is missing or too small'
 assert "versionCode 988" in gradle and "versionName '0.988'" in gradle
 assert "applicationId 'com.darkfall.game'" in gradle
-assert 'android:screenOrientation="sensorlandscape"' in manifest
+assert 'android:screenOrientation="sensorLandscape"' in manifest
 assert 'file:///android_asset/index.html' in activity
 assert '<html' in html.read_text(errors='replace')[:10000].lower(), 'HTML entry point missing'
 print('Project validation PASS')
