@@ -4,6 +4,7 @@ import hashlib,json,sys,tempfile
 from pathlib import Path
 from PIL import Image,ImageDraw
 from select_assets import resolve_selection
+from prepare_asset_overlay import prepare
 from validate_asset import validate
 
 with tempfile.TemporaryDirectory() as tmp:
@@ -26,6 +27,16 @@ with tempfile.TemporaryDirectory() as tmp:
     selection=root/"selection.json"
     selection.write_text(json.dumps({"assets":{"hero":digest}}))
     assert resolve_selection(selection,root/"staged")["hero"]["revision"]==digest
+    overlay=root/"overlay"
+    registry=prepare(selection,root/"staged",overlay)
+    assert registry["assets"]["hero"]["revision"]==digest
+    assert (overlay/"registry.json").is_file()
+    assert (overlay/"hero"/"hero.png").is_file()
+    try:
+        prepare(selection,root/"staged",overlay)
+        raise AssertionError("Existing overlay was overwritten")
+    except ValueError:
+        pass
     selection.write_text(json.dumps({"assets":{"hero":"0"*16}}))
     try:
         resolve_selection(selection,root/"staged")
