@@ -52,6 +52,7 @@ jobs:
           python3 scripts/test_palette_diagnostics.py
           python3 scripts/test_animation_coverage.py
           python3 scripts/test_character_build.py
+          python3 scripts/test_animation_transitions.py
       - name: Survey legacy renderer and sprite references
         run: python3 scripts/survey_renderer.py
       - name: Upload renderer survey report
