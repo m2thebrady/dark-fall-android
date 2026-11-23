@@ -19,7 +19,7 @@ small{color:#b8c3c2}</style></head><body>
 <p><small>Isolated asset preview. Does not replace sprites in the game.</small></p>
 <label>Asset <select id="asset"></select></label>
 <label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>\n<label>Simulated state <select id="state"><option value="manual">Manual</option><option value="idle">Idle</option><option value="run">Moving</option><option value="cast">Casting</option><option value="run_cast">Moving + Casting</option><option value="attack">Attacking</option><option value="run_attack">Moving + Attacking</option><option value="hit">Taking damage</option><option value="death">Death</option></select></label>\n<label>Speed <select id="speed"><option value="4">4 fps</option><option value="8">8 fps</option><option value="10" selected>10 fps</option><option value="15">15 fps</option><option value="24">24 fps</option></select></label>
-<canvas id="stage" width="320" height="320"></canvas>
+<canvas id="stage" width="320" height="320"></canvas>\n<label><input id="guides" type="checkbox" checked> Show frame bounds and feet anchor</label>
 <p id="status" role="status"></p>
 <script>
 (async()=>{
@@ -78,7 +78,16 @@ function draw(now){
  const sx=(index%manifest.columns)*w,sy=Math.floor(index/manifest.columns)*h;
  ctx.clearRect(0,0,canvas.width,canvas.height);
  const scale=Math.min(4,Math.floor(Math.min(canvas.width/w,canvas.height/h)));
- ctx.drawImage(image,sx,sy,w,h,(canvas.width-w*scale)/2,(canvas.height-h*scale)/2,w*scale,h*scale);
+ const dx=(canvas.width-w*scale)/2,dy=(canvas.height-h*scale)/2;
+ ctx.drawImage(image,sx,sy,w,h,dx,dy,w*scale,h*scale);
+ if(document.getElementById('guides').checked){
+   ctx.strokeStyle='#f3d36b';ctx.lineWidth=1;ctx.strokeRect(dx,dy,w*scale,h*scale);
+   const anchor=manifest.anchors?.[String(index)]?.feet;
+   if(Array.isArray(anchor)&&anchor.length===2){
+     const ax=dx+anchor[0]*scale,ay=dy+anchor[1]*scale;
+     ctx.strokeStyle='#50e8a4';ctx.beginPath();ctx.moveTo(ax-6,ay);ctx.lineTo(ax+6,ay);ctx.moveTo(ax,ay-6);ctx.lineTo(ax,ay+6);ctx.stroke();
+   }
+ }
  document.getElementById('status').textContent=assetSelect.value+' / '+action+' / frame '+index;
 }
 await loadAsset();requestAnimationFrame(draw);
