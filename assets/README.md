@@ -21,3 +21,7 @@ Copy `assets/selection.example.json` to a private selection file, then populate 
 ## Isolated overlay packaging (experimental)
 
 After selecting validated revisions, run `python3 scripts/prepare_asset_overlay.py path/to/selection.json --output /tmp/dark-fall-overlay`. This creates an isolated folder with a registry and asset files. It refuses to overwrite an existing nonempty output. **No current game renderer reads this registry yet**, and it is deliberately not included in the Android publishing workflow. The next step is a test-only runtime bridge with an explicit opt-in switch and a legacy fallback.
+
+## Legacy renderer investigation
+
+Run `python3 scripts/survey_renderer.py` to create `browser-smoke-results/renderer-survey.json`, a read-only inventory of sprite drawing, image loading, animation state, and class references. The survey reports approximate source locations; it does not imply these are safe injection points. Review actual render functions and frame timing before implementing a replacement adapter.
