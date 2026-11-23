@@ -6,6 +6,7 @@ from PIL import Image,ImageDraw
 from select_assets import resolve_selection
 from prepare_asset_overlay import prepare
 from check_asset_overlay import check_overlay
+from build_sprite_viewer import build
 from validate_asset import validate
 
 with tempfile.TemporaryDirectory() as tmp:
@@ -34,6 +35,15 @@ with tempfile.TemporaryDirectory() as tmp:
     assert (overlay/"registry.json").is_file()
     assert (overlay/"hero"/"hero.png").is_file()
     check_overlay(overlay)
+    viewer=build(overlay,root/'viewer')
+    assert (viewer/'index.html').is_file()
+    assert (viewer/'registry.json').is_file()
+    assert (viewer/'hero'/'hero.png').is_file()
+    try:
+        build(overlay,root/'viewer')
+        raise AssertionError('Existing viewer overwritten')
+    except ValueError:
+        pass
     try:
         prepare(selection,root/"staged",overlay)
         raise AssertionError("Existing overlay was overwritten")
