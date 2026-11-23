@@ -11,7 +11,9 @@ def run(profile_path,manifest_path,image_path,output):
     manifest=json.loads(Path(manifest_path).read_text())
     errors=validate_profile(profile)+check_coverage(profile,manifest)
     if errors:raise ValueError("; ".join(errors))
-    # The established validator loads the sprite sheet from the manifest image path.\n    resolved_image=(Path(manifest_path).parent / manifest.get("image","")).resolve()\n    if resolved_image!=Path(image_path).resolve():raise ValueError("image argument does not match manifest image path")
+    # The established validator loads the sprite sheet from the manifest image path.
+    resolved_image=(Path(manifest_path).parent / manifest.get("image","")).resolve()
+    if resolved_image!=Path(image_path).resolve():raise ValueError("image argument does not match manifest image path")
     import subprocess
     result=subprocess.run([sys.executable,str(Path(__file__).with_name("validate_asset.py")),str(manifest_path)],capture_output=True,text=True)
     if result.returncode:raise ValueError("sprite validation failed: "+result.stdout+result.stderr)
