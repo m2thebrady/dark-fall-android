@@ -1,0 +1,21 @@
+[
+  {
+    "action": "idle"
+  },
+  {
+    "action": "fly",
+    "cycles": 3
+  },
+  {
+    "action": "dive"
+  },
+  {
+    "action": "attack"
+  },
+  {
+    "action": "hit"
+  },
+  {
+    "action": "death"
+  }
+]
