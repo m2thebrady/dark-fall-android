@@ -18,7 +18,7 @@ small{color:#b8c3c2}</style></head><body>
 <h1>Dark Fall — Experimental Sprite Viewer</h1>
 <p><small>Isolated asset preview. Does not replace sprites in the game.</small></p>
 <label>Asset <select id="asset"></select></label>
-<label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>
+<label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>\n<label>Speed <select id="speed"><option value="4">4 fps</option><option value="8">8 fps</option><option value="10" selected>10 fps</option><option value="15">15 fps</option><option value="24">24 fps</option></select></label>
 <canvas id="stage" width="320" height="320"></canvas>
 <p id="status" role="status"></p>
 <script>
@@ -29,7 +29,7 @@ const actionSelect=document.getElementById('action');
 const canvas=document.getElementById('stage');
 const ctx=canvas.getContext('2d');
 ctx.imageSmoothingEnabled=false;
-let manifest,image,action='idle',start=performance.now(),paused=false,pausedIndex=0;
+let manifest,image,action='idle',start=performance.now(),paused=false,pausedIndex=0,fps=10;
 for(const id of Object.keys(registry.assets)){const option=document.createElement('option');option.value=id;option.textContent=id;assetSelect.append(option)}
 async function loadAsset(){
  const entry=registry.assets[assetSelect.value];
@@ -45,12 +45,15 @@ actionSelect.addEventListener('change',()=>{action=actionSelect.value;start=perf
 document.getElementById('pause').addEventListener('click',()=>{
  paused=!paused;
  document.getElementById('pause').textContent=paused?'Resume':'Pause';
- if(!paused){start=performance.now()-pausedIndex*1000/10}
+ if(!paused){start=performance.now()-pausedIndex*1000/fps}
 });
 document.getElementById('step').addEventListener('click',()=>{
  paused=true;document.getElementById('pause').textContent='Resume';
  const frames=manifest?.actions[action];
  if(frames?.length)pausedIndex=(pausedIndex+1)%frames.length;
+});
+document.getElementById('speed').addEventListener('change',event=>{
+ fps=Number(event.target.value);start=performance.now()-pausedIndex*1000/fps;
 });
 function showError(error){document.getElementById('status').textContent=String(error)}
 function draw(now){
