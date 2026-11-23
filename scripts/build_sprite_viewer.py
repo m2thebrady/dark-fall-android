@@ -18,7 +18,7 @@ small{color:#b8c3c2}</style></head><body>
 <h1>Dark Fall — Experimental Sprite Viewer</h1>
 <p><small>Isolated asset preview. Does not replace sprites in the game.</small></p>
 <label>Asset <select id="asset"></select></label>
-<label>Action <select id="action"></select></label>
+<label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>
 <canvas id="stage" width="320" height="320"></canvas>
 <p id="status" role="status"></p>
 <script>
@@ -29,7 +29,7 @@ const actionSelect=document.getElementById('action');
 const canvas=document.getElementById('stage');
 const ctx=canvas.getContext('2d');
 ctx.imageSmoothingEnabled=false;
-let manifest,image,action='idle',start=performance.now();
+let manifest,image,action='idle',start=performance.now(),paused=false,pausedIndex=0;
 for(const id of Object.keys(registry.assets)){const option=document.createElement('option');option.value=id;option.textContent=id;assetSelect.append(option)}
 async function loadAsset(){
  const entry=registry.assets[assetSelect.value];
@@ -38,10 +38,20 @@ async function loadAsset(){
  image=new Image();image.src=entry.image;await image.decode();
  actionSelect.replaceChildren();
  for(const name of Object.keys(manifest.actions)){const option=document.createElement('option');option.value=name;option.textContent=name;actionSelect.append(option)}
- action=actionSelect.value;start=performance.now();
+ action=actionSelect.value;start=performance.now();pausedIndex=0;pausedIndex=0;
 }
 assetSelect.addEventListener('change',()=>loadAsset().catch(showError));
 actionSelect.addEventListener('change',()=>{action=actionSelect.value;start=performance.now()});
+document.getElementById('pause').addEventListener('click',()=>{
+ paused=!paused;
+ document.getElementById('pause').textContent=paused?'Resume':'Pause';
+ if(!paused){start=performance.now()-pausedIndex*1000/10}
+});
+document.getElementById('step').addEventListener('click',()=>{
+ paused=true;document.getElementById('pause').textContent='Resume';
+ const frames=manifest?.actions[action];
+ if(frames?.length)pausedIndex=(pausedIndex+1)%frames.length;
+});
 function showError(error){document.getElementById('status').textContent=String(error)}
 function draw(now){
  requestAnimationFrame(draw);
@@ -49,7 +59,9 @@ function draw(now){
  const frames=manifest.actions[action];
  if(!frames||!frames.length)return;
  const fps=10;
- const index=frames[Math.floor((now-start)*fps/1000)%frames.length];
+ const position=paused?pausedIndex:Math.floor((now-start)*fps/1000)%frames.length;
+ if(!paused)pausedIndex=position;
+ const index=frames[position];
  const w=manifest.frame_width,h=manifest.frame_height;
  const sx=(index%manifest.columns)*w,sy=Math.floor(index/manifest.columns)*h;
  ctx.clearRect(0,0,canvas.width,canvas.height);
