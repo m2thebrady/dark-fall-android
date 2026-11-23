@@ -18,7 +18,7 @@ small{color:#b8c3c2}</style></head><body>
 <h1>Dark Fall — Experimental Sprite Viewer</h1>
 <p><small>Isolated asset preview. Does not replace sprites in the game.</small></p>
 <label>Asset <select id="asset"></select></label>
-<label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>\n<label>Speed <select id="speed"><option value="4">4 fps</option><option value="8">8 fps</option><option value="10" selected>10 fps</option><option value="15">15 fps</option><option value="24">24 fps</option></select></label>
+<label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>\n<label>Simulated state <select id="state"><option value="manual">Manual</option><option value="idle">Idle</option><option value="run">Moving</option><option value="cast">Casting</option><option value="run_cast">Moving + Casting</option><option value="attack">Attacking</option><option value="run_attack">Moving + Attacking</option><option value="hit">Taking damage</option><option value="death">Death</option></select></label>\n<label>Speed <select id="speed"><option value="4">4 fps</option><option value="8">8 fps</option><option value="10" selected>10 fps</option><option value="15">15 fps</option><option value="24">24 fps</option></select></label>
 <canvas id="stage" width="320" height="320"></canvas>
 <p id="status" role="status"></p>
 <script>
@@ -54,6 +54,15 @@ document.getElementById('step').addEventListener('click',()=>{
 });
 document.getElementById('speed').addEventListener('change',event=>{
  fps=Number(event.target.value);start=performance.now()-pausedIndex*1000/fps;
+});
+document.getElementById('state').addEventListener('change',event=>{
+ if(!manifest)return;
+ const requested=event.target.value;
+ if(requested==='manual')return;
+ const actions=manifest.actions;
+ const fallback={run_cast:['run_cast','cast','run','idle'],run_attack:['run_attack','attack','run','idle'],run:['run','idle'],cast:['cast','idle'],attack:['attack','idle'],hit:['hit','idle'],death:['death','idle'],idle:['idle']};
+ const chosen=(fallback[requested]||['idle']).find(name=>actions[name]);
+ if(chosen){actionSelect.value=chosen;action=chosen;pausedIndex=0;start=performance.now()}
 });
 function showError(error){document.getElementById('status').textContent=String(error)}
 function draw(now){
