@@ -29,3 +29,7 @@ Run `python3 scripts/survey_renderer.py` to create `browser-smoke-results/render
 ## Animation silhouette diagnostics
 
 Run `python3 scripts/inspect_animation.py path/to/character.json --output /tmp/animation-report.json` to inspect opaque artwork bounds for every animation frame. It warns when a frame is fully transparent or an action's silhouette width/height varies beyond the configurable ratio (default 1.5x). Use `--fail-on-warning` for strict experiments. These warnings are review aids: deliberate attacks, falls, and perspective changes may legitimately change silhouette dimensions. This does not yet render an animated GIF or test in-game transitions.
+
+## Animated GIF previews
+
+Run `python3 scripts/preview_animation.py path/to/character.json --output /tmp/dark-fall-gifs --fps 10` to generate one looping GIF for each action, including idle, run, attack and death when present. Previews show actual sheet frames on a neutral background, preserving frame dimensions and ordering. Use a fresh output directory: existing GIF files are not overwritten. These previews are for visual review only; the game's renderer may use different timing, scaling and interpolation.
