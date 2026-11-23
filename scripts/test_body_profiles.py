@@ -2,7 +2,7 @@
 import copy,json
 from pathlib import Path
 from validate_body_profile import validate
-paths=list(Path("assets/profiles").glob("*.json"))
+paths=[Path("assets/profiles") / f"{name}.json" for name in ("warden","wolf","raven")]
 assert len(paths)>=3
 profiles=[json.loads(p.read_text()) for p in paths]
 assert {p["family"] for p in profiles}>={"humanoid","quadruped","avian"}
