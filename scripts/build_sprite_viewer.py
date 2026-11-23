@@ -19,7 +19,7 @@ small{color:#b8c3c2}</style></head><body>
 <p><small>Isolated asset preview. Does not replace sprites in the game.</small></p>
 <label>Asset <select id="asset"></select></label>
 <label>Action <select id="action"></select></label>\n<label>Playback <button id="pause">Pause</button> <button id="step">Next frame</button></label>\n<label>Simulated state <select id="state"><option value="manual">Manual</option><option value="idle">Idle</option><option value="run">Moving</option><option value="cast">Casting</option><option value="run_cast">Moving + Casting</option><option value="attack">Attacking</option><option value="run_attack">Moving + Attacking</option><option value="hit">Taking damage</option><option value="death">Death</option></select></label>\n<label>Speed <select id="speed"><option value="4">4 fps</option><option value="8">8 fps</option><option value="10" selected>10 fps</option><option value="15">15 fps</option><option value="24">24 fps</option></select></label>
-<canvas id="stage" width="320" height="320"></canvas>\n<label><input id="guides" type="checkbox" checked> Show frame bounds and feet anchor</label>
+<canvas id="stage" width="320" height="320"></canvas>\n<label><input id="guides" type="checkbox" checked> Show frame bounds and feet anchor</label>\n<label><input id="onion" type="checkbox"> Show previous frame ghost</label>
 <p id="status" role="status"></p>
 <script>
 (async()=>{
@@ -79,6 +79,11 @@ function draw(now){
  ctx.clearRect(0,0,canvas.width,canvas.height);
  const scale=Math.min(4,Math.floor(Math.min(canvas.width/w,canvas.height/h)));
  const dx=(canvas.width-w*scale)/2,dy=(canvas.height-h*scale)/2;
+ if(document.getElementById('onion').checked&&frames.length>1){
+   const prev=frames[(position+frames.length-1)%frames.length];
+   const px=(prev%manifest.columns)*w,py=Math.floor(prev/manifest.columns)*h;
+   ctx.globalAlpha=0.25;ctx.drawImage(image,px,py,w,h,dx,dy,w*scale,h*scale);ctx.globalAlpha=1;
+ }
  ctx.drawImage(image,sx,sy,w,h,dx,dy,w*scale,h*scale);
  if(document.getElementById('guides').checked){
    ctx.strokeStyle='#f3d36b';ctx.lineWidth=1;ctx.strokeRect(dx,dy,w*scale,h*scale);
