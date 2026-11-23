@@ -25,3 +25,7 @@ After selecting validated revisions, run `python3 scripts/prepare_asset_overlay.
 ## Legacy renderer investigation
 
 Run `python3 scripts/survey_renderer.py` to create `browser-smoke-results/renderer-survey.json`, a read-only inventory of sprite drawing, image loading, animation state, and class references. The survey reports approximate source locations; it does not imply these are safe injection points. Review actual render functions and frame timing before implementing a replacement adapter.
+
+## Animation silhouette diagnostics
+
+Run `python3 scripts/inspect_animation.py path/to/character.json --output /tmp/animation-report.json` to inspect opaque artwork bounds for every animation frame. It warns when a frame is fully transparent or an action's silhouette width/height varies beyond the configurable ratio (default 1.5x). Use `--fail-on-warning` for strict experiments. These warnings are review aids: deliberate attacks, falls, and perspective changes may legitimately change silhouette dimensions. This does not yet render an animated GIF or test in-game transitions.
