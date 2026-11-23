@@ -48,3 +48,9 @@ Example rig JSON:
 Run `python3 scripts/compose_articulated_parts.py assets/profiles/warden.json assets/pose-specs/warden-guide.json PATH/TO/rig.json PATH/TO/articulated.png --action run --frames 16`.
 
 The master Warden blueprint must first be separated into correctly aligned transparent parts. Joint pivot and reference anatomy must be approved before using this output in gameplay. Rotated artwork can look blurry at subpixel angles; manual pixel-art cleanup remains necessary.
+
+## Unified candidate build (experimental)
+
+`python3 scripts/build_animation_candidate.py assets/profiles/warden.json assets/pose-specs/warden-guide.json PATH/TO/rig.json PATH/TO/warden-idle-candidate.png --action idle --frames 16 --report PATH/TO/report.json`
+
+This command interpolates poses, renders a candidate sprite sheet from separately painted articulated PNG parts, and audits body proportions, angular motion, club-to-hand attachment, and frame margins. By default any diagnostic finding **blocks** the output. `--allow-warnings` exports a diagnostic candidate despite findings, never an approved asset. No candidate is automatically installed into the game. The report includes an unapproved status; visual inspection and explicit approval remain mandatory. The cloth-follow guide is exported as numerical positions, not automatically applied to painted cloth.
