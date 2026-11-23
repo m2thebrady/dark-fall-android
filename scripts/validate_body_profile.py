@@ -35,6 +35,8 @@ def validate(p):
             if not isinstance(fps,(int,float)) or isinstance(fps,bool) or not 1<=fps<=60:errors.append(f"action {name} fps invalid")
             if not isinstance(settings.get("loop"),bool):errors.append(f"action {name} loop invalid")
         if "idle" not in actions:errors.append("idle action required")
+        if p.get("family")=="avian" and "fly" not in actions:errors.append("avian profile requires fly action")
+        if p.get("family")=="quadruped" and not ("run" in actions or "walk" in actions):errors.append("quadruped profile requires locomotion")
     return errors
 def main():
     parser=argparse.ArgumentParser()
