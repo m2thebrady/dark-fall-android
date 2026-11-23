@@ -1,0 +1,15 @@
+# Dark Fall asset validation (experimental)
+
+New character/enemy sprites should be authored as standalone **RGBA PNG sprite sheets** with a neighboring JSON manifest before integration into the 45 MB legacy HTML. Run `python3 -m pip install Pillow` then `python3 scripts/validate_asset.py assets/examples/warden.json` after adding the referenced PNG.
+
+The example manifest is a **schema example only**: the PNG does not exist yet, so do not run the example in CI until a real sheet is added.
+
+Each action lists zero-based row-major frame indices. Every frame has the same width/height and a configurable transparent safe margin. The validator rejects missing images, wrong dimensions, non-RGBA sheets, invalid indices, empty actions and artwork touching the frame edge. This prevents a class of sprite clipping and accidental transparent-frame bugs; it cannot guarantee anatomy, motion quality, or alignment.
+
+Preview a real sheet with `python3 scripts/preview_asset.py path/to/asset.json --output /tmp/asset-preview.png`. The preview labels every action frame, shows transparency on a checkerboard, and draws the safe margin.\n\nNext: track per-frame feet/weapon anchors, check animation transition states, and integrate validated assets through a reversible build step. Keep existing sprites untouched until replacement art passes visual review.
+
+## Safe staging (not yet game integration)
+
+After validation, run `python3 scripts/stage_asset.py path/to/asset.json`. This creates an immutable-style, content-hashed revision under `assets/staged/<asset-name>/<hash>/`. Old revisions remain available for rollback. The staging tool does **not** change the game or select a live revision. Never delete the existing bundled character until a new one passes phone testing.
+
+Animation manifests may include `anchors` keyed by frame number with `feet` and `weapon` coordinates, `anchor_tolerance`, and `transitions` as pairs of valid action names. These checks validate structure and positioning; they do not guarantee good motion.
