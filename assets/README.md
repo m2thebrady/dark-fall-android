@@ -37,3 +37,7 @@ Run `python3 scripts/preview_animation.py path/to/character.json --output /tmp/d
 ## Browser-based sprite viewer (isolated)
 
 Prepare an overlay, then run `python3 scripts/build_sprite_viewer.py /tmp/dark-fall-overlay --output /tmp/dark-fall-viewer`. Serve the viewer directory with `python3 -m http.server 8000 --directory /tmp/dark-fall-viewer`, then open `http://localhost:8000`. Select a character and action to preview frames on a canvas at a default 10 fps. Adjust playback between 4, 8, 10, 15 and 24 fps; pause, resume, or step forward one frame at a time to inspect sprite clipping and proportions. This standalone viewer intentionally does **not** modify or hook the production game renderer, and does not yet support custom per-action timing, anchors or game effects. It is a safe intermediate stage before a test-only in-game bridge.
+
+## Preview animation-state policy
+
+`scripts/animation_state.py` provides a pure, unit-tested policy for choosing actions from movement, attack, casting, hit, and death flags. Death and hit take priority; moving attacks/casts use `run_attack`/`run_cast` when present, and transitions can be restricted to declared pairs. This policy is **not yet wired into the browser viewer or production game**; its behavior is independently testable before any runtime bridge.
