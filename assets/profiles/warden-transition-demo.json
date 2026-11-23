@@ -1,0 +1,24 @@
+[
+  {
+    "action": "idle"
+  },
+  {
+    "action": "run",
+    "cycles": 2
+  },
+  {
+    "action": "attack"
+  },
+  {
+    "action": "run_cast"
+  },
+  {
+    "action": "cast"
+  },
+  {
+    "action": "hit"
+  },
+  {
+    "action": "death"
+  }
+]
