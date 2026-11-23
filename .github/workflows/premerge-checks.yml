@@ -33,6 +33,21 @@ jobs:
         run: python3 -m pip install Pillow
       - name: Self-test sprite validation and previews
         run: python3 scripts/test_asset_pipeline.py
+      - name: Self-test asset revision selection
+        run: python3 scripts/test_asset_selection.py
+      - name: Self-test animation silhouette diagnostics
+        run: python3 scripts/test_animation_inspection.py
+      - name: Self-test animated sprite previews
+        run: python3 scripts/test_animation_preview.py
+      - name: Survey legacy renderer and sprite references
+        run: python3 scripts/survey_renderer.py
+      - name: Upload renderer survey report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dark-fall-renderer-survey
+          path: browser-smoke-results/renderer-survey.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Install Android SDK 35
         run: |
           "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-35" "build-tools;35.0.0"
