@@ -1,0 +1,61 @@
+{
+  "name": "Woodland Approach",
+  "size": {
+    "width": 2400,
+    "height": 1200
+  },
+  "objects": [
+    {
+      "id": "party-start",
+      "type": "spawn",
+      "x": 120,
+      "y": 540,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "id": "north-trees",
+      "type": "tree",
+      "x": 480,
+      "y": 180,
+      "width": 130,
+      "height": 160,
+      "solid": true
+    },
+    {
+      "id": "path-boulder",
+      "type": "rock",
+      "x": 1040,
+      "y": 340,
+      "width": 160,
+      "height": 140,
+      "solid": true
+    },
+    {
+      "id": "pond",
+      "type": "water",
+      "x": 1580,
+      "y": 780,
+      "width": 420,
+      "height": 250,
+      "solid": true
+    },
+    {
+      "id": "old-ruins",
+      "type": "ruin",
+      "x": 1780,
+      "y": 230,
+      "width": 210,
+      "height": 180,
+      "solid": true
+    },
+    {
+      "id": "castle-gate",
+      "type": "exit",
+      "x": 2240,
+      "y": 520,
+      "width": 100,
+      "height": 140
+    }
+  ]
+}
