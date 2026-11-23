@@ -45,6 +45,10 @@ jobs:
         run: |
           python3 scripts/validate_map.py maps/woodland-approach.json
           python3 scripts/test_map_validation.py
+      - name: Validate modular body profiles
+        run: |
+          python3 scripts/validate_body_profile.py assets/profiles/*.json
+          python3 scripts/test_body_profiles.py
       - name: Survey legacy renderer and sprite references
         run: python3 scripts/survey_renderer.py
       - name: Upload renderer survey report
