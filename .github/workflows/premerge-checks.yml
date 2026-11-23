@@ -35,6 +35,8 @@ jobs:
         run: python3 scripts/test_asset_pipeline.py
       - name: Self-test asset revision selection
         run: python3 scripts/test_asset_selection.py
+      - name: Self-test animation silhouette diagnostics
+        run: python3 scripts/test_animation_inspection.py
       - name: Survey legacy renderer and sprite references
         run: python3 scripts/survey_renderer.py
       - name: Install Android SDK 35
