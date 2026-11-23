@@ -62,6 +62,7 @@ jobs:
           python3 scripts/test_art_quality_audits.py
           python3 scripts/test_equipment_and_cloth.py
           python3 scripts/test_animation_candidate.py
+          python3 scripts/test_art_reference_lock.py
       - name: Survey legacy renderer and sprite references
         run: python3 scripts/survey_renderer.py
       - name: Upload renderer survey report
