@@ -56,6 +56,7 @@ jobs:
           python3 scripts/test_transition_preview.py
           python3 scripts/test_pose_production.py
           python3 scripts/test_pose_interpolation.py
+          python3 scripts/test_pose_motion_audit.py
       - name: Survey legacy renderer and sprite references
         run: python3 scripts/survey_renderer.py
       - name: Upload renderer survey report
