@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "id": "fighter",
+      "family": "humanoid",
+      "kind": "character",
+      "frame": {
+        "width": 160,
+        "height": 192
+      },
+      "status": "planned",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 16,
+          "loop": true
+        },
+        "run": {
+          "fps": 12,
+          "frames": 32,
+          "loop": true
+        },
+        "attack": {
+          "fps": 12,
+          "frames": 32,
+          "loop": false
+        },
+        "defend": {
+          "fps": 8,
+          "frames": 16,
+          "loop": false
+        },
+        "hit": {
+          "fps": 8,
+          "frames": 12,
+          "loop": false
+        },
+        "death": {
+          "fps": 10,
+          "frames": 24,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "caster",
+      "family": "humanoid",
+      "kind": "character",
+      "frame": {
+        "width": 160,
+        "height": 192
+      },
+      "status": "planned",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 16,
+          "loop": true
+        },
+        "run": {
+          "fps": 12,
+          "frames": 32,
+          "loop": true
+        },
+        "cast": {
+          "fps": 12,
+          "frames": 32,
+          "loop": false
+        },
+        "run_cast": {
+          "fps": 12,
+          "frames": 32,
+          "loop": true
+        },
+        "hit": {
+          "fps": 8,
+          "frames": 12,
+          "loop": false
+        },
+        "death": {
+          "fps": 10,
+          "frames": 24,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "warden",
+      "family": "humanoid",
+      "kind": "character",
+      "frame": {
+        "width": 160,
+        "height": 192
+      },
+      "status": "in_production",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 16,
+          "loop": true
+        },
+        "run": {
+          "fps": 12,
+          "frames": 32,
+          "loop": true
+        },
+        "attack": {
+          "fps": 12,
+          "frames": 32,
+          "loop": false
+        },
+        "cast": {
+          "fps": 10,
+          "frames": 24,
+          "loop": false
+        },
+        "run_cast": {
+          "fps": 12,
+          "frames": 32,
+          "loop": true
+        },
+        "hit": {
+          "fps": 8,
+          "frames": 16,
+          "loop": false
+        },
+        "death": {
+          "fps": 10,
+          "frames": 24,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "skeleton",
+      "family": "humanoid",
+      "kind": "enemy",
+      "frame": {
+        "width": 128,
+        "height": 128
+      },
+      "status": "planned",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 12,
+          "loop": true
+        },
+        "walk": {
+          "fps": 10,
+          "frames": 24,
+          "loop": true
+        },
+        "attack": {
+          "fps": 12,
+          "frames": 20,
+          "loop": false
+        },
+        "hit": {
+          "fps": 8,
+          "frames": 8,
+          "loop": false
+        },
+        "death": {
+          "fps": 10,
+          "frames": 20,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "wolf",
+      "family": "quadruped",
+      "kind": "enemy",
+      "frame": {
+        "width": 160,
+        "height": 128
+      },
+      "status": "planned",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 12,
+          "loop": true
+        },
+        "run": {
+          "fps": 12,
+          "frames": 32,
+          "loop": true
+        },
+        "attack": {
+          "fps": 12,
+          "frames": 24,
+          "loop": false
+        },
+        "hit": {
+          "fps": 8,
+          "frames": 8,
+          "loop": false
+        },
+        "death": {
+          "fps": 10,
+          "frames": 24,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "raven",
+      "family": "flying",
+      "kind": "enemy",
+      "frame": {
+        "width": 128,
+        "height": 128
+      },
+      "status": "planned",
+      "actions": {
+        "fly": {
+          "fps": 14,
+          "frames": 32,
+          "loop": true
+        },
+        "attack": {
+          "fps": 12,
+          "frames": 20,
+          "loop": false
+        },
+        "hit": {
+          "fps": 8,
+          "frames": 8,
+          "loop": false
+        },
+        "death": {
+          "fps": 12,
+          "frames": 24,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "swamp_creature",
+      "family": "irregular",
+      "kind": "boss",
+      "frame": {
+        "width": 192,
+        "height": 192
+      },
+      "status": "planned",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 16,
+          "loop": true
+        },
+        "move": {
+          "fps": 10,
+          "frames": 24,
+          "loop": true
+        },
+        "attack": {
+          "fps": 12,
+          "frames": 32,
+          "loop": false
+        },
+        "death": {
+          "fps": 10,
+          "frames": 32,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "forest_tree",
+      "family": "environment",
+      "kind": "environment",
+      "frame": {
+        "width": 192,
+        "height": 256
+      },
+      "status": "planned",
+      "actions": {
+        "idle": {
+          "fps": 1,
+          "frames": 1,
+          "loop": true
+        }
+      }
+    },
+    {
+      "id": "healing_sparkle",
+      "family": "vfx",
+      "kind": "effect",
+      "frame": {
+        "width": 128,
+        "height": 128
+      },
+      "status": "planned",
+      "actions": {
+        "play": {
+          "fps": 20,
+          "frames": 24,
+          "loop": false
+        }
+      }
+    }
+  ]
+}
