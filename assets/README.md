@@ -45,3 +45,5 @@ Prepare an overlay, then run `python3 scripts/build_sprite_viewer.py /tmp/dark-f
 The browser viewer also includes a simulated state selector for idle, moving, casting, moving-and-casting, attacking, moving-and-attacking, hit, and death. If an exact animation is unavailable, it falls back to another available action. This is a manual preview control, not automatic game state detection; the separate Python state policy remains independently tested.
 
 The browser viewer can overlay a yellow frame boundary and green feet-anchor crosshair (when the manifest defines a feet anchor for that frame). Toggle guides off for a clean animation view. This helps spot sprite origin jumps before game integration.
+
+Enable the optional previous-frame ghost (onion skin) to inspect animation continuity and unwanted movement between adjacent frames. It is a visual aid only and does not change the source sprite sheet.
