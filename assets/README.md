@@ -17,3 +17,7 @@ Animation manifests may include `anchors` keyed by frame number with `feet` and 
 ## Select revisions for a future build
 
 Copy `assets/selection.example.json` to a private selection file, then populate `assets` with asset IDs mapped to their 16-character revision hashes. Run `python3 scripts/select_assets.py path/to/selection.json` to verify that every selected revision exists, matches its original hash, and still passes sprite validation. This does **not** inject the artwork into the game yet; the integration adapter will be built and tested separately.
+
+## Isolated overlay packaging (experimental)
+
+After selecting validated revisions, run `python3 scripts/prepare_asset_overlay.py path/to/selection.json --output /tmp/dark-fall-overlay`. This creates an isolated folder with a registry and asset files. It refuses to overwrite an existing nonempty output. **No current game renderer reads this registry yet**, and it is deliberately not included in the Android publishing workflow. The next step is a test-only runtime bridge with an explicit opt-in switch and a legacy fallback.
