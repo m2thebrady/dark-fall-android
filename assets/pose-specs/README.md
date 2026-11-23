@@ -34,3 +34,17 @@ The `compose_artwork_layers.py` tool accepts a JSON layout containing `character
 Run `python3 scripts/compose_artwork_layers.py assets/profiles/warden.json assets/pose-specs/warden-guide.json PATH/TO/layers.json PATH/TO/output.png --action run --frames 16`.
 
 **Important:** This is a rigid-translation compositor for separately prepared transparent pieces. It does not rotate arms, bend joints, synthesize occluded surfaces, resolve layer overlap, or automatically produce finished polished character art. A real approved Warden reference and manually prepared transparent artwork parts are required. Preview output must undergo visual review before any game integration.
+
+## Experimental joint rotation
+
+`compose_articulated_parts.py` rotates independently painted PNG parts around an authored image-space pivot using a pair of landmarks (root and tip). The reference root-to-tip angle is compared with the interpolated frame angle. Each part remains rigid, with no skeletal skinning, cloth simulation, occlusion correction or automatic cleanup.
+
+Example rig JSON:
+
+```json
+{"character":"warden","parts":[{"name":"left_leg","image":"left-leg.png","root":"hip","tip":"foot_l","pivot":[12,4]}]}
+```
+
+Run `python3 scripts/compose_articulated_parts.py assets/profiles/warden.json assets/pose-specs/warden-guide.json PATH/TO/rig.json PATH/TO/articulated.png --action run --frames 16`.
+
+The master Warden blueprint must first be separated into correctly aligned transparent parts. Joint pivot and reference anatomy must be approved before using this output in gameplay. Rotated artwork can look blurry at subpixel angles; manual pixel-art cleanup remains necessary.
