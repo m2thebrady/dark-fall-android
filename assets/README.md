@@ -13,3 +13,7 @@ Preview a real sheet with `python3 scripts/preview_asset.py path/to/asset.json -
 After validation, run `python3 scripts/stage_asset.py path/to/asset.json`. This creates an immutable-style, content-hashed revision under `assets/staged/<asset-name>/<hash>/`. Old revisions remain available for rollback. The staging tool does **not** change the game or select a live revision. Never delete the existing bundled character until a new one passes phone testing.
 
 Animation manifests may include `anchors` keyed by frame number with `feet` and `weapon` coordinates, `anchor_tolerance`, and `transitions` as pairs of valid action names. These checks validate structure and positioning; they do not guarantee good motion.
+
+## Select revisions for a future build
+
+Copy `assets/selection.example.json` to a private selection file, then populate `assets` with asset IDs mapped to their 16-character revision hashes. Run `python3 scripts/select_assets.py path/to/selection.json` to verify that every selected revision exists, matches its original hash, and still passes sprite validation. This does **not** inject the artwork into the game yet; the integration adapter will be built and tested separately.
