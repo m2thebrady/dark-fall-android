@@ -303,6 +303,58 @@
           "loop": false
         }
       }
+    },
+    {
+      "id": "ashen_alpha",
+      "family": "quadruped",
+      "kind": "boss",
+      "frame": {
+        "width": 256,
+        "height": 192
+      },
+      "status": "in_production",
+      "actions": {
+        "idle": {
+          "fps": 8,
+          "frames": 16,
+          "loop": true
+        },
+        "walk": {
+          "fps": 12,
+          "frames": 24,
+          "loop": true
+        },
+        "run": {
+          "fps": 14,
+          "frames": 24,
+          "loop": true
+        },
+        "attack": {
+          "fps": 16,
+          "frames": 32,
+          "loop": false
+        },
+        "run_attack": {
+          "fps": 16,
+          "frames": 32,
+          "loop": false
+        },
+        "hit": {
+          "fps": 12,
+          "frames": 16,
+          "loop": false
+        },
+        "death": {
+          "fps": 12,
+          "frames": 32,
+          "loop": false
+        },
+        "corpse": {
+          "fps": 1,
+          "frames": 1,
+          "loop": false
+        }
+      }
     }
   ]
 }
