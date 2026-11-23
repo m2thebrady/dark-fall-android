@@ -1,0 +1,50 @@
+{
+  "id": "silver-wolf",
+  "family": "quadruped",
+  "frame": {
+    "width": 192,
+    "height": 144
+  },
+  "palette": {
+    "fur": "#8E979A",
+    "shadow": "#495459",
+    "highlight": "#C0C7C6",
+    "eyes": "#A75B47"
+  },
+  "anchors": {
+    "feet": [
+      98,
+      129
+    ],
+    "head": [
+      152,
+      50
+    ]
+  },
+  "actions": {
+    "idle": {
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "fps": 10,
+      "loop": true
+    },
+    "run": {
+      "fps": 16,
+      "loop": true
+    },
+    "attack": {
+      "fps": 12,
+      "loop": false
+    },
+    "hit": {
+      "fps": 8,
+      "loop": false
+    },
+    "death": {
+      "fps": 10,
+      "loop": false
+    }
+  }
+}

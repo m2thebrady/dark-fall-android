@@ -1,0 +1,50 @@
+{
+  "id": "dark-raven",
+  "family": "avian",
+  "frame": {
+    "width": 160,
+    "height": 160
+  },
+  "palette": {
+    "feathers": "#353B40",
+    "shadow": "#1D2229",
+    "highlight": "#64696C",
+    "eyes": "#A33B37"
+  },
+  "anchors": {
+    "feet": [
+      80,
+      134
+    ],
+    "head": [
+      115,
+      54
+    ]
+  },
+  "actions": {
+    "idle": {
+      "fps": 8,
+      "loop": true
+    },
+    "fly": {
+      "fps": 16,
+      "loop": true
+    },
+    "dive": {
+      "fps": 14,
+      "loop": false
+    },
+    "attack": {
+      "fps": 12,
+      "loop": false
+    },
+    "hit": {
+      "fps": 8,
+      "loop": false
+    },
+    "death": {
+      "fps": 10,
+      "loop": false
+    }
+  }
+}

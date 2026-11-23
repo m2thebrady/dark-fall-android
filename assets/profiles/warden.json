@@ -1,0 +1,55 @@
+{
+  "id": "warden",
+  "family": "humanoid",
+  "frame": {
+    "width": 160,
+    "height": 192
+  },
+  "palette": {
+    "armor": "#554537",
+    "cloak": "#596046",
+    "steel": "#85857B",
+    "skin": "#B18A70",
+    "shadow": "#302B2A"
+  },
+  "anchors": {
+    "feet": [
+      80,
+      177
+    ],
+    "weapon": [
+      113,
+      100
+    ]
+  },
+  "actions": {
+    "idle": {
+      "fps": 8,
+      "loop": true
+    },
+    "run": {
+      "fps": 12,
+      "loop": true
+    },
+    "attack": {
+      "fps": 12,
+      "loop": false
+    },
+    "cast": {
+      "fps": 10,
+      "loop": false
+    },
+    "run_cast": {
+      "fps": 12,
+      "loop": true
+    },
+    "hit": {
+      "fps": 8,
+      "loop": false
+    },
+    "death": {
+      "fps": 10,
+      "loop": false
+    }
+  }
+}
