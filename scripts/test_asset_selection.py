@@ -38,7 +38,7 @@ with tempfile.TemporaryDirectory() as tmp:
     viewer=build(overlay,root/'viewer')
     assert (viewer/'index.html').is_file()
     viewer_html=(viewer/'index.html').read_text()
-    assert 'id="pause"' in viewer_html and 'id="step"' in viewer_html
+    assert 'id="pause"' in viewer_html and 'id="step"' in viewer_html and 'id="speed"' in viewer_html
     assert (viewer/'registry.json').is_file()
     assert (viewer/'hero'/'hero.png').is_file()
     try:
