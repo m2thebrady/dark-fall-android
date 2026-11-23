@@ -33,3 +33,7 @@ Run `python3 scripts/inspect_animation.py path/to/character.json --output /tmp/a
 ## Animated GIF previews
 
 Run `python3 scripts/preview_animation.py path/to/character.json --output /tmp/dark-fall-gifs --fps 10` to generate one looping GIF for each action, including idle, run, attack and death when present. Previews show actual sheet frames on a neutral background, preserving frame dimensions and ordering. Use a fresh output directory: existing GIF files are not overwritten. These previews are for visual review only; the game's renderer may use different timing, scaling and interpolation.
+
+## Browser-based sprite viewer (isolated)
+
+Prepare an overlay, then run `python3 scripts/build_sprite_viewer.py /tmp/dark-fall-overlay --output /tmp/dark-fall-viewer`. Serve the viewer directory with `python3 -m http.server 8000 --directory /tmp/dark-fall-viewer`, then open `http://localhost:8000`. Select a character and action to preview frames on a canvas at a fixed 10 fps. This standalone viewer intentionally does **not** modify or hook the production game renderer, and does not yet support custom per-action timing, anchors or game effects. It is a safe intermediate stage before a test-only in-game bridge.
