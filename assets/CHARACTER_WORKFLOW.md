@@ -12,3 +12,7 @@ The production sequence is:
 8. Only integrate after a renderer adapter and screenshot regression tests are implemented and passed.
 
 This workflow currently **validates user-provided artwork; it does not generate finished character drawings or automatically install them into the game**. The pipeline is deliberately conservative to avoid repeating earlier visual regressions.
+
+## Action-transition planning
+
+Before animation production, use `python3 scripts/plan_animation_transitions.py assets/profiles/warden.json assets/profiles/warden-transition-demo.json` to inspect a planned sequence of actions, loops and per-action FPS. Equivalent sample sequences exist for the wolf and raven. This validates action availability and emits a transition plan; it does **not** yet render an animated preview or alter the in-game animation state machine.
