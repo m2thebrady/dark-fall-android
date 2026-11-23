@@ -2,7 +2,6 @@
 """One-command character asset checks and non-destructive preview preparation."""
 import argparse,json,sys
 from pathlib import Path
-from validate_asset import validate as validate_sprite
 from validate_body_profile import validate as validate_profile
 from check_animation_coverage import check as check_coverage
 from inspect_palette import inspect as inspect_palette
@@ -12,9 +11,9 @@ def run(profile_path,manifest_path,image_path,output):
     manifest=json.loads(Path(manifest_path).read_text())
     errors=validate_profile(profile)+check_coverage(profile,manifest)
     if errors:raise ValueError("; ".join(errors))
-    # Sprite validation is run by the established standalone validator CLI.
+    # The established validator loads the sprite sheet from the manifest image path.\n    resolved_image=(Path(manifest_path).parent / manifest.get("image","")).resolve()\n    if resolved_image!=Path(image_path).resolve():raise ValueError("image argument does not match manifest image path")
     import subprocess
-    result=subprocess.run([sys.executable,str(Path(__file__).with_name("validate_asset.py")),str(image_path),str(manifest_path)],capture_output=True,text=True)
+    result=subprocess.run([sys.executable,str(Path(__file__).with_name("validate_asset.py")),str(manifest_path)],capture_output=True,text=True)
     if result.returncode:raise ValueError("sprite validation failed: "+result.stdout+result.stderr)
     palette=inspect_palette(image_path,profile_path)
     output=Path(output)
