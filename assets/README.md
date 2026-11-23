@@ -41,3 +41,5 @@ Prepare an overlay, then run `python3 scripts/build_sprite_viewer.py /tmp/dark-f
 ## Preview animation-state policy
 
 `scripts/animation_state.py` provides a pure, unit-tested policy for choosing actions from movement, attack, casting, hit, and death flags. Death and hit take priority; moving attacks/casts use `run_attack`/`run_cast` when present, and transitions can be restricted to declared pairs. This policy is **not yet wired into the browser viewer or production game**; its behavior is independently testable before any runtime bridge.
+
+The browser viewer also includes a simulated state selector for idle, moving, casting, moving-and-casting, attacking, moving-and-attacking, hit, and death. If an exact animation is unavailable, it falls back to another available action. This is a manual preview control, not automatic game state detection; the separate Python state policy remains independently tested.
