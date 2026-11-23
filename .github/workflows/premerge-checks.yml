@@ -54,6 +54,14 @@ jobs:
           python3 scripts/test_character_build.py
           python3 scripts/test_animation_transitions.py
           python3 scripts/test_transition_preview.py
+          python3 scripts/test_pose_production.py
+          python3 scripts/test_pose_interpolation.py
+          python3 scripts/test_pose_motion_audit.py
+          python3 scripts/test_artwork_layers.py
+          python3 scripts/test_articulated_parts.py
+          python3 scripts/test_art_quality_audits.py
+          python3 scripts/test_equipment_and_cloth.py
+          python3 scripts/test_animation_candidate.py
       - name: Survey legacy renderer and sprite references
         run: python3 scripts/survey_renderer.py
       - name: Upload renderer survey report

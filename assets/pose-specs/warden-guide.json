@@ -1,0 +1,209 @@
+{
+  "character": "warden",
+  "landmarks": {
+    "head": [
+      80,
+      35
+    ],
+    "neck": [
+      80,
+      55
+    ],
+    "shoulder_l": [
+      61,
+      64
+    ],
+    "shoulder_r": [
+      100,
+      64
+    ],
+    "hip": [
+      80,
+      111
+    ],
+    "hand_l": [
+      54,
+      106
+    ],
+    "hand_r": [
+      113,
+      104
+    ],
+    "foot_l": [
+      67,
+      177
+    ],
+    "foot_r": [
+      94,
+      177
+    ],
+    "club_tip": [
+      133,
+      77
+    ]
+  },
+  "links": [
+    [
+      "head",
+      "neck"
+    ],
+    [
+      "neck",
+      "shoulder_l"
+    ],
+    [
+      "neck",
+      "shoulder_r"
+    ],
+    [
+      "neck",
+      "hip"
+    ],
+    [
+      "shoulder_l",
+      "hand_l"
+    ],
+    [
+      "shoulder_r",
+      "hand_r"
+    ],
+    [
+      "hip",
+      "foot_l"
+    ],
+    [
+      "hip",
+      "foot_r"
+    ],
+    [
+      "hand_r",
+      "club_tip"
+    ]
+  ],
+  "limits": {
+    "max_head_displacement": 8,
+    "max_hip_displacement": 12,
+    "max_club_tip_displacement": 35
+  },
+  "poses": {
+    "idle": [
+      {
+        "t": 0,
+        "offsets": {}
+      },
+      {
+        "t": 0.5,
+        "offsets": {
+          "head": [
+            0,
+            1
+          ],
+          "shoulder_l": [
+            0,
+            1
+          ],
+          "shoulder_r": [
+            0,
+            1
+          ]
+        }
+      },
+      {
+        "t": 1,
+        "offsets": {}
+      }
+    ],
+    "run": [
+      {
+        "t": 0,
+        "offsets": {
+          "foot_l": [
+            -5,
+            -3
+          ],
+          "foot_r": [
+            5,
+            2
+          ],
+          "hip": [
+            0,
+            0
+          ],
+          "club_tip": [
+            -2,
+            0
+          ]
+        }
+      },
+      {
+        "t": 0.5,
+        "offsets": {
+          "foot_l": [
+            5,
+            2
+          ],
+          "foot_r": [
+            -5,
+            -3
+          ],
+          "hip": [
+            0,
+            -2
+          ],
+          "club_tip": [
+            2,
+            0
+          ]
+        }
+      },
+      {
+        "t": 1,
+        "offsets": {
+          "foot_l": [
+            -5,
+            -3
+          ],
+          "foot_r": [
+            5,
+            2
+          ],
+          "hip": [
+            0,
+            0
+          ],
+          "club_tip": [
+            -2,
+            0
+          ]
+        }
+      }
+    ],
+    "hit": [
+      {
+        "t": 0,
+        "offsets": {}
+      },
+      {
+        "t": 0.4,
+        "offsets": {
+          "shoulder_l": [
+            -2,
+            1
+          ],
+          "shoulder_r": [
+            -2,
+            1
+          ],
+          "head": [
+            -2,
+            0
+          ]
+        }
+      },
+      {
+        "t": 1,
+        "offsets": {}
+      }
+    ]
+  }
+}
