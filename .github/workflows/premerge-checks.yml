@@ -21,8 +21,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Apply bundled-game display patches
-        run: python3 scripts/patch_fighter_label.py
+      - name: Materialize verified bundled game
+        run: python3 scripts/materialize_game.py
       - name: Validate Android configuration
         run: python3 scripts/validate_project.py
       - name: Check HTML and JavaScript

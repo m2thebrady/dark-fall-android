@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/browser_smoke.mjs'
+      - 'game-bundle/**'
+      - 'scripts/materialize_game.py'
       - '.github/workflows/browser-smoke.yml'
 permissions:
   contents: read
@@ -21,8 +23,8 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Apply display patch
-        run: python3 scripts/patch_fighter_label.py
+      - name: Materialize verified bundled game
+        run: python3 scripts/materialize_game.py
       - name: Run browser startup test
         run: node scripts/browser_smoke.mjs
       - name: Verify screenshot artifacts

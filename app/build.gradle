@@ -6,8 +6,8 @@ android {
         applicationId 'com.darkfall.game'
         minSdk 26
         targetSdk 35
-        versionCode 994
-        versionName '0.994'
+        versionCode 1509
+        versionName '0.1509'
     }
     signingConfigs {
         if (System.getenv('DARKFALL_KEYSTORE_PATH')) {
@@ -32,3 +32,17 @@ android {
 }
 
 dependencies { implementation 'androidx.core:core:1.13.1' }
+
+// Reassemble the original HTML for every Android build, including Android Studio.
+def gameBundle = rootProject.file('game-bundle')
+def gameHtml = file('src/main/assets/index.html')
+def pythonCommand = providers.environmentVariable('DARKFALL_PYTHON').orElse(
+    System.getProperty('os.name').toLowerCase().contains('windows') ? 'python' : 'python3'
+)
+tasks.register('materializeBundledGame', Exec) {
+    workingDir rootProject.projectDir
+    inputs.files(fileTree(gameBundle), rootProject.file('scripts/materialize_game.py'))
+    outputs.file(gameHtml)
+    commandLine pythonCommand.get(), rootProject.file('scripts/materialize_game.py').absolutePath
+}
+tasks.named('preBuild').configure { dependsOn tasks.named('materializeBundledGame') }

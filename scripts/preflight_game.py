@@ -2,12 +2,12 @@
 """Fail-closed preflight for the bundled Dark Fall HTML and Android version."""
 from html.parser import HTMLParser
 from pathlib import Path
-import re, subprocess, tempfile, hashlib
+import re, subprocess, tempfile, hashlib, json
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML = ROOT / "app/src/main/assets/index.html"
 GRADLE = (ROOT / "app/build.gradle").read_text()
-VALIDATOR = (ROOT / "scripts/validate_project.py").read_text()
+BUNDLE = json.loads((ROOT / "game-bundle/manifest.json").read_text())
 PUBLISH = (ROOT / ".github/workflows/publish-update.yml").read_text()
 class ScriptCollector(HTMLParser):
     def __init__(self):
@@ -36,7 +36,8 @@ version = re.search(r"\bversionCode\s+(\d+)\b", GRADLE)
 name = re.search(r"\bversionName\s+['\"]([^'\"]+)['\"]", GRADLE)
 assert version and name, "Missing Android version metadata"
 assert name.group(1) == "0." + version.group(1), "Android versionName/versionCode mismatch"
-assert f'versionCode {version.group(1)}' in VALIDATOR, "Static validator version mismatch"
+assert int(version.group(1)) == BUNDLE["version"], "Game bundle version mismatch"
+assert hashlib.sha256(HTML.read_bytes()).hexdigest() == BUNDLE["sha256"], "Game bundle checksum mismatch"
 assert "gh release create" in PUBLISH, "Signed release publishing step missing"
 collector = ScriptCollector()
 collector.feed(html)
