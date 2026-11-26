@@ -75,3 +75,21 @@ const gate=readFileSync(folder+'forest-gate-revised.webp');
 assert.equal(gate.toString('ascii',8,12),'WEBP');
 assert.ok(gate.length>30000&&gate.length<400000);
 console.log('Gate artwork and seamless world-aligned shoulder atlas PASS');
+
+const civic=JSON.parse(readFileSync(folder+'civic-metadata.json','utf8'));
+assert.deepEqual(Object.keys(civic).sort(),['hall','herb','store','supply']);
+scope.rh1510CivicMeta=civic;
+const f=scope.rh1510HallFit({w:550,h:320,doorX:1740,doorY:2038},{naturalWidth:civic.hall.width,naturalHeight:civic.hall.height});
+assert.ok(Math.abs(f.left+f.w*civic.hall.door[0]-1740)<.0001,'redesigned guild door preserves interaction X');
+assert.ok(Math.abs(f.top+f.h*civic.hall.door[1]-2044)<.0001,'guild door sill follows original entrance');
+assert.ok(f.h*civic.hall.doorHeight>=95,'guild entrance is taller than the player silhouette');
+assert.ok(civic.hall.windows.some(p=>p.lit)&&civic.hall.windows.some(p=>!p.lit),'varied window illumination');
+assert.equal(civic.hall.flames.length,2);
+for(const [k,m] of Object.entries(civic)){
+ const a=readFileSync(folder+m.file);
+ assert.equal(a.toString('ascii',8,12),'WEBP');
+ assert.ok(a.length>40000&&a.length<400000,k+' compact alpha sprite');
+ assert.ok(m.door[0]>.3&&m.door[0]<.85&&m.door[1]>.85&&m.door[1]<1);
+ if(k!=='hall') assert.ok(198*m.height/m.width*m.doorHeight>=54,k+' doorway human scale');
+}
+console.log('Civic hall entrance alignment, lighting metadata and proportioned service annexes PASS');

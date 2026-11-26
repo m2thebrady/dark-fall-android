@@ -33,9 +33,32 @@ def apply(html: bytes) -> bytes:
     # their indexed splice to avoid shifting the original source positions.
     shoulders={f"{i}-{j}":"data:image/webp;base64,"+base64.b64encode((patch_dir/f"art-v1510/shoulder-{i}-{j}.webp").read_bytes()).decode() for i in range(2) for j in range(2)}
     art+=("const rh1510ShoulderData="+json.dumps(shoulders,separators=(",",":"))+";\n").encode()
+    civic_meta=json.loads((patch_dir/"art-v1510/civic-metadata.json").read_text())
+    art+=("const rh1510CivicMeta="+json.dumps(civic_meta,separators=(",",":"))+";\n").encode()
     js=art+patch_dir.joinpath("royal-haven-v1510.js").read_bytes()
     html=html[:start]+js+b"\n"+html[end:]
     edit(old_gate,revised_gate)
+    # Replace the actual indexed artwork in-place, so every existing projection,
+    # foundation, bounds query and visible instance uses the same revised sprite.
+    def civic_group(symbol, files):
+        nonlocal html
+        rx=rb'const '+symbol.encode()+rb'=\{\};for\(const \[k,src\] of Object.entries\((\{[^\n]+?\})\)'
+        match=re.search(rx,html)
+        if not match:
+            raise ValueError("Missing civic art dictionary: "+symbol)
+        values=json.loads(match.group(1))
+        for key,file in files.items():
+            if key not in values:
+                raise ValueError("Missing civic art key: "+key)
+            values[key]="data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510"/file).read_bytes()).decode()
+        html=html[:match.start(1)]+json.dumps(values,separators=(",",":")).encode()+html[match.end(1):]
+    civic_group("rh193Art",{"hall":civic_meta["hall"]["file"]})
+    civic_group("rh187Art",{k:m["file"] for k,m in civic_meta.items() if k!="hall"})
+    edit("function rh1269Landmark(s,im){const academy=", "function rh1269Landmark(s,im){if(s.type==='future'&&im===rh193Art.hall)return rh1510HallFit(s,im);const academy=")
+    edit("if(k==='mage'||k==='hall')rh1376DrawGlass('landmark:'+k,left,base-h,w,h);",
+         "if(k==='mage')rh1376DrawGlass('landmark:'+k,left,base-h,w,h);if(k==='hall')rh1510HallGlass(left,base-h,w,h);")
+    edit("return [[166,340,11,18],[100,243,18,27]].map(([u,v,w,h],i)=>({x:fit.left+fit.w*u/850,y:fit.top+fit.h*v/499,w:fit.w*w/850,h:fit.h*h/499,base:s.doorY,i,seed:1416+i*19,site:s.name}));",
+         "return rh1510CivicMeta.hall.flames.map(([u,v,w,h],i)=>({x:fit.left+fit.w*u,y:fit.top+fit.h*v,w:fit.w*w,h:fit.h*h,base:s.doorY,i,seed:1416+i*19,site:s.name}));")
     edit("for(const o of ready)c.drawImage(o.im,o.x,o.y,720,650);",
          "for(const o of ready){c.drawImage(o.im,o.x,o.y,720,650);rh1510ShoulderDraw(c,o.x,o.y);}")
     edit("const im=s.type==='future'?rh193Art.hall:rh1451SiteArt(s),fit=rh1365SiteBounds(s);",
@@ -76,7 +99,7 @@ def apply(html: bytes) -> bytes:
     edit("function rh1454FireGeometry(s){return rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire;}", "function rh1454FireGeometry(s){return rh1510ArtPoints(s,'fire')||(rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire);}")
     edit("rh1430PuddleDraw(cx,cy,townTime);", "rh1510Ground(cx,cy);rh1430PuddleDraw(cx,cy,townTime);")
     edit("function rh1432ClearFacades(){rh1510CutawayCanvas=null;", "function rh1432ClearFacades(){rh1510ShoulderReset();rh1510GroundReset();rh1510CutawayCanvas=null;")
-    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),streetArt:rh1510StreetArtStatus,secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
+    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),streetArt:rh1510StreetArtStatus,civicArt:rh1510CivicArtStatus,secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
     edit("rh1457Facade(b,o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;", "rh1457Facade(rh1510HomeContext(b,o,im),o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;")
     edit("if(Number.isFinite(o.flue)&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*o.flue,b.top+(o.flueY===undefined?3:b.h*o.flueY),now,cx,cy,o.x+o.y,'house');", "const updatedFlue=rh1510HomeFlues(o)?.[0];if((updatedFlue||Number.isFinite(o.flue))&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*(updatedFlue?.[0]??o.flue),b.top+(updatedFlue?b.h*updatedFlue[1]:(o.flueY===undefined?3:b.h*o.flueY)),now,cx,cy,o.x+o.y,'house');")
     # Preserve existing draw order and special northern citadel (painted behind the party).

@@ -128,8 +128,8 @@ function rh1510GroundBuild(b,im,site){
  const pad=28,top=Math.floor(b.top+b.h-Math.min(142,b.h*.34)),left=Math.floor(b.left-pad);
  const w=Math.ceil(b.w+2*pad),h=Math.ceil(b.top+b.h+39-top);
  const canvas=rhSurface(w,h),g=canvas.getContext('2d');
- const type=site.type,green=site.name==='Herbalist'||site.name==='Apothecary'||type==='home',soot=type==='forge'||site.name==='Bakery';
- const pale=site.name==='Bakery',wood=site.name==='Fletcher'||site.name==='Leatherworker';
+ const type=site.type,green=site.name==='Herbalist'||site.name==='Apothecary'||site.name==='Herb Workshop'||type==='home',soot=type==='forge'||site.name==='Bakery';
+ const pale=site.name==='Bakery',wood=site.name==='Fletcher'||site.name==='Leatherworker'||site.name==='Storage Annex'||site.name==='Supply Annex';
  const groundY=[];
  function spot(x,y,rx,ry,color){
   g.save();g.translate(x,y);g.scale(rx,ry);
@@ -210,7 +210,7 @@ function rh1510Ground(cx,cy){
  for(const o of rh1464Homes)if(o.large)rh1510GroundHome(o,rh1464Bounds(o),rh1510HomeUpgrade(o)||rh1464Art[o.k],cx,cy);
  for(const o of rh1474Parts)rh1510GroundHome(o,rh1474Bounds(o),rh1474Art[o.k],cx,cy);
  for(const o of rh189Houses)rh1510GroundHome(o,rh1365HouseBounds(o),rh1365HouseImage(o),cx,cy);
- for(const o of rh187Annex)rh1510GroundHome(o,rh1399AnnexBounds(o),o.rebuilt1340?rh1340ServiceArt.herb:rh187Art[o.k],cx,cy);
+ for(const o of rh187Annex)rh1510AnnexEntry(o,rh1399AnnexBounds(o),o.rebuilt1340?rh1340ServiceArt.herb:rh187Art[o.k],cx,cy);
 }
 
 // The four sparse overlays are generated from the town's actual painted ground,
@@ -258,4 +258,44 @@ function rh1510FoundationWear(g,runs,top,depth,seed){
   }
  }
  g.restore();
+}
+
+// Civic buildings use the same door/footing coordinate as the existing town.
+// The hall's redesigned oak entrance, recessed stonework and moving lamps
+// receive dedicated artwork-aligned measurements, not the old window mask.
+function rh1510HallFit(s,im){
+ const w=s.w*.99,h=Math.max(s.h*.98,w*im.naturalHeight/im.naturalWidth),[u,v]=rh1510CivicMeta.hall.door;
+ return {left:s.doorX-w*u,top:s.doorY+6-h*v,w,h,base:s.doorY+6+h*(1-v)};
+}
+function rh1510HallGlass(x,y,w,h){
+ const night=rh1433Day().night;
+ c.save();
+ try{
+  for(const pane of rh1510CivicMeta.hall.windows){
+   const pts=pane.points;
+   c.save();c.beginPath();pts.forEach(([u,v],i)=>i?c.lineTo(x+w*u,y+h*v):c.moveTo(x+w*u,y+h*v));c.closePath();c.clip();
+   const left=Math.min(...pts.map(p=>p[0])),right=Math.max(...pts.map(p=>p[0])),top=Math.min(...pts.map(p=>p[1])),bottom=Math.max(...pts.map(p=>p[1]));
+   if(pane.lit){
+    // A warm occupied room becomes slightly more apparent after dusk.
+    c.fillStyle=`rgba(255,174,82,${.035+night*.095})`;
+   }else{
+    c.fillStyle=`rgba(33,44,54,${.04+night*.14})`;
+   }
+   c.fillRect(x+w*left,y+h*top,w*(right-left),h*(bottom-top));c.restore();
+  }
+ }finally{c.restore();}
+}
+function rh1510AnnexEntry(o,b,im,cx,cy){
+ if(!b)return;
+ const m=!o.rebuilt1340&&rh1510CivicMeta[o.k];
+ if(!m){rh1510GroundHome(o,b,im,cx,cy);return;}
+ rh1510GroundEntry(o,b,im,{name:m.name,type:'annex',doorX:b.left+b.w*m.door[0],doorY:b.top+b.h*m.door[1]},cx,cy);
+}
+function rh1510CivicArtStatus(){
+ const hall=rh193Art.hall,site=sites.find(s=>s.type==='future'),fit=site&&rh1365SiteBounds(site);
+ const annexes=Object.entries(rh1510CivicMeta).filter(([k])=>k!=='hall').map(([k,m])=>({
+  key:k,ready:rh187Ready(k),width:rh187Art[k].naturalWidth,height:rh187Art[k].naturalHeight,
+  instances:rh187Annex.filter(o=>o.k===k&&!o.rebuilt1340).map(o=>({x:o.x,y:o.y,w:o.w,doorHeight:Math.round(o.w*rh187Art[k].naturalHeight/rh187Art[k].naturalWidth*m.doorHeight)}))
+ }));
+ return {hallReady:!!hall?.complete&&hall.naturalWidth>1,hallDoorHeight:fit?Math.round(fit.h*rh1510CivicMeta.hall.doorHeight):null,hallDoorAligned:fit?Math.abs(fit.left+fit.w*rh1510CivicMeta.hall.door[0]-site.doorX)<.01:false,annexes};
 }

@@ -86,9 +86,20 @@ try {
     await page.waitForFunction(()=>{const k=window.DarkFallRoyalHaven.streetArt();return k.gateReady&&k.shoulderTiles===4&&k.loadedShoulders>0&&k.shoulderDraws>0;},{},{timeout:30000});
     await page.waitForTimeout(4000);
     const streetArt=await page.evaluate(()=>window.DarkFallRoyalHaven.streetArt());
+    await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.civicArt();return a.hallReady&&a.annexes.length===3&&a.annexes.every(o=>o.ready);},{},{timeout:30000});
+    const civicArt=await page.evaluate(()=>window.DarkFallRoyalHaven.civicArt());
+    if(!civicArt.hallDoorAligned||civicArt.hallDoorHeight<95||!civicArt.annexes.some(o=>o.instances.length)||
+       civicArt.annexes.some(o=>o.instances.some(o=>o.doorHeight<54)))throw new Error('Revised civic building geometry audit failed: '+JSON.stringify(civicArt));
+    console.log('Royal Haven civic building readiness',JSON.stringify(civicArt));
     console.log('Royal Haven gate / ground readiness',streetArt);
     await page.screenshot({path:resolve(out,'royal-haven-exterior.png'),timeout:30000});
-    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,errors},null,2));
+    // Walk north toward the civic hall to review the complete building at play scale.
+    await page.keyboard.down('ArrowUp');
+    await page.waitForTimeout(1000);
+    await page.keyboard.up('ArrowUp');
+    await page.waitForTimeout(1200);
+    await page.screenshot({path:resolve(out,'royal-haven-civic-hall.png'),timeout:30000});
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,errors},null,2));
     if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
   }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.
