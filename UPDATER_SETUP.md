@@ -13,7 +13,7 @@ After this branch is tested and merged to main, open Actions → **Publish signe
 
 **Important:** The existing debug-signed app likely cannot update directly to this release-signed APK. Back up local progress if applicable; you may need to uninstall the debug version **once** before installing the release APK. Afterward, all releases must use the **same keystore, alias, package ID, and increasing versionCode**.
 
-For future releases, increment versionCode/versionName, adjust `scripts/validate_project.py`, update the game HTML if needed, then run the publish workflow. Do not reuse an existing release version.
+For future releases, increment versionCode/versionName, regenerate the compressed game parts and manifest in `game-bundle/`, then run the publish workflow. The static validator checks the bundled version and SHA-256 automatically. Do not reuse an existing release version.
 
 Android still requires user approval for each APK installation and may request one-time permission to install from Dark Fall. The app never silently installs updates.
 

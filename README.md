@@ -1,4 +1,16 @@
-# Dark Fall V988 — first APK build verification milestone
+# Dark Fall V1509 — Royal Haven Craft and Arcane Interiors
+
+The Android app now bundles the original V1509 HTML, reconstructed from individually compressed, checksummed files in `game-bundle/`. The original HTML is over GitHub's per-file limit, so it is generated locally, not tracked directly.
+
+## Build and update
+- Install Python 3.11+ and Java 17. For Android Studio, use **Build APK**; Gradle runs the bundle materialization task automatically. Set `DARKFALL_PYTHON` if a custom Python executable is needed.
+- To reconstruct the browser game or run source audits, execute `python3 scripts/materialize_game.py` from the repository root.
+- Android versionCode: **1509** / versionName: **0.1509**; application ID and signing configuration are unchanged.
+- The GitHub Actions publish workflow creates `v1509` with `dark-fall.apk` once the signed build succeeds. Verify gameplay and upgrade on a real Android device before treating this build as production-ready.
+- See [UPDATER_SETUP.md](UPDATER_SETUP.md) for the existing signing and update setup.
+
+## Historical notes
+### V988 — first APK build verification milestone
 
 **This ZIP is an Android Studio / GitHub Actions project, not an APK.** The game asset is identical to the V987 project (which retains V983 gameplay); no fire repairs were imported.
 

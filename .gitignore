@@ -9,3 +9,6 @@ app/build/
 .private-signing/
 *.jks
 *.keystore
+
+# Generated from the verified game bundle
+/app/src/main/assets/index.html

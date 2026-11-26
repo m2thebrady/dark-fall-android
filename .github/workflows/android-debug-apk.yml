@@ -5,6 +5,8 @@ on:
     branches: [main, feature/in-game-updater-v989]
     paths:
       - 'app/**'
+      - 'game-bundle/**'
+      - 'scripts/materialize_game.py'
       - '*.gradle'
       - 'gradle.properties'
       - '.github/workflows/android-debug-apk.yml'
@@ -37,6 +39,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Materialize verified bundled game
+        run: python3 scripts/materialize_game.py
       - name: Validate project and bundled game
         run: python3 scripts/validate_project.py
       - name: Build debug APK (first installation fallback)
@@ -49,7 +53,7 @@ jobs:
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: Dark-Fall-V989-Debug-APK
+          name: Dark-Fall-V1509-Debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
@@ -76,7 +80,7 @@ jobs:
         if: ${{ env.HAS_SIGNING_KEY == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: Dark-Fall-V989-Signed-APK
+          name: Dark-Fall-V1509-Signed-APK
           path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
           retention-days: 14
