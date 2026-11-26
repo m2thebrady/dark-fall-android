@@ -152,3 +152,25 @@ const fn=scope.rh1512Noise;
 assert.ok(Math.abs(fn(240-.01,240,52,84,1512)-fn(240+.01,240,52,84,1512))<.001,'continuous material noise across tile seam');
 assert.notEqual(fn(120,220,52,84,1512),fn(120,460,52,84,1512),'weathering varies across repeated source tiles');
 console.log('Five new architectural/merchant assets, four distinct market variants and continuous wall wear PASS');
+
+const rowDir='game-bundle/patches/art-v1513/';
+const layout=JSON.parse(readFileSync(rowDir+'layout-metadata.json','utf8'));
+assert.deepEqual(Object.keys(layout.shops).sort(),['Apothecary','Bakery','Tailor']);
+assert.deepEqual(Object.keys(layout.court).sort(),['rh1474gallery','rh1474rear','rh1474tower']);
+for(const [name,m] of Object.entries({...layout.shops,...layout.court})){
+ const bytes=readFileSync(rowDir+m.file);
+ assert.equal(bytes.toString('ascii',8,12),'WEBP');
+ assert.ok(bytes.length>25000&&bytes.length<500000,name+' compact alpha art');
+ for(const p of m.flues)assert.ok(p.every(v=>v>=0&&v<=1));
+}
+for(const [name,m] of Object.entries(layout.shops)){
+ const g=m.geometry;
+ assert.equal(g.doorWorld[1],1963,'shared straight street entrance line');
+ assert.ok(Math.abs(g.left+g.w*m.door[0])<.002);
+ assert.ok(Math.abs(g.top+g.h*m.door[1])<.002);
+ assert.ok(g.height>=78&&g.doorWidth>=50,name+' believable door scale');
+ assert.ok(g.parts.every(p=>p.every((v,i)=>{const u=p[(i+1)%p.length];return v[0]===u[0]||v[1]===u[1]})),name+' square street-aligned footprint');
+}
+assert.ok(layout.court.rh1474tower.door[0]<.4&&layout.court.rh1474rear.door[0]>.55,'both courtyard houses face each other');
+assert.equal(layout.courtyard.routes.length,3,'two outward connections plus shared courtyard crossing');
+console.log('Six new aligned assets, street-aligned geometry, original interaction coordinates and inward courtyard PASS');
