@@ -308,3 +308,23 @@ assert.equal(perfCtx.rh1518StreetTiles(0,0).length,4);
 assert.equal(perfCtx.rh1518StreetTiles(1,1).length,9);
 assert.equal(perfCtx.rh1518StreetTiles(640,360).length,4);
 console.log('Optimized world noise, bounded cutaway rectangle, raster budget, and tile coverage PASS');
+
+// Exterior-only 12% zoom and exact inverse cursor projection.
+const nav=vm.createContext({W:1280,H:720,WORLD_W:6460,WORLD_H:2600});
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1519.js','utf8'),nav);
+const q19=nav.rh1519Camera(3100,1750);
+assert.equal(q19.zoom,1.12);assert.ok(Math.abs(q19.w-1280/1.12)<1e-9);
+assert.ok(Math.abs((3100-q19.x)*q19.zoom-640)<1e-9);
+assert.ok(Math.abs((1750-q19.y)*q19.zoom-360)<1e-9);
+const click19=nav.rh1519WorldPoint(640,360,q19.x,q19.y);
+assert.ok(Math.hypot(click19.x-3100,click19.y-1750)<1e-9);
+const edge19=nav.rh1519Camera(6440,2535);
+assert.ok(Math.abs(edge19.x+edge19.w-6460)<1e-9&&edge19.y+edge19.h<=2600+1e-9);
+assert.equal(vm.runInContext('rh1519IsBench',nav)({k:'woodbench'}),true);assert.equal(vm.runInContext('rh1519IsBench',nav)({k:'plazaBench'}),true);assert.equal(vm.runInContext('rh1519IsBench',nav)({k:'barrel'}),false);
+const walk19=nav.rh1519Walk;
+const v19={x:0,y:0};walk19(v19,100,0,()=>false);assert.ok(Math.abs(v19.x-100)<.001&&v19.y===0);
+const wall19={x:0,y:0};walk19(wall19,100,0,(x,y)=>x>=20&&x<=38&&Math.abs(y)<100);assert.ok(wall19.x<20&&wall19.y===0);
+const corner19={x:0,y:0};for(let i=0;i<14;i++)walk19(corner19,8,0,(x,y)=>x>=20&&x<=38&&Math.abs(y)<8);
+assert.ok(corner19.x>38&&Math.abs(corner19.y)>=8,'short corner is bypassed without entering solid footprint');
+const diagonal19={x:0,y:0};walk19(diagonal19,50,50,(x,y)=>x>=20&&x<=38&&Math.abs(y)<100);assert.ok(diagonal19.x<20&&diagonal19.y>45);
+console.log('Exterior camera projection, viewport edges, no wall tunneling, short-corner assistance and diagonal sliding PASS');
