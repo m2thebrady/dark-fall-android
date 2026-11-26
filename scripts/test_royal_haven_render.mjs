@@ -174,3 +174,26 @@ for(const [name,m] of Object.entries(layout.shops)){
 assert.ok(layout.court.rh1474tower.door[0]<.4&&layout.court.rh1474rear.door[0]>.55,'both courtyard houses face each other');
 assert.equal(layout.courtyard.routes.length,3,'two outward connections plus shared courtyard crossing');
 console.log('Six new aligned assets, street-aligned geometry, original interaction coordinates and inward courtyard PASS');
+
+const westDir='game-bundle/patches/art-v1514/';
+const west=JSON.parse(readFileSync(westDir+'layout-metadata.json','utf8'));
+assert.deepEqual(Object.keys(west.shops).sort(),['Enchanter','Fletcher','Herbalist']);
+assert.equal(west.homeShift,-36);
+for(const [name,m] of Object.entries({...west.shops,gate:west.gate})){
+ const bytes=readFileSync(westDir+m.file);
+ assert.equal(bytes.toString('ascii',8,12),'WEBP');
+ assert.ok(bytes.length>25000&&bytes.length<500000,name+' compact transparent art');
+ assert.ok(m.width>300&&m.height>300);
+}
+for(const [name,m] of Object.entries(west.shops)){
+ const g=m.geometry;
+ assert.equal(g.doorWorld[1],1963);
+ assert.ok(Math.abs(g.left+g.w*m.door[0])<.002);
+ assert.ok(Math.abs(g.top+g.h*m.door[1])<.002);
+ assert.ok(g.height>=78&&g.doorWidth>=50,name+' human-scale entrance');
+ assert.ok(g.parts.every(p=>p.every((v,i)=>{const u=p[(i+1)%p.length];return v[0]===u[0]||v[1]===u[1]})));
+}
+assert.ok(west.gate.geometry.archWidth>=100&&west.gate.geometry.archHeight>=118);
+assert.equal(west.gate.geometry.polyParts.length,2);
+assert.ok(west.gate.geometry.walk.every(p=>p[0]===west.gate.geometry.walk[0][0]),'straight open passage');
+console.log('Four front-facing sprites, recessed homes, preserved shop doors and square passage PASS');
