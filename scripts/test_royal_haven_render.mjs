@@ -133,3 +133,22 @@ assert.equal(doorRows({x:200,y:130,doorWorldOffset:15,doorHeight:80})[0][0],215)
 assert.equal(doorRows({doors:[[210,110,85],[245,115,73]]}).length,2);
 assert.equal(doorRows({archWidth:100,archHeight:120}).length,0,'open arch and bell court do not fabricate thresholds');
 console.log('Nine eastern district assets and preserved multi-door geometry PASS');
+
+const fortDir='game-bundle/patches/art-v1512/';
+const fort=JSON.parse(readFileSync(fortDir+'fortification-metadata.json','utf8'));
+assert.deepEqual(Object.keys(fort).sort(),['pottery','spice','tower0','tower1','tower2']);
+for(const [k,m] of Object.entries(fort)){
+ const a=readFileSync(fortDir+m.file);
+ assert.equal(a.toString('ascii',8,12),'WEBP');
+ assert.ok(a.length>15000&&a.length<500000,k+' compact alpha art');
+ assert.ok(m.width>240&&m.height>240);
+}
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1512.js','utf8'),scope);
+assert.equal(scope.rh1512MarketVariant({k:'stall1',x:5845,y:2084}),'spice');
+assert.equal(scope.rh1512MarketVariant({k:'stall0',x:6240,y:2085}),'pottery');
+assert.equal(scope.rh1512MarketVariant({k:'stall0',x:5925,y:1845}),null);
+assert.equal(scope.rh1512MarketVariant({k:'stall1',x:6240,y:1890}),null);
+const fn=scope.rh1512Noise;
+assert.ok(Math.abs(fn(240-.01,240,52,84,1512)-fn(240+.01,240,52,84,1512))<.001,'continuous material noise across tile seam');
+assert.notEqual(fn(120,220,52,84,1512),fn(120,460,52,84,1512),'weathering varies across repeated source tiles');
+console.log('Five new architectural/merchant assets, four distinct market variants and continuous wall wear PASS');

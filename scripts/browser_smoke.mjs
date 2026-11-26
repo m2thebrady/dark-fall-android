@@ -79,7 +79,7 @@ try {
   await writeFile(resolve(out, 'report.json'), JSON.stringify({ status, errors }, null, 2));
   console.log(JSON.stringify({ status, errors: errors.slice(0, 12) }, null, 2));
   if (!status.canvases) throw new Error('Game canvas not found');
-  if(['Dark Fall V1510','Dark Fall V1511'].includes(status.title)){
+  if(['Dark Fall V1510','Dark Fall V1511','Dark Fall V1512'].includes(status.title)){
     // The built-in entry point is used for an exterior runtime smoke, not a modified game.
     await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven?.exteriorArt?.();return a?.length===16&&a.every(s=>s.ready&&(!s.active||s.bounds))&&window.DarkFallRoyalHaven.secondaryArt().every(s=>s.ready);},{},{timeout:45000});
     const art=await page.evaluate(()=>({stores:window.DarkFallRoyalHaven.exteriorArt(),homes:window.DarkFallRoyalHaven.secondaryArt()}));
@@ -116,7 +116,7 @@ try {
     await page.screenshot({path:resolve(out,'royal-haven-market.png'),timeout:30000});
     await writeFile(resolve(out,'royal-haven-market-audit.json'),JSON.stringify(marketArt,null,2));
     let districtArt=null;
-    if(status.title==='Dark Fall V1511'){
+    if(['Dark Fall V1511','Dark Fall V1512'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.districtArt();return a.assets.length===9&&a.assets.every(o=>o.ready);},{},{timeout:30000});
       // Review each revised neighborhood in the real game, while the explicit
       // audit-only camera option keeps test positioning out of normal gameplay.
@@ -139,7 +139,23 @@ try {
         throw new Error('Eastern district placement/walkway audit failed: '+JSON.stringify(districtArt));
       console.log('Royal Haven eastern district audit PASS',JSON.stringify(districtArt));
     }
-    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,marketArt,districtArt,errors},null,2));
+    let fortificationArt=null;
+    if(status.title==='Dark Fall V1512'){
+      await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.fortificationArt();return a.towers.every(o=>o.ready)&&a.market.every(o=>o.ready);},{},{timeout:30000});
+      for(const key of ['market','south','west','east','middle']){
+        await page.evaluate(k=>window.DarkFallRoyalHaven.reviewFortifications(k),key);
+        await page.waitForTimeout(1700);
+        await page.screenshot({path:resolve(out,'royal-haven-fortification-'+key+'.png'),timeout:30000});
+      }
+      fortificationArt=await page.evaluate(()=>window.DarkFallRoyalHaven.fortificationArt());
+      await writeFile(resolve(out,'royal-haven-fortification-audit.json'),JSON.stringify(fortificationArt,null,2));
+      if(fortificationArt.towers.length!==3||fortificationArt.towers.reduce((n,o)=>n+o.instances.length,0)!==8||
+         new Set(fortificationArt.market.map(o=>o.key)).size!==4||fortificationArt.market.length!==4||
+         !fortificationArt.sideTiles||!fortificationArt.curtainTiles||!fortificationArt.footTiles||!fortificationArt.towerContacts)
+        throw new Error('Fortification and market audit failed: '+JSON.stringify(fortificationArt));
+      console.log('Royal Haven fortification & market diversity audit PASS',JSON.stringify(fortificationArt));
+    }
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,marketArt,districtArt,fortificationArt,errors},null,2));
     if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
   }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.
