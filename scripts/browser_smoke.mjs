@@ -102,14 +102,23 @@ try {
     const first=page.locator('.chooseCard').first();
     if(await first.isVisible())await first.click({timeout:15000});
     if(status.title==='Dark Fall V1539'){
+      // Class selection automatically opens Royal Haven. Switch to the actual
+      // forest through the supported API before testing its layout and controls.
+      await page.waitForFunction(()=>window.DarkFallRoyalHaven?.active,{},{timeout:30000});
+      await page.evaluate(()=>window.DarkFallRoyalHaven.close());
+      await page.waitForFunction(()=>!window.dfTownActive&&!window.DarkFallRoyalHaven.active,{},{timeout:20000});
       const samples=[];
       const waitViewport=async()=>{
         await page.waitForFunction(()=>{
           const f=window.DarkFallForestViewport?.();
-          return !!f&&Math.abs(f.wrap.x)<1&&Math.abs(f.wrap.y)<1&&Math.abs(f.wrap.width-innerWidth)<2&&Math.abs(f.wrap.height-innerHeight)<2&&
+          return !!f&&!window.dfTownActive&&!window.DarkFallRoyalHaven.active&&Math.abs(f.wrap.x)<1&&Math.abs(f.wrap.y)<1&&Math.abs(f.wrap.width-innerWidth)<2&&Math.abs(f.wrap.height-innerHeight)<2&&
             Math.abs(f.css.x-f.stage.x)<1&&Math.abs(f.css.y-f.stage.y)<1&&Math.abs(f.css.width-f.stage.width)<1&&Math.abs(f.css.height-f.stage.height)<1&&
             Math.abs(f.css.x)<1&&Math.abs(f.css.width-innerWidth)<2&&Math.abs(f.css.y+f.css.height-innerHeight)<2&&f.scaleMismatch<.005&&f.pointerError<1e-7&&f.area<=f.cap&&
             f.logical[0]===f.backing[0]&&f.logical[1]===f.backing[1]&&f.camera&&f.player;
+        },{},{timeout:20000});
+        await page.waitForFunction(()=>{
+          const c=document.getElementById('screen');
+          return c.getContext('2d').getImageData(Math.floor(c.width/2),Math.floor(c.height/2),1,1).data[3]===255;
         },{},{timeout:20000});
         return await page.evaluate(()=>window.DarkFallForestViewport());
       };
