@@ -27,6 +27,8 @@ jobs:
         run: python3 scripts/validate_project.py
       - name: Check HTML and JavaScript
         run: python3 scripts/preflight_game.py
+      - name: Test Royal Haven weathering and occlusion geometry
+        run: node scripts/test_royal_haven_render.mjs
       - name: Audit sprite and rendering sources
         run: python3 scripts/audit_sprites.py
       - name: Install asset-tool dependencies

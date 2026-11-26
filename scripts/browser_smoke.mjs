@@ -10,6 +10,37 @@ const errors = [];
 page.on('pageerror', err => errors.push(String(err)));
 page.on('console', msg => { if (msg.type() === 'error') errors.push('console: ' + msg.text()); });
 try {
+  // Real Canvas2D compositing regression, including scaled/translated camera transforms.
+  const probe=await browser.newPage();
+  await probe.setContent('<canvas id="scene" width="256" height="240"></canvas>');
+  await probe.addScriptTag({content:`
+    let c=document.getElementById('scene').getContext('2d'),p={x:140,y:140};
+    function rhSurface(w,h){const a=document.createElement('canvas');a.width=w;a.height=h;return a;}
+  `});
+  await probe.addScriptTag({content:await readFile('game-bundle/patches/royal-haven-v1510.js','utf8')});
+  const cutaway=await probe.evaluate(()=>{
+    const main=c;
+    c.fillStyle='#983027';c.fillRect(0,0,256,240);
+    c.setTransform(.8,0,0,.8,12,16);
+    const bounds={left:20,top:10,w:240,h:195};
+    let draws=0;
+    const facade=()=>{draws++;c.fillStyle='#b2b5b9';c.fillRect(bounds.left,bounds.top,bounds.w,bounds.h);};
+    rh1457Facade(bounds,205,facade);
+    const pixel=(x,y)=>Array.from(main.getImageData(Math.floor(x*.8+12),Math.floor(y*.8+16),1,1).data);
+    const center=pixel(140,109),feet=pixel(140,140),feather=pixel(179,109),roof=pixel(70,60),street=pixel(10,10);
+    const behindDraws=draws,restored=c===main&&main.getTransform().a===.8;
+    p.y=220;rh1457Facade(bounds,205,facade);
+    const front=pixel(140,109);
+    return {center,feet,feather,roof,street,front,behindDraws,draws,restored};
+  });
+  await probe.close();
+  if(cutaway.center[1]>75||cutaway.feet[1]>85||cutaway.feather[1]<=cutaway.center[1]||
+     cutaway.roof[1]<170||cutaway.front[1]<170||cutaway.street[1]!==48||
+     cutaway.behindDraws!==1||cutaway.draws!==2||!cutaway.restored||
+     [cutaway.center,cutaway.feet,cutaway.street,cutaway.roof].some(p=>p[3]!==255))
+    throw new Error('Royal Haven cutaway pixel test failed: '+JSON.stringify(cutaway));
+  await writeFile(resolve(out,'royal-haven-cutaway.json'),JSON.stringify(cutaway,null,2));
+  console.log('Royal Haven cutaway pixel test PASS',cutaway);
   await page.goto('file://' + resolve('app/src/main/assets/index.html'), { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(5000);
   const status = await page.evaluate(() => ({
@@ -39,6 +70,15 @@ try {
   await writeFile(resolve(out, 'report.json'), JSON.stringify({ status, errors }, null, 2));
   console.log(JSON.stringify({ status, errors: errors.slice(0, 12) }, null, 2));
   if (!status.canvases) throw new Error('Game canvas not found');
+  if(status.title==='Dark Fall V1510'){
+    // The built-in entry point is used for an exterior runtime smoke, not a modified game.
+    const town=await page.evaluate(()=>{const api=window.DarkFallRoyalHaven;if(!api)return false;api.open();return api.active;});
+    if(!town)throw new Error('Royal Haven failed to open');
+    await page.waitForTimeout(4000);
+    await page.screenshot({path:resolve(out,'royal-haven-exterior.png'),timeout:30000});
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,errors},null,2));
+    if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
+  }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.
   // Do not fail on transparent samples until the active rendering canvas is identified.
   if (status.canvasDimensions.some(c => c.width <= 0 || c.height <= 0)) throw new Error('Invalid canvas pixel dimensions');
