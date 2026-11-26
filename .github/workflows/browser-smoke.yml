@@ -28,22 +28,6 @@ jobs:
           node --input-type=module -e "import {chromium} from 'playwright'; const b=await chromium.launch({headless:true});await b.close();" || npx playwright install-deps chromium
       - name: Materialize verified bundled game
         run: python3 scripts/materialize_game.py
-      - name: Build isolated V1526 treatment candidate
-        id: v1526
-        run: |
-          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-          python3 scripts/build_v1526_candidate.py
-      - name: Archive V1526 exact baked assets and candidate manifest
-        if: steps.v1526.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: dark-fall-v1526-baked-assets
-          path: |
-            game-bundle/patches/art-v1526/baked/
-            browser-smoke-results/candidate-manifest.json
-            browser-smoke-results/v1526-garden-bake-preview.png
-          if-no-files-found: error
-          retention-days: 14
       - name: Run browser startup test
         run: node scripts/browser_smoke.mjs
       - name: Verify screenshot artifacts
@@ -60,7 +44,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: dark-fall-v1526-playable-html
+          name: dark-fall-playable-html
           path: app/src/main/assets/index.html
           if-no-files-found: error
           retention-days: 14
