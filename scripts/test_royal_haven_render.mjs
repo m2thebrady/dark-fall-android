@@ -351,3 +351,33 @@ for(const site of [cellSite,{name:'Caster Guild',doorX:3090,doorY:632},{name:'Da
  assert.ok(b.w*b.h<30000&&b.shape.every(([x,y])=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h));
 }
 console.log('Three distinct WebP landmarks, measured entrance fit and bounded natural approach patches PASS');
+
+// A single continuous world-scale ground plan replaces the old overlapping
+// road rasters. Exact tile coverage, dimensions and route bounds are immutable.
+const cityGroundDir='game-bundle/patches/art-v1521/';
+const cityPlan=JSON.parse(readFileSync(cityGroundDir+'layout.json','utf8'));
+assert.equal(cityPlan.width,6460);assert.equal(cityPlan.height,2600);
+assert.equal(cityPlan.marketMoves.length,6);
+assert.ok(cityPlan.roads.length>=31&&cityPlan.courts.length>=20);
+assert.ok(cityPlan.roads.every(r=>r.width>=50&&r.points.length>=2&&r.points.every(([x,y])=>x>=0&&x<=6460&&y>=0&&y<=2600)));
+assert.ok(cityPlan.courts.every(r=>r.poly.length>=4&&r.poly.every(([x,y])=>x>=0&&x<=6460&&y>=0&&y<=2600)));
+for(let y=1;y<=3;y++)for(let x=0;x<9;x++){
+ const b=readFileSync(cityGroundDir+'ground-'+x+'-'+y+'.webp');
+ assert.equal(b.subarray(0,4).toString(),'RIFF');assert.equal(b.subarray(8,12).toString(),'WEBP');
+ assert.ok(b.length>10000);
+}
+// Legacy layered paving runs only on northern/southern transitional views or
+// while visible tiles are decoding. Interior streets require no legacy raster.
+const terrainMock=new Map([['2:2',{complete:true,naturalWidth:720,naturalHeight:650}]]);
+const ground21ctx=vm.createContext({rh1521Plan:cityPlan,rh119ChunkImages:terrainMock,WORLD_W:6460,c:{save(){},restore(){},beginPath(){},rect(){},clip(){}}});
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1521.js','utf8'),ground21ctx);
+assert.equal(ground21ctx.rh1521Ready(1440,1300,720,650),true);
+assert.equal(ground21ctx.rh1521Ready(1440,1300,721,650),false);
+let oldGroundCalls=0;
+ground21ctx.rh1521LegacyGround(1800,1000,900,650,true,()=>oldGroundCalls++);
+assert.equal(oldGroundCalls,0);
+ground21ctx.rh1521LegacyGround(1800,1000,900,650,false,()=>oldGroundCalls++);
+assert.equal(oldGroundCalls,1);
+ground21ctx.rh1521LegacyGround(1800,600,900,650,true,()=>oldGroundCalls++);
+assert.equal(oldGroundCalls,2);
+console.log('27 continuous terrain tiles, 31 planned routes, spacious market and skipped legacy road overlays PASS');
