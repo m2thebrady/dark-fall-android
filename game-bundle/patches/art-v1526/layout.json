@@ -1,0 +1,206 @@
+{
+  "version": 1526,
+  "tileWidth": 720,
+  "tileHeight": 650,
+  "world": [
+    6460,
+    2600
+  ],
+  "sourceAtlas": "garden-atlas.png",
+  "kinds": [
+    "kitchen",
+    "verge",
+    "herb",
+    "yard"
+  ],
+  "gardens": [
+    {
+      "name": "Northcourt kitchen garden",
+      "x": 3890,
+      "y": 1140,
+      "w": 135,
+      "h": 54,
+      "kind": "kitchen",
+      "roadClearance": 34,
+      "flip": false,
+      "tone": 0.82
+    },
+    {
+      "name": "Northcourt cottage verge",
+      "x": 4280,
+      "y": 1160,
+      "w": 135,
+      "h": 43,
+      "kind": "verge",
+      "roadClearance": 55.5,
+      "flip": true,
+      "tone": 0.87
+    },
+    {
+      "name": "Gatehouse herb garden",
+      "x": 4640,
+      "y": 1330,
+      "w": 74,
+      "h": 30,
+      "kind": "herb",
+      "roadClearance": 5.3,
+      "flip": false,
+      "tone": 0.8
+    },
+    {
+      "name": "Gatehouse flowering verge",
+      "x": 4810,
+      "y": 1170,
+      "w": 154,
+      "h": 54,
+      "kind": "verge",
+      "roadClearance": 20.5,
+      "flip": false,
+      "tone": 0.85
+    },
+    {
+      "name": "Longhouse kitchen plot",
+      "x": 5480,
+      "y": 1240,
+      "w": 135,
+      "h": 43,
+      "kind": "kitchen",
+      "roadClearance": 138.5,
+      "flip": true,
+      "tone": 0.82
+    },
+    {
+      "name": "Foundry cottage verge",
+      "x": 3950,
+      "y": 1870,
+      "w": 86,
+      "h": 30,
+      "kind": "verge",
+      "roadClearance": 5.3,
+      "flip": false,
+      "tone": 0.87
+    },
+    {
+      "name": "Craft herb garden",
+      "x": 4170,
+      "y": 1960,
+      "w": 154,
+      "h": 62,
+      "kind": "herb",
+      "roadClearance": 15.2,
+      "flip": false,
+      "tone": 0.8
+    },
+    {
+      "name": "South cottage kitchen garden",
+      "x": 4530,
+      "y": 2190,
+      "w": 135,
+      "h": 54,
+      "kind": "kitchen",
+      "roadClearance": 15,
+      "flip": true,
+      "tone": 0.85
+    },
+    {
+      "name": "South cottage yard edge",
+      "x": 4760,
+      "y": 2230,
+      "w": 135,
+      "h": 43,
+      "kind": "yard",
+      "roadClearance": 31.5,
+      "flip": false,
+      "tone": 0.82
+    },
+    {
+      "name": "East residence kitchen plot",
+      "x": 5000,
+      "y": 2180,
+      "w": 98,
+      "h": 39,
+      "kind": "kitchen",
+      "roadClearance": 5.3,
+      "flip": false,
+      "tone": 0.87
+    },
+    {
+      "name": "East residence flowering verge",
+      "x": 5430,
+      "y": 1960,
+      "w": 135,
+      "h": 54,
+      "kind": "verge",
+      "roadClearance": 15,
+      "flip": true,
+      "tone": 0.8
+    },
+    {
+      "name": "South herb plot",
+      "x": 4310,
+      "y": 2270,
+      "w": 154,
+      "h": 62,
+      "kind": "herb",
+      "roadClearance": 36.5,
+      "flip": false,
+      "tone": 0.85
+    },
+    {
+      "name": "Merchant herb garden",
+      "x": 2490,
+      "y": 2190,
+      "w": 150,
+      "h": 60,
+      "kind": "herb",
+      "roadClearance": 5.6,
+      "flip": false,
+      "tone": 0.82
+    },
+    {
+      "name": "Western cottage verge",
+      "x": 1350,
+      "y": 2200,
+      "w": 135,
+      "h": 43,
+      "kind": "verge",
+      "roadClearance": 10.5,
+      "flip": true,
+      "tone": 0.87
+    },
+    {
+      "name": "Western kitchen garden",
+      "x": 1070,
+      "y": 1800,
+      "w": 154,
+      "h": 54,
+      "kind": "kitchen",
+      "roadClearance": 39,
+      "flip": false,
+      "tone": 0.8
+    }
+  ],
+  "review": {
+    "north": [
+      4070,
+      984
+    ],
+    "gatehouse": [
+      4630,
+      1270
+    ],
+    "east": [
+      5220,
+      2075
+    ],
+    "south": [
+      4630,
+      2410
+    ],
+    "west": [
+      865,
+      2075
+    ]
+  },
+  "notes": "Decorative ground texture only; no new colliders. Preserve V1525 homes and all walking routes."
+}
