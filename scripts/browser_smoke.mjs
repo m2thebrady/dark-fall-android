@@ -83,9 +83,12 @@ try {
     if(await first.isVisible())await first.click({timeout:15000});
     const town=await page.evaluate(()=>{const api=window.DarkFallRoyalHaven;if(!api)return false;api.open();return api.active;});
     if(!town)throw new Error('Royal Haven failed to open');
+    await page.waitForFunction(()=>{const k=window.DarkFallRoyalHaven.streetArt();return k.gateReady&&k.shoulderTiles===4&&k.loadedShoulders>0&&k.shoulderDraws>0;},{},{timeout:30000});
     await page.waitForTimeout(4000);
+    const streetArt=await page.evaluate(()=>window.DarkFallRoyalHaven.streetArt());
+    console.log('Royal Haven gate / ground readiness',streetArt);
     await page.screenshot({path:resolve(out,'royal-haven-exterior.png'),timeout:30000});
-    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,errors},null,2));
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,errors},null,2));
     if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
   }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.

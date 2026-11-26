@@ -2,6 +2,7 @@
 from pathlib import Path
 import json
 import base64
+import re
 
 def apply(html: bytes) -> bytes:
     def edit(old: str, new: str):
@@ -21,8 +22,26 @@ def apply(html: bytes) -> bytes:
     metadata.update(json.loads((patch_dir/"art-v1510/variant-metadata.json").read_text()))
     assets={name:"data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510"/item["file"]).read_bytes()).decode() for name,item in metadata.items()}
     art=("const rh1510ArtMeta="+json.dumps(metadata,separators=(",",":"))+";\nconst rh1510Art={};for(const [name,src] of Object.entries("+json.dumps(assets,separators=(",",":"))+")){const im=rh1200Image();im.src=src;rh1510Art[name]=im;}\n").encode()
+    # Replace only the gate sprite's artwork; original world geometry, animated
+    # banner/flame anchors and cutaway remain unchanged.
+    gate=re.search(rb'const rh118Images=\{\};for\(const \[k,v\] of Object.entries\((\{[^\n]+?\})\)',html)
+    if not gate:
+        raise ValueError("Gate image dictionary not found")
+    old_gate=json.loads(gate.group(1))["gate"]
+    revised_gate="data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510/forest-gate-revised.webp").read_bytes()).decode()
+    # Gate dictionary is located earlier than the cutaway anchors. Apply after
+    # their indexed splice to avoid shifting the original source positions.
+    shoulders={f"{i}-{j}":"data:image/webp;base64,"+base64.b64encode((patch_dir/f"art-v1510/shoulder-{i}-{j}.webp").read_bytes()).decode() for i in range(2) for j in range(2)}
+    art+=("const rh1510ShoulderData="+json.dumps(shoulders,separators=(",",":"))+";\n").encode()
     js=art+patch_dir.joinpath("royal-haven-v1510.js").read_bytes()
     html=html[:start]+js+b"\n"+html[end:]
+    edit(old_gate,revised_gate)
+    edit("for(const o of ready)c.drawImage(o.im,o.x,o.y,720,650);",
+         "for(const o of ready){c.drawImage(o.im,o.x,o.y,720,650);rh1510ShoulderDraw(c,o.x,o.y);}")
+    edit("const im=s.type==='future'?rh193Art.hall:rh1451SiteArt(s),fit=rh1365SiteBounds(s);",
+         "const im=rh1510Upgrade(s)||(s.type==='future'?rh193Art.hall:rh1451SiteArt(s)),fit=rh1365SiteBounds(s);")
+    edit("g.strokeStyle='#34372c85';g.lineWidth=3;shape(g);g.stroke();g.strokeStyle='#b3a89066';g.lineWidth=1;shape(g);g.stroke();for(const p of runs)rh1422Weather(g,p,top,depth,seed);g.restore();",
+         "g.strokeStyle='#34372c66';g.lineWidth=2.5;shape(g);g.stroke();g.strokeStyle='#b3a89044';g.lineWidth=1;shape(g);g.stroke();for(const p of runs)rh1422Weather(g,p,top,depth,seed);g.restore();rh1510FoundationWear(g,runs,top,depth,seed);")
 
     edit("if(landmarkNames.has(s.name)||s.type==='future')facade();else rh1457Facade(b,rh1504Shop?.depth(s)??s.doorY,facade);",
          "rh1457Facade(rh1510SiteBounds(b,s),rh1504Shop?.depth(s)??s.doorY,facade);")
@@ -56,8 +75,8 @@ def apply(html: bytes) -> bytes:
     edit("function rh1451SiteLanterns(s){const q=", "function rh1451SiteLanterns(s){const revised=rh1510ArtPoints(s,'lanterns');if(revised)return revised;const q=")
     edit("function rh1454FireGeometry(s){return rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire;}", "function rh1454FireGeometry(s){return rh1510ArtPoints(s,'fire')||(rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire);}")
     edit("rh1430PuddleDraw(cx,cy,townTime);", "rh1510Ground(cx,cy);rh1430PuddleDraw(cx,cy,townTime);")
-    edit("function rh1432ClearFacades(){rh1510CutawayCanvas=null;", "function rh1432ClearFacades(){rh1510GroundReset();rh1510CutawayCanvas=null;")
-    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
+    edit("function rh1432ClearFacades(){rh1510CutawayCanvas=null;", "function rh1432ClearFacades(){rh1510ShoulderReset();rh1510GroundReset();rh1510CutawayCanvas=null;")
+    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),streetArt:rh1510StreetArtStatus,secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
     edit("rh1457Facade(b,o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;", "rh1457Facade(rh1510HomeContext(b,o,im),o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;")
     edit("if(Number.isFinite(o.flue)&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*o.flue,b.top+(o.flueY===undefined?3:b.h*o.flueY),now,cx,cy,o.x+o.y,'house');", "const updatedFlue=rh1510HomeFlues(o)?.[0];if((updatedFlue||Number.isFinite(o.flue))&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*(updatedFlue?.[0]??o.flue),b.top+(updatedFlue?b.h*updatedFlue[1]:(o.flueY===undefined?3:b.h*o.flueY)),now,cx,cy,o.x+o.y,'house');")
     # Preserve existing draw order and special northern citadel (painted behind the party).

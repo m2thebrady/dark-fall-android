@@ -57,3 +57,21 @@ const variant=JSON.parse(readFileSync(folder+'variant-metadata.json','utf8'))['v
 assert.ok(Math.abs(variant.door[0]-193/650)<.003,'relocated cellar artwork uses its actual door anchor');
 assert.equal(readFileSync(folder+variant.file).toString('ascii',8,12),'WEBP');
 console.log('Relocated cellar entrance variant PASS');
+
+const shoulder=scope.rh1510ShoulderTile;
+assert.equal(shoulder(0,0).key,'0-0');
+assert.equal(shoulder(2160,650).sx,1080);
+assert.equal(shoulder(2160,650).sy,325);
+assert.equal(shoulder(2880,650).key,'1-0');
+assert.equal(shoulder(2880,1300).sx,0);
+assert.equal(shoulder(2880,1300).sy,0);
+assert.equal(shoulder(5760,1300),null,'new overlays never touch fallback terrain beyond the original painted town');
+for(let i=0;i<2;i++)for(let j=0;j<2;j++){
+ const p=readFileSync(folder+'shoulder-'+i+'-'+j+'.webp');
+ assert.equal(p.toString('ascii',8,12),'WEBP');
+ assert.ok(p.length>5000&&p.length<120000,'sparse shoulder overlay stays small');
+}
+const gate=readFileSync(folder+'forest-gate-revised.webp');
+assert.equal(gate.toString('ascii',8,12),'WEBP');
+assert.ok(gate.length>30000&&gate.length<400000);
+console.log('Gate artwork and seamless world-aligned shoulder atlas PASS');

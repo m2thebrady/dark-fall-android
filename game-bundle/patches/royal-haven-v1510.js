@@ -198,14 +198,64 @@ function rh1510GroundHome(o,b,im,cx,cy){
 function rh1510Ground(cx,cy){
  rh1510GroundBuilds=0;
  for(const s of sites){
-  if(!rhPainted[s.name])continue;
+  if(s.type==='castle')continue; // the mountain-integrated castle has its own contacts
   const b=rh1365SiteBounds(s);
-  rh1510GroundEntry(s,b,rh1510Upgrade(s)||rh1451SiteArt(s),s,cx,cy);
+  const im=rh1510Upgrade(s)||(s.type==='temple'?rh117Images.temple:s.name==='Caster Guild'?rh193Art.mage:s.type==='cave'?rh193Art.cave:s.type==='future'?rh193Art.hall:rh1451SiteArt(s));
+  rh1510GroundEntry(s,b,im,s,cx,cy);
  }
+ // Follow the gate's masonry feet, never paint across its open passage.
+ rh1510GroundEntry('forest-gate',{left:rh1407Gate.x,top:rh1407Gate.y,w:rh1407Gate.w,h:rh1407Gate.h},rh118Images.gate,{name:'Forest Gate',type:'landmark',doorX:NaN,doorY:NaN},cx,cy);
  // The same irregular contact follows estate houses, outbuildings and passage
  // structures so the shops and neighboring residential streets read as one town.
  for(const o of rh1464Homes)if(o.large)rh1510GroundHome(o,rh1464Bounds(o),rh1510HomeUpgrade(o)||rh1464Art[o.k],cx,cy);
  for(const o of rh1474Parts)rh1510GroundHome(o,rh1474Bounds(o),rh1474Art[o.k],cx,cy);
  for(const o of rh189Houses)rh1510GroundHome(o,rh1365HouseBounds(o),rh1365HouseImage(o),cx,cy);
  for(const o of rh187Annex)rh1510GroundHome(o,rh1399AnnexBounds(o),o.rebuilt1340?rh1340ServiceArt.herb:rh187Art[o.k],cx,cy);
+}
+
+// The four sparse overlays are generated from the town's actual painted ground,
+// aligned across original 720x650 chunks. They are lazily loaded, never cover
+// fallback terrain, and have no influence on movement or obstruction.
+const rh1510ShoulderImages=new Map();
+let rh1510ShoulderDraws=0;
+function rh1510ShoulderTile(x,y){
+ const i=Math.floor(x/2880),j=Math.floor(y/1300);
+ if(i<0||i>1||j<0||j>1)return null;
+ return {key:i+'-'+j,sx:(x-i*2880)/2,sy:(y-j*1300)/2};
+}
+function rh1510ShoulderDraw(g,x,y){
+ const z=rh1510ShoulderTile(x,y);
+ if(!z)return;
+ const src=rh1510ShoulderData[z.key];if(!src)return;
+ let im=rh1510ShoulderImages.get(z.key);
+ if(!im){im=rh1200Image();im.src=src;rh1510ShoulderImages.set(z.key,im);}
+ if(!im.complete||im.naturalWidth!==1440||im.naturalHeight!==650)return;
+ g.drawImage(im,z.sx,z.sy,360,325,x,y,720,650);
+ rh1510ShoulderDraws++;
+}
+function rh1510ShoulderReset(){rh1510ShoulderImages.clear();rh1510ShoulderDraws=0;}
+function rh1510StreetArtStatus(){
+ return {gateReady:!!rh118Images.gate?.complete&&rh118Images.gate.naturalWidth===1110,
+  shoulderTiles:Object.keys(rh1510ShoulderData).length,loadedShoulders:[...rh1510ShoulderImages.values()].filter(im=>im.complete&&im.naturalWidth===1440).length,
+  shoulderDraws:rh1510ShoulderDraws};
+}
+
+// Apron edges are individually worn by foot traffic, instead of outlined as
+// clean rectangular slabs. Erase only the ground-facing lip, not the wall
+// contact or the middle of a fitted foundation. Rasterized in its existing cache.
+function rh1510FoundationWear(g,runs,top,depth,seed){
+ g.save();g.globalCompositeOperation='destination-out';
+ for(const run of runs){
+  for(let i=0;i<run.length;i++){
+   const [x,y]=run[i],n=rh1510Hash(i,7,seed);
+   if(n<.25)continue;
+   const u=x+3*(rh1510Hash(i,8,seed)-.5),v=y-top+depth+2+n*2;
+   const rx=8+8*n,ry=5+5*n;
+   g.save();g.translate(u,v);g.scale(rx,ry);
+   const grad=g.createRadialGradient(0,0,0,0,0,1);
+   grad.addColorStop(0,'rgba(0,0,0,.77)');grad.addColorStop(.50,'rgba(0,0,0,.48)');grad.addColorStop(1,'rgba(0,0,0,0)');
+   g.fillStyle=grad;g.fillRect(-1,-1,2,2);g.restore();
+  }
+ }
+ g.restore();
 }
