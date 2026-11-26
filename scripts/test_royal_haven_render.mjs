@@ -253,3 +253,14 @@ const covered=foundry.gallery.geometry;
 assert.equal(covered.polyParts.length,2);assert.ok(square(covered.polyParts)&&covered.openingWidth>=60&&covered.openingHeight>=80);
 assert.ok(covered.polyParts.every(q=>q.every(p=>Math.abs(p[0])>=30)),'central gallery passage has no solid footprint');
 console.log('Three straight craft facades, townhouse, clear timber gallery and clipped forge fire PASS');
+// Execute the forge paint branch in isolation. The animation must use an
+// available clock and stay in the defined furnace clip even when cut away.
+const flameCalls=[],foundryCtx=vm.createContext({
+ rh1516Meta:foundry,rh1444Enabled:true,rh1510Art:Object.fromEntries(Object.entries(foundry.shops).map(([k,m])=>[k,{complete:true,naturalWidth:m.width,naturalHeight:m.height}])),
+ c:{save(){},restore(){},beginPath(){},rect(){},clip(){}},performance:{now:()=>12345},p:{x:5000,y:5000},
+ rh1432FacadeDraw(){},rh1510WindowTint(){},rh1273Fire:(x,y,w,h,t)=>flameCalls.push(t),rh1273Embers:(x,y,w,h,t)=>flameCalls.push(t),txt(){}
+});
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1516.js','utf8'),foundryCtx);
+assert.equal(vm.runInContext("rh1516Foundry.draw({name:'Weapon Smith',doorX:350,doorY:1333})",foundryCtx),true);
+assert.deepEqual(flameCalls,[12.345,12.345],'animated furnace and embers use the real render clock');
+console.log('Foundry furnace paint and time source PASS');

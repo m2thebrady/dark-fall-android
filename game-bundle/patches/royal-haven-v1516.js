@@ -13,11 +13,11 @@ const rh1516Foundry=(()=>{
  const lanterns=s=>ready(s)?model(s).lanterns:null;
  function flame(s,b){
   const f=model(s).fire;if(!f)return;
-  const [fx,fy,l,t,w,h]=f,x=b.left+b.w*fx,y=b.top+b.h*fy;
+  const [fx,fy,l,t,w,h]=f,x=b.left+b.w*fx,y=b.top+b.h*fy,now=performance.now()/1000;
   c.save();try{
    c.beginPath();c.rect(b.left+b.w*l,b.top+b.h*t,b.w*w,b.h*h);c.clip();
-   rh1273Fire(x,y,b.w*w*.83,b.h*h*.92,townTime,5);
-   rh1273Embers(x,y,b.w*w*.66,b.h*h*.68,townTime,5);
+   rh1273Fire(x,y,b.w*w*.83,b.h*h*.92,now,5);
+   rh1273Embers(x,y,b.w*w*.66,b.h*h*.68,now,5);
   }finally{c.restore();}
  }
  function draw(s){const b=fit(s);if(!b)return false;rh1432FacadeDraw(image(s),b.left,b.top,b.w,b.h);rh1510WindowTint(model(s).windows,b.left,b.top,b.w,b.h);flame(s,b);if(Math.hypot(p.x-s.doorX,p.y-s.doorY)<280)txt(s.name,s.doorX,b.top-8,13,'#d8c5a0');return true;}
