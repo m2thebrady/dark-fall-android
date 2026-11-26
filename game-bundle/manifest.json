@@ -1,7 +1,7 @@
 {
-  "version": 1522,
-  "bytes": 206547844,
-  "sha256": "ef9f350baf6907e7fcea3faf3e5f8cc3f37051c731549d276bc7960407451798",
+  "version": 1523,
+  "bytes": 206552829,
+  "sha256": "801e2bcfaad6d686558c25fb420430835d348a59dbc9f768aa35249da520f64e",
   "parts": [
     {
       "name": "index-000.html.gz",
@@ -67,6 +67,7 @@
     "patches/v1519.py",
     "patches/v1520.py",
     "patches/v1521.py",
-    "patches/v1522.py"
+    "patches/v1522.py",
+    "patches/v1523.py"
   ]
 }

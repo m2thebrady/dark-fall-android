@@ -383,3 +383,5 @@ assert.equal(oldGroundCalls,2);
 console.log('27 continuous terrain tiles, 31 planned routes, spacious market and skipped legacy road overlays PASS');
 
 await import("./test_royal_haven_v1522.mjs");
+
+await import("./test_royal_haven_v1523.mjs");
