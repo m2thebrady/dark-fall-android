@@ -197,3 +197,32 @@ assert.ok(west.gate.geometry.archWidth>=100&&west.gate.geometry.archHeight>=118)
 assert.equal(west.gate.geometry.polyParts.length,2);
 assert.ok(west.gate.geometry.walk.every(p=>p[0]===west.gate.geometry.walk[0][0]),'straight open passage');
 console.log('Four front-facing sprites, recessed homes, preserved shop doors and square passage PASS');
+
+const merchantDir='game-bundle/patches/art-v1515/';
+const quarter=JSON.parse(readFileSync(merchantDir+'layout-metadata.json','utf8'));
+assert.deepEqual(Object.keys(quarter.shops).sort(),['General Store','Item Shop','Town Residence']);
+assert.deepEqual(Object.keys(quarter.civic).sort(),['rh1499bellCourt','rh1499stoneSeat']);
+for(const [name,m] of Object.entries({...quarter.shops,...quarter.civic})){
+ const asset=readFileSync(merchantDir+m.file);
+ assert.equal(asset.toString('ascii',8,12),'WEBP');
+ assert.ok(asset.length>25000&&asset.length<500000,name+' compact alpha art');
+ assert.ok(m.width>300&&m.height>300);
+}
+const square=parts=>parts.every(p=>p.every((v,i)=>{const u=p[(i+1)%p.length];return v[0]===u[0]||v[1]===u[1]}));
+for(const [name,m] of Object.entries(quarter.shops)){
+ const g=m.geometry;
+ assert.ok(Math.abs(g.left+g.w*m.door[0])<.002&&Math.abs(g.top+g.h*m.door[1])<.002);
+ assert.ok(g.height>=78&&g.doorWidth>=50,name+' human-scale entrance');
+ assert.ok(square(g.parts),name+' squared footprint');
+}
+const general=quarter.shops['General Store'].geometry,item=quarter.shops['Item Shop'].geometry;
+assert.deepEqual(general.doorWorld,[2385,1333]);assert.deepEqual(item.doorWorld,[2865,1333]);assert.deepEqual(quarter.shops['Town Residence'].geometry.doorWorld,[3820,1360]);
+const maxX=g=>g.doorWorld[0]+Math.max(...g.parts.flat().map(p=>p[0]));
+const minX=g=>g.doorWorld[0]+Math.min(...g.parts.flat().map(p=>p[0]));
+assert.ok(maxX(general)>=quarter.seam&&minX(item)<=quarter.seam&&maxX(general)-minX(item)<1,'continuous shared wall');
+const gap=item.doorWorld[0]+item.left-general.doorWorld[0]-general.left-general.w;
+assert.ok(gap>=-30&&gap<=5,'connected merchant silhouettes');
+const bell=quarter.civic.rh1499bellCourt.geometry,seat=quarter.civic.rh1499stoneSeat.geometry;
+assert.equal(bell.polyParts.length,4);assert.ok(square(bell.polyParts)&&square(seat.polyParts));assert.ok(bell.archWidth>=100&&bell.archHeight>=80);
+assert.ok(bell.walk.every(p=>p[0]===bell.walk[0][0]),'straight bell passage');
+console.log('Five individualized buildings and civic assets, shared merchant wall, level seat and straight bell passage PASS');
