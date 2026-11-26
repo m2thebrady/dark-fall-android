@@ -1,0 +1,215 @@
+{
+  "version": 1541,
+  "models": [
+    {
+      "key": "weapon",
+      "file": "weapon.webp",
+      "width": 280,
+      "height": 273,
+      "bytes": 34000,
+      "sha256": "6b9c104983287680d4f98eedeee5676df993bd376ccd4612b19de31b08f548b0",
+      "alphaBounds": [
+        1,
+        0,
+        280,
+        272
+      ]
+    },
+    {
+      "key": "armor",
+      "file": "armor.webp",
+      "width": 280,
+      "height": 248,
+      "bytes": 36798,
+      "sha256": "6917e17449fd7b2eb2a5d1327eca3bb2f27f181875e497749f15282093135b01",
+      "alphaBounds": [
+        1,
+        0,
+        280,
+        248
+      ]
+    },
+    {
+      "key": "leather",
+      "file": "leather.webp",
+      "width": 280,
+      "height": 262,
+      "bytes": 31020,
+      "sha256": "2d3a09f34f0f99c8e009a40b777d1d1ad234939d64ff8bb133016e0574bd2bc7",
+      "alphaBounds": [
+        0,
+        0,
+        280,
+        262
+      ]
+    },
+    {
+      "key": "general",
+      "file": "general.webp",
+      "width": 267,
+      "height": 280,
+      "bytes": 40022,
+      "sha256": "613c04a4eed414b895778f0f70f2221718e735093ccbeee022e4d647e1643950",
+      "alphaBounds": [
+        0,
+        0,
+        267,
+        280
+      ]
+    },
+    {
+      "key": "item",
+      "file": "item.webp",
+      "width": 276,
+      "height": 280,
+      "bytes": 40066,
+      "sha256": "fd36b139f3ec8c5c7d1b198e725c56e291841d6a0a07b6d62303834592a931a0",
+      "alphaBounds": [
+        0,
+        0,
+        276,
+        280
+      ]
+    },
+    {
+      "key": "alchemy",
+      "file": "alchemy.webp",
+      "width": 274,
+      "height": 280,
+      "bytes": 38244,
+      "sha256": "fc1168da2a2e4145d0fa03e6791cc0514e7207cb2f1d79c7925d7c2cb8714a0a",
+      "alphaBounds": [
+        0,
+        1,
+        274,
+        280
+      ]
+    },
+    {
+      "key": "herbalist",
+      "file": "herbalist.webp",
+      "width": 280,
+      "height": 234,
+      "bytes": 31148,
+      "sha256": "24b450c2b9ac837843934f1ad3b78ac8f45fe835605df8bcc8b0cc3badc649ef",
+      "alphaBounds": [
+        0,
+        0,
+        280,
+        233
+      ]
+    },
+    {
+      "key": "enchanter",
+      "file": "enchanter.webp",
+      "width": 280,
+      "height": 241,
+      "bytes": 26568,
+      "sha256": "792ea35bc6f451fcca909b223710e0de5b566776375f56bdd9728625ef4e075e",
+      "alphaBounds": [
+        1,
+        1,
+        279,
+        241
+      ]
+    },
+    {
+      "key": "fletcher",
+      "file": "fletcher.webp",
+      "width": 280,
+      "height": 205,
+      "bytes": 22410,
+      "sha256": "fc6bf0976cd763da7bdfa3533fc1591d8fbe58a64d2c4e6bf194258bfe2c96d7",
+      "alphaBounds": [
+        0,
+        0,
+        279,
+        204
+      ]
+    },
+    {
+      "key": "tailor",
+      "file": "tailor.webp",
+      "width": 280,
+      "height": 254,
+      "bytes": 28366,
+      "sha256": "cdabafadbbaf2a19caba6712d011171f90720a2d8484d6e77652a19f5cd9b1f2",
+      "alphaBounds": [
+        0,
+        0,
+        280,
+        254
+      ]
+    },
+    {
+      "key": "apothecary",
+      "file": "apothecary.webp",
+      "width": 280,
+      "height": 252,
+      "bytes": 33298,
+      "sha256": "7fd321910556f6d32344204cc491423710188de57ff799ccd1813d52e70cab71",
+      "alphaBounds": [
+        0,
+        1,
+        280,
+        252
+      ]
+    },
+    {
+      "key": "bakery",
+      "file": "bakery.webp",
+      "width": 280,
+      "height": 210,
+      "bytes": 27586,
+      "sha256": "05a0c15829a53091ded5afe3f20f661ec4db05772bfa5a9dff9317a42fcff89d",
+      "alphaBounds": [
+        0,
+        0,
+        280,
+        210
+      ]
+    },
+    {
+      "key": "alchemyDelivery",
+      "file": "alchemyDelivery.webp",
+      "width": 280,
+      "height": 274,
+      "bytes": 30558,
+      "sha256": "0fd14bf19f5cd210da23ef9ab384b7ac03d38b6fec0cbdb429e1731d2c806238",
+      "alphaBounds": [
+        0,
+        0,
+        279,
+        274
+      ]
+    },
+    {
+      "key": "enchantDelivery",
+      "file": "enchantDelivery.webp",
+      "width": 280,
+      "height": 268,
+      "bytes": 30356,
+      "sha256": "5667bf9b74ab1a80b7dfb41632cbd84673d2c146f3fb4bf6bc9601a44529e2c3",
+      "alphaBounds": [
+        0,
+        0,
+        280,
+        268
+      ]
+    },
+    {
+      "key": "clothDelivery",
+      "file": "clothDelivery.webp",
+      "width": 280,
+      "height": 269,
+      "bytes": 30126,
+      "sha256": "4f75f3160b3cd43afb5017ba70c7f282ab9f3847747a6a7397961e1f3efbe56c",
+      "alphaBounds": [
+        0,
+        1,
+        280,
+        269
+      ]
+    }
+  ]
+}
