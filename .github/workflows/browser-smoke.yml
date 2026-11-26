@@ -40,3 +40,11 @@ jobs:
           path: browser-smoke-results/
           if-no-files-found: ignore
           retention-days: 14
+      - name: Upload playable HTML test build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dark-fall-playable-html
+          path: app/src/main/assets/index.html
+          if-no-files-found: error
+          retention-days: 14

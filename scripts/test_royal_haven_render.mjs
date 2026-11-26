@@ -385,3 +385,5 @@ console.log('27 continuous terrain tiles, 31 planned routes, spacious market and
 await import("./test_royal_haven_v1522.mjs");
 
 await import("./test_royal_haven_v1523.mjs");
+
+await import("./test_royal_haven_v1524.mjs");
