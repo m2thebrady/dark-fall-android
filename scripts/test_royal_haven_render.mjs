@@ -328,3 +328,26 @@ const corner19={x:0,y:0};for(let i=0;i<14;i++)walk19(corner19,8,0,(x,y)=>x>=20&&
 assert.ok(corner19.x>38&&Math.abs(corner19.y)>=8,'short corner is bypassed without entering solid footprint');
 const diagonal19={x:0,y:0};walk19(diagonal19,50,50,(x,y)=>x>=20&&x<=38&&Math.abs(y)<100);assert.ok(diagonal19.x<20&&diagonal19.y>45);
 console.log('Exterior camera projection, viewport edges, no wall tunneling, short-corner assistance and diagonal sliding PASS');
+
+// All three landmark replacements use measured art-space portals and local lots.
+const landmarkDir='game-bundle/patches/art-v1520/';
+const lm=JSON.parse(readFileSync(landmarkDir+'metadata.json','utf8'));
+assert.deepEqual(Object.keys(lm).sort(),['cave','cellar','mage']);
+for(const [key,m] of Object.entries(lm)){
+ const b=readFileSync(landmarkDir+m.file);
+ assert.equal(b.subarray(0,4).toString(),'RIFF');assert.equal(b.subarray(8,12).toString(),'WEBP');
+ assert.ok(m.width<=1000&&m.height<=1000&&m.door.every(v=>v>0&&v<1),key);
+ assert.ok(m.doorWidth>0&&m.doorHeight>0);
+}
+const lmCtx=vm.createContext({rh1520Meta:lm,rh1328Foot:{'Storehouse Cellar':[-118,287]}});
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1520.js','utf8'),lmCtx);
+const cellSite={name:'Storehouse Cellar',w:420,doorX:765.56,doorY:2300};
+const landmarkLayout=lmCtx.rh1520CellarGeometry(cellSite);
+assert.ok(Math.abs(landmarkLayout.left+landmarkLayout.w*lm.cellar.door[0]-cellSite.doorX)<.001);
+assert.ok(Math.abs(landmarkLayout.top+landmarkLayout.h*lm.cellar.door[1]-cellSite.doorY-4)<.001);
+assert.ok(landmarkLayout.w*lm.cellar.doorWidth>=47&&landmarkLayout.h*lm.cellar.doorHeight>=78);
+for(const site of [cellSite,{name:'Caster Guild',doorX:3090,doorY:632},{name:'Dark Guild Cave',type:'cave',doorX:4980,doorY:530}]){
+ const b=lmCtx.rh1520ApproachSpec(site);
+ assert.ok(b.w*b.h<30000&&b.shape.every(([x,y])=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h));
+}
+console.log('Three distinct WebP landmarks, measured entrance fit and bounded natural approach patches PASS');
