@@ -226,3 +226,30 @@ const bell=quarter.civic.rh1499bellCourt.geometry,seat=quarter.civic.rh1499stone
 assert.equal(bell.polyParts.length,4);assert.ok(square(bell.polyParts)&&square(seat.polyParts));assert.ok(bell.archWidth>=100&&bell.archHeight>=80);
 assert.ok(bell.walk.every(p=>p[0]===bell.walk[0][0]),'straight bell passage');
 console.log('Five individualized buildings and civic assets, shared merchant wall, level seat and straight bell passage PASS');
+
+const foundryDir='game-bundle/patches/art-v1516/';
+const foundry=JSON.parse(readFileSync(foundryDir+'layout-metadata.json','utf8'));
+assert.deepEqual(Object.keys(foundry.shops).sort(),['Armor Smith','Leatherworker','Weapon Smith']);
+for(const [name,m] of Object.entries({...foundry.shops,townhouse:foundry.home,gallery:foundry.gallery})){
+ const asset=readFileSync(foundryDir+m.file);
+ assert.equal(asset.toString('ascii',8,12),'WEBP');
+ assert.ok(asset.length>25000&&asset.length<500000,name+' compact detailed alpha art');
+ assert.ok(m.width>300&&m.height>300);
+}
+for(const [name,m] of Object.entries(foundry.shops)){
+ const g=m.geometry;
+ assert.equal(g.doorWorld[1],1333);
+ assert.ok(Math.abs(g.left+g.w*m.door[0])<.01&&Math.abs(g.top+g.h*m.door[1])<.01,name+' aligned threshold');
+ assert.ok(g.height>=78&&g.doorWidth>=50,name+' human-scale doors');
+ assert.ok(square(g.parts),name+' squared collision shape');
+}
+assert.deepEqual(foundry.shops['Weapon Smith'].geometry.doorWorld,[350,1333]);
+assert.deepEqual(foundry.shops['Armor Smith'].geometry.doorWorld,[805,1333]);
+assert.deepEqual(foundry.shops['Leatherworker'].geometry.doorWorld,[1275,1333]);
+const flame=foundry.shops['Weapon Smith'].fire;
+assert.ok(flame[0]>flame[2]&&flame[0]<flame[2]+flame[4]&&flame[1]>flame[3]&&flame[1]<flame[3]+flame[5],'forge animation anchor inside its furnace clip');
+assert.ok(foundry.home.geometry.doorHeight>=80&&foundry.home.geometry.w*foundry.home.doorWidth>=50);
+const covered=foundry.gallery.geometry;
+assert.equal(covered.polyParts.length,2);assert.ok(square(covered.polyParts)&&covered.openingWidth>=60&&covered.openingHeight>=80);
+assert.ok(covered.polyParts.every(q=>q.every(p=>Math.abs(p[0])>=30)),'central gallery passage has no solid footprint');
+console.log('Three straight craft facades, townhouse, clear timber gallery and clipped forge fire PASS');
