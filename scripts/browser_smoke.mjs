@@ -28,15 +28,19 @@ try {
     rh1457Facade(bounds,205,facade);
     const pixel=(x,y)=>Array.from(main.getImageData(Math.floor(x*.8+12),Math.floor(y*.8+16),1,1).data);
     const center=pixel(140,109),feet=pixel(140,140),feather=pixel(179,109),roof=pixel(70,60),street=pixel(10,10);
-    const behindDraws=draws,restored=c===main&&main.getTransform().a===.8;
+    const behindDraws=draws,restored=c===main&&Math.abs(main.getTransform().a-.8)<1e-6;
     p.y=220;rh1457Facade(bounds,205,facade);
     const front=pixel(140,109);
-    return {center,feet,feather,roof,street,front,behindDraws,draws,restored};
+    const sprite=rhSurface(140,180),sc=sprite.getContext('2d');sc.fillStyle='#777';sc.fillRect(24,20,98,148);
+    const blend=rh1510GroundBuild({left:100,top:30,w:140,h:180},sprite,{name:'Herbalist',type:'shop',doorX:170,doorY:198});
+    const bg=blend.canvas.getContext('2d'),contact=bg.getImageData(170-blend.left,204-blend.top,1,1).data[3],
+      far=bg.getImageData(92-blend.left,160-blend.top,1,1).data[3];
+    return {center,feet,feather,roof,street,front,behindDraws,draws,restored,contact,far};
   });
   await probe.close();
   if(cutaway.center[1]>75||cutaway.feet[1]>85||cutaway.feather[1]<=cutaway.center[1]||
      cutaway.roof[1]<170||cutaway.front[1]<170||cutaway.street[1]!==48||
-     cutaway.behindDraws!==1||cutaway.draws!==2||!cutaway.restored||
+     cutaway.behindDraws!==1||cutaway.draws!==2||!cutaway.restored||cutaway.contact<=0||cutaway.far!==0||
      [cutaway.center,cutaway.feet,cutaway.street,cutaway.roof].some(p=>p[3]!==255))
     throw new Error('Royal Haven cutaway pixel test failed: '+JSON.stringify(cutaway));
   await writeFile(resolve(out,'royal-haven-cutaway.json'),JSON.stringify(cutaway,null,2));
@@ -72,11 +76,13 @@ try {
   if (!status.canvases) throw new Error('Game canvas not found');
   if(status.title==='Dark Fall V1510'){
     // The built-in entry point is used for an exterior runtime smoke, not a modified game.
+    await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven?.exteriorArt?.();return a?.length===16&&a.every(s=>s.ready&&s.bounds);},{},{timeout:45000});
+    const art=await page.evaluate(()=>window.DarkFallRoyalHaven.exteriorArt());
     const town=await page.evaluate(()=>{const api=window.DarkFallRoyalHaven;if(!api)return false;api.open();return api.active;});
     if(!town)throw new Error('Royal Haven failed to open');
     await page.waitForTimeout(4000);
     await page.screenshot({path:resolve(out,'royal-haven-exterior.png'),timeout:30000});
-    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,errors},null,2));
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,errors},null,2));
     if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
   }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.

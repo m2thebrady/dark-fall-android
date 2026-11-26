@@ -1,5 +1,7 @@
 """Exact, fail-closed transformations from the original V1509 HTML."""
 from pathlib import Path
+import json
+import base64
 
 def apply(html: bytes) -> bytes:
     def edit(old: str, new: str):
@@ -13,7 +15,11 @@ def apply(html: bytes) -> bytes:
     # The old cutaway had a lane whitelist and painted the building three times.
     start=html.index(b"function rh1457Overlap(")
     end=html.index(b"function rh1457Shade(",start)
-    js=Path(__file__).with_name("royal-haven-v1510.js").read_bytes()
+    patch_dir=Path(__file__).parent
+    metadata=json.loads((patch_dir/"art-v1510/metadata.json").read_text())
+    assets={name:"data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510"/item["file"]).read_bytes()).decode() for name,item in metadata.items()}
+    art=("const rh1510ArtMeta="+json.dumps(metadata,separators=(",",":"))+";\nconst rh1510Art={};for(const [name,src] of Object.entries("+json.dumps(assets,separators=(",",":"))+")){const im=rh1200Image();im.src=src;rh1510Art[name]=im;}\n").encode()
+    js=art+patch_dir.joinpath("royal-haven-v1510.js").read_bytes()
     html=html[:start]+js+b"\n"+html[end:]
 
     edit("if(landmarkNames.has(s.name)||s.type==='future')facade();else rh1457Facade(b,rh1504Shop?.depth(s)??s.doorY,facade);",
@@ -41,6 +47,15 @@ def apply(html: bytes) -> bytes:
     edit("const key=rh1432FacadeIds.get(im)+':'+dw+':'+dh+':'+filter;", "const key=rh1432FacadeIds.get(im)+':'+dw+':'+dh+':'+filter+':'+wear;")
     edit("g.drawImage(im,0,0,dw,dh);while(rh1432FacadePixels+n>", "g.drawImage(im,0,0,dw,dh);rh1510WeatherRaster(g,dw,dh,wear);while(rh1432FacadePixels+n>")
     edit("function rh1432ClearFacades(){rh1432FacadeCache.clear();","function rh1432ClearFacades(){rh1510CutawayCanvas=null;rh1432FacadeCache.clear();")
+    # Only the primary image is replaced; original world-space fit and collision remain unchanged.
+    edit("function rh1432FacadeDraw(im,x,y,w,h){", "function rh1432FacadeDraw(im,x,y,w,h){\n if(rh1510FacadeContext?.upgrade&&rh1510FacadeContext.primary===im)im=rh1510FacadeContext.upgrade;")
+    edit("rh1451SiteGlass(s,left,base-h,w,h);rh1424ShopFabric(s,left,base-h,w,h,performance.now()/1000);","if(!rh1510Upgrade(s)){rh1451SiteGlass(s,left,base-h,w,h);rh1424ShopFabric(s,left,base-h,w,h,performance.now()/1000);}")
+    edit("function rh1451SiteFlues(s){const q=", "function rh1451SiteFlues(s){const revised=rh1510ArtPoints(s,'flues');if(revised)return revised;const q=")
+    edit("function rh1451SiteLanterns(s){const q=", "function rh1451SiteLanterns(s){const revised=rh1510ArtPoints(s,'lanterns');if(revised)return revised;const q=")
+    edit("function rh1454FireGeometry(s){return rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire;}", "function rh1454FireGeometry(s){return rh1510ArtPoints(s,'fire')||(rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire);}")
+    edit("rh1430PuddleDraw(cx,cy,townTime);", "rh1510Ground(cx,cy);rh1430PuddleDraw(cx,cy,townTime);")
+    edit("function rh1432ClearFacades(){rh1510CutawayCanvas=null;", "function rh1432ClearFacades(){rh1510GroundReset();rh1510CutawayCanvas=null;")
+    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>sites.filter(s=>rh1510ArtMeta[s.name]).map(s=>({name:s.name,ready:!!rh1510Upgrade(s),bounds:!!rh1365SiteBounds(s),legacy:rh1510ArtMeta[s.name].legacy}))};")
     # Preserve existing draw order and special northern citadel (painted behind the party).
     # Every occurrence was checked against the text-only source (no embedded image bytes).
     if html.count(b"V1509")!=108:

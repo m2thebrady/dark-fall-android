@@ -63,11 +63,18 @@ function rh1510WeatherKey(w,h){
 function rh1510WeatherRaster(g,w,h,seed){
  if(seed===null)return;
  // Cached once at world display resolution, never read back from the live game canvas.
- try{const im=g.getImageData(0,0,w,h);rh1510WeatherPixels(im.data,w,h,seed,rh1510FacadeContext?.style||{});g.putImageData(im,0,0);}catch(_){}
+ try{const im=g.getImageData(0,0,w,h);const style=rh1510FacadeContext?.style||{};
+ if(rh1510FacadeContext?.upgrade){
+  const original=im.data.slice();rh1510WeatherPixels(im.data,w,h,seed,style);
+  for(let i=0;i<im.data.length;i+=4)for(let k=0;k<3;k++)im.data[i+k]=original[i+k]+(im.data[i+k]-original[i+k])*.35;
+ }else rh1510WeatherPixels(im.data,w,h,seed,style);g.putImageData(im,0,0);}catch(_){}
 }
+function rh1510Upgrade(s){const a=rh1510Art[s.name];return a?.complete&&a.naturalWidth>1?a:null;}
+function rh1510Legacy(s){return !!rh1510Upgrade(s)&&!!rh1510ArtMeta[s.name]?.legacy;}
+function rh1510ArtPoints(s,key){return rh1510Upgrade(s)?rh1510ArtMeta[s.name]?.[key]:null;}
 function rh1510SiteBounds(b,s){
  const fit=b||{left:s.x,top:s.y,w:s.w,h:s.h};
- return {...fit,style:{hearth:s.type==='forge'||s.type==='tavern'||s.type==='inn'||s.name==='Bakery',
+ return {...fit,primary:rh1451SiteArt(s),upgrade:rh1510Upgrade(s),style:{hearth:s.type==='forge'||s.type==='tavern'||s.type==='inn'||s.name==='Bakery',
   green:s.name==='Herbalist'||s.name==='Apothecary'||s.type==='home',flues:rh1451SiteFlues(s)}};
 }
 function rh1457Overlap(b,base,x,y){
@@ -102,4 +109,86 @@ function rh1457Facade(b,base,draw){
   }finally{g.restore();c=main;}
   main.save();try{main.setTransform(1,0,0,1,0,0);main.drawImage(layer,0,0);}finally{main.restore();}
  }finally{rh1510FacadeContext=previous;}
+}
+
+// V1510 street integration: use each facade's true lower alpha contour, not
+// a rectangular lot. Contact shadows, damp edges, stone fragments and worn
+// thresholds are ground-only, cached and independent of collision or doors.
+const rh1510GroundCache=new Map();
+let rh1510GroundBuilds=0,rh1510GroundPixels=0;
+function rh1510GroundReset(){rh1510GroundCache.clear();rh1510GroundPixels=0;rh1510GroundBuilds=0;}
+function rh1510GroundBuild(b,im,site){
+ const seed=rh1510Seed(b),sw=Math.max(8,Math.ceil(b.w/3)),sh=Math.max(8,Math.ceil(b.h/3));
+ const silhouette=rhSurface(sw,sh),sg=silhouette.getContext('2d',{willReadFrequently:true});
+ sg.drawImage(im,0,0,sw,sh);
+ const pixels=sg.getImageData(0,0,sw,sh).data;
+ const pad=28,top=Math.floor(b.top+b.h-Math.min(142,b.h*.34)),left=Math.floor(b.left-pad);
+ const w=Math.ceil(b.w+2*pad),h=Math.ceil(b.top+b.h+39-top);
+ const canvas=rhSurface(w,h),g=canvas.getContext('2d');
+ const type=site.type,green=site.name==='Herbalist'||site.name==='Apothecary'||type==='home',soot=type==='forge'||site.name==='Bakery';
+ const pale=site.name==='Bakery',wood=site.name==='Fletcher'||site.name==='Leatherworker';
+ const groundY=[];
+ function spot(x,y,rx,ry,color){
+  g.save();g.translate(x,y);g.scale(rx,ry);
+  const r=g.createRadialGradient(0,0,.10,0,0,1);r.addColorStop(0,color);r.addColorStop(.62,color);r.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=r;g.fillRect(-1,-1,2,2);g.restore();
+ }
+ for(let xx=0;xx<sw;xx+=2){
+  let yy=sh-1;while(yy>sh*.66&&pixels[(yy*sw+xx)*4+3]<155)yy--;
+  if(yy<=sh*.66)continue;
+  const x=b.left+xx*b.w/sw-left,y=b.top+(yy+.5)*b.h/sh-top,k=rh1510Hash(xx,0,seed);
+  if(y<8||y>h-18)continue;
+  groundY.push([x,y]);
+  // Uneven soil/cobble boundary, tight dark contact and broad natural grime.
+  spot(x,y+3,13+k*13,5+k*5,'rgba(26,29,23,.115)');
+  spot(x,y+9,19+k*14,7+k*9,soot?'rgba(39,34,29,.082)':'rgba(62,57,44,.070)');
+  if(k>.43)spot(x+2,y+7,9+k*8,4+k*4,green?'rgba(64,75,43,.13)':'rgba(77,72,55,.09)');
+ }
+ // A few irregularly scattered chips, moss, timber shavings or ash hug
+ // the actual footing. No generated objects enter the collision grid.
+ for(let i=0;i<groundY.length;i++){
+  const [x,y]=groundY[i],q=rh1510Hash(i,7,seed);
+  if(q<.38)continue;
+  const u=x+(rh1510Hash(i,13,seed)-.5)*8,v=y+3+rh1510Hash(i,17,seed)*12;
+  const s=1.1+rh1510Hash(i,19,seed)*2.7;
+  g.fillStyle=green&&q>.63?'rgba(86,99,58,.30)':pale&&q>.60?'rgba(161,150,121,.19)':wood&&q>.57?'rgba(138,111,74,.23)':'rgba(92,86,72,.27)';
+  g.beginPath();g.moveTo(u-s,v);g.lineTo(u-.4*s,v-s*.48);g.lineTo(u+s,v-.15*s);g.lineTo(u+s*.55,v+s*.54);g.closePath();g.fill();
+  if(green&&q>.79){g.fillStyle='rgba(113,129,72,.33)';g.fillRect(u-1,v-1,1.4,2);}
+ }
+ // Worn entry apron: low, irregular paving sheen and softly worn approach.
+ // It is at the existing entrance, with no added step collision or height.
+ const dx=site.doorX-left,dy=site.doorY-top+5;
+ if(dx>12&&dx<w-12&&dy>0&&dy<h-8){
+  const wide=Math.min(27,Math.max(17,b.w*.056));
+  spot(dx,dy+10,wide+13,11,'rgba(35,38,32,.12)');
+  spot(dx,dy+12,wide+9,7,'rgba(151,142,115,.075)');
+  for(let n=-2;n<=2;n++){
+   const k=rh1510Hash(n+6,11,seed),x=dx+n*wide*.41,y=dy+5+k*3;
+   g.fillStyle='rgba(120,112,91,.19)';g.beginPath();
+   g.moveTo(x-5,y-2);g.lineTo(x+4,y-2.8);g.lineTo(x+4.8,y+2.5);g.lineTo(x-4.8,y+2);g.closePath();g.fill();
+   g.strokeStyle='rgba(44,45,36,.18)';g.lineWidth=.8;g.stroke();
+  }
+ }
+ return {canvas,left,top,n:w*h,im};
+}
+function rh1510Ground(cx,cy){
+ rh1510GroundBuilds=0;
+ for(const s of sites){
+  if(!rhPainted[s.name])continue;
+  const b=rh1365SiteBounds(s);if(!b||!rh1365Intersects(b,cx,cy,45))continue;
+  const im=rh1510Upgrade(s)||rh1451SiteArt(s);
+  if(!im?.complete||!im.naturalWidth)continue;
+  let a=rh1510GroundCache.get(s);
+  if(a&&a.im!==im){rh1510GroundPixels-=a.n;rh1510GroundCache.delete(s);a=null;}
+  if(a){rh1510GroundCache.delete(s);rh1510GroundCache.set(s,a);}
+  else if(rh1510GroundBuilds<1){
+   rh1510GroundBuilds++;
+   try{
+    a=rh1510GroundBuild(b,im,s);
+    while(rh1510GroundPixels+a.n>1600000&&rh1510GroundCache.size){const key=rh1510GroundCache.keys().next().value;rh1510GroundPixels-=rh1510GroundCache.get(key).n;rh1510GroundCache.delete(key);}
+    rh1510GroundCache.set(s,a);rh1510GroundPixels+=a.n;
+   }catch(_){}
+  }
+  if(a)c.drawImage(a.canvas,a.left,a.top);
+ }
 }

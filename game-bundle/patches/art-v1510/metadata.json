@@ -1,0 +1,399 @@
+{
+  "Weapon Smith": {
+    "file": "weapon-smith.webp",
+    "flues": [
+      [
+        0.237547,
+        0.129004
+      ]
+    ],
+    "lanterns": [
+      [
+        0.425444,
+        0.705236
+      ]
+    ],
+    "legacy": true,
+    "door": [
+      0.535971,
+      0.966756
+    ],
+    "width": 556,
+    "height": 467,
+    "fire": [
+      0.185967,
+      0.804968,
+      0.114967,
+      0.7249680000000001,
+      0.142,
+      0.16
+    ]
+  },
+  "Armor Smith": {
+    "file": "armor-smith.webp",
+    "flues": [
+      [
+        0.352992,
+        0.232178
+      ],
+      [
+        0.524555,
+        0.21455
+      ]
+    ],
+    "lanterns": [
+      [
+        0.635857,
+        0.751241
+      ]
+    ],
+    "legacy": true,
+    "door": [
+      0.48062,
+      0.96866
+    ],
+    "width": 516,
+    "height": 429
+  },
+  "Leatherworker": {
+    "file": "leatherworker.webp",
+    "flues": [
+      [
+        0.861945,
+        0.249332
+      ]
+    ],
+    "lanterns": [],
+    "legacy": true,
+    "door": [
+      0.544484,
+      0.967626
+    ],
+    "width": 562,
+    "height": 527
+  },
+  "General Store": {
+    "file": "general-store.webp",
+    "flues": [
+      [
+        0.371298,
+        0.138883
+      ]
+    ],
+    "lanterns": [],
+    "legacy": true,
+    "door": [
+      0.48537,
+      0.960759
+    ],
+    "width": 581,
+    "height": 461
+  },
+  "Item Shop": {
+    "file": "item-shop.webp",
+    "flues": [
+      [
+        0.334712,
+        0.108461
+      ]
+    ],
+    "lanterns": [
+      [
+        0.833149,
+        0.761523
+      ]
+    ],
+    "legacy": true,
+    "door": [
+      0.488576,
+      0.970649
+    ],
+    "width": 569,
+    "height": 534
+  },
+  "Wayfarer Inn": {
+    "file": "wayfarer-inn.webp",
+    "flues": [
+      [
+        0.282114,
+        0.010101
+      ],
+      [
+        0.862919,
+        0.046465
+      ]
+    ],
+    "lanterns": [
+      [
+        0.429996,
+        0.785859
+      ],
+      [
+        0.637818,
+        0.781818
+      ]
+    ],
+    "legacy": true,
+    "door": [
+      0.564228,
+      0.969697
+    ],
+    "width": 615,
+    "height": 547
+  },
+  "Apothecary": {
+    "file": "apothecary.webp",
+    "flues": [
+      [
+        0.157504,
+        0.170918
+      ]
+    ],
+    "lanterns": [
+      [
+        0.529654,
+        0.822634
+      ],
+      [
+        0.714306,
+        0.814385
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.616803,
+      0.973189
+    ],
+    "width": 488,
+    "height": 555
+  },
+  "Bakery": {
+    "file": "bakery.webp",
+    "flues": [
+      [
+        0.17468,
+        0.012528
+      ],
+      [
+        0.79473,
+        0.407148
+      ]
+    ],
+    "lanterns": [
+      [
+        0.461691,
+        0.715248
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.377907,
+      0.871408
+    ],
+    "width": 516,
+    "height": 506
+  },
+  "Herbalist": {
+    "file": "herbalist.webp",
+    "flues": [
+      [
+        0.153066,
+        0.012821
+      ]
+    ],
+    "lanterns": [
+      [
+        0.263787,
+        0.746154
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.360417,
+      0.971795
+    ],
+    "width": 480,
+    "height": 386
+  },
+  "Alchemist": {
+    "file": "alchemist.webp",
+    "flues": [],
+    "lanterns": [
+      [
+        0.344183,
+        0.833871
+      ],
+      [
+        0.611299,
+        0.833871
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.484765,
+      0.96607
+    ],
+    "width": 361,
+    "height": 720
+  },
+  "Fletcher": {
+    "file": "fletcher.webp",
+    "flues": [
+      [
+        0.813662,
+        0.057748
+      ]
+    ],
+    "lanterns": [
+      [
+        0.441331,
+        0.789324
+      ],
+      [
+        0.642568,
+        0.789324
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.541667,
+      0.962918
+    ],
+    "width": 480,
+    "height": 513
+  },
+  "Tailor": {
+    "file": "tailor.webp",
+    "flues": [
+      [
+        0.202773,
+        0.015964
+      ]
+    ],
+    "lanterns": [
+      [
+        0.294756,
+        0.818077
+      ],
+      [
+        0.534314,
+        0.818077
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.40625,
+      0.96899
+    ],
+    "width": 480,
+    "height": 670
+  },
+  "Storehouse Cellar": {
+    "file": "storehouse-cellar.webp",
+    "flues": [
+      [
+        0.225924,
+        0.012122
+      ]
+    ],
+    "lanterns": [
+      [
+        0.547177,
+        0.585867
+      ]
+    ],
+    "legacy": true,
+    "door": [
+      0.395833,
+      0.958606
+    ],
+    "width": 480,
+    "height": 423
+  },
+  "Enchanter": {
+    "file": "enchanter.webp",
+    "flues": [
+      [
+        0.155908,
+        0.296116
+      ]
+    ],
+    "lanterns": [
+      [
+        0.595458,
+        0.8094
+      ],
+      [
+        0.78562,
+        0.794352
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.6875,
+      0.944826
+    ],
+    "width": 480,
+    "height": 539
+  },
+  "Town Residence": {
+    "file": "town-residence.webp",
+    "flues": [
+      [
+        0.150969,
+        0.08546
+      ],
+      [
+        0.818461,
+        0.007769
+      ]
+    ],
+    "lanterns": [
+      [
+        0.468512,
+        0.745837
+      ],
+      [
+        0.631628,
+        0.743894
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.552518,
+      0.8682
+    ],
+    "width": 695,
+    "height": 600
+  },
+  "The Iron Hearth Tavern": {
+    "file": "the-iron-hearth-tavern.webp",
+    "flues": [
+      [
+        0.255372,
+        0.011864
+      ],
+      [
+        0.850563,
+        0.237289
+      ]
+    ],
+    "lanterns": [
+      [
+        0.409257,
+        0.78136
+      ],
+      [
+        0.589048,
+        0.779665
+      ]
+    ],
+    "legacy": false,
+    "door": [
+      0.505435,
+      0.91187
+    ],
+    "width": 552,
+    "height": 592
+  }
+}

@@ -31,3 +31,16 @@ for(let i=0;i<a.length;i+=4){
 assert.ok(material/n>2,'masonry wear is visible');
 assert.ok(window/(17*h)<material/n,'bright shop glass and signage relatively protected');
 console.log('Royal Haven geometry, deterministic weathering, colour protection and silhouette tests PASS');
+
+const folder='game-bundle/patches/art-v1510/';
+const art=JSON.parse(readFileSync(folder+'metadata.json','utf8'));
+const expected=['Weapon Smith','Armor Smith','Leatherworker','General Store','Item Shop','Wayfarer Inn','Apothecary','Bakery','Herbalist','Alchemist','Fletcher','Tailor','Storehouse Cellar','Enchanter','Town Residence','The Iron Hearth Tavern'];
+assert.deepEqual(Object.keys(art).sort(),expected.sort(),'every named commercial/residential facade has a revised asset');
+for(const [name,m] of Object.entries(art)){
+ const b=readFileSync(folder+m.file);
+ assert.equal(b.toString('ascii',0,4),'RIFF',name);assert.equal(b.toString('ascii',8,12),'WEBP',name);
+ assert.ok(b.length>10000&&m.width>100&&m.height>100,name);
+ assert.ok(m.door[0]>.25&&m.door[0]<.75&&m.door[1]>.65&&m.door[1]<1.02,name+' entrance alignment');
+ for(const p of [...m.flues,...m.lanterns])assert.ok(p.every(v=>v>=0&&v<=1),name+' light/smoke anchor');
+}
+console.log('All 16 revised exterior sprites and entrance/smoke/light metadata PASS');
