@@ -1,0 +1,100 @@
+{
+  "well": {
+    "file": "market-well.webp",
+    "width": 646,
+    "height": 658,
+    "sourceBounds": [
+      6,
+      5,
+      318,
+      323
+    ],
+    "windows": []
+  },
+  "cart": {
+    "file": "market-cart.webp",
+    "width": 808,
+    "height": 574,
+    "sourceBounds": [
+      5,
+      5,
+      399,
+      282
+    ],
+    "windows": []
+  },
+  "rh1498shelter": {
+    "file": "market-rh1498shelter.webp",
+    "width": 1000,
+    "height": 862,
+    "sourceBounds": [
+      1,
+      1,
+      816,
+      702
+    ],
+    "windows": []
+  },
+  "stall0": {
+    "file": "market-stall0.webp",
+    "width": 822,
+    "height": 802,
+    "sourceBounds": [
+      6,
+      5,
+      405,
+      396
+    ],
+    "windows": []
+  },
+  "stall1": {
+    "file": "market-stall1.webp",
+    "width": 822,
+    "height": 802,
+    "sourceBounds": [
+      6,
+      5,
+      405,
+      396
+    ],
+    "windows": []
+  },
+  "rh1498warehouse": {
+    "file": "market-rh1498warehouse.webp",
+    "width": 1000,
+    "height": 845,
+    "sourceBounds": [
+      1,
+      0,
+      734,
+      620
+    ],
+    "windows": [
+      {
+        "points": [
+          [
+            0.69,
+            0.648
+          ],
+          [
+            0.784,
+            0.657
+          ],
+          [
+            0.785,
+            0.823
+          ],
+          [
+            0.69,
+            0.812
+          ]
+        ],
+        "lit": true
+      }
+    ],
+    "flue": [
+      0.815,
+      0.029
+    ]
+  }
+}

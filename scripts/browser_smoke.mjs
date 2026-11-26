@@ -45,7 +45,7 @@ try {
     throw new Error('Royal Haven cutaway pixel test failed: '+JSON.stringify(cutaway));
   await writeFile(resolve(out,'royal-haven-cutaway.json'),JSON.stringify(cutaway,null,2));
   console.log('Royal Haven cutaway pixel test PASS',cutaway);
-  await page.goto('file://' + resolve('app/src/main/assets/index.html'), { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto('file://' + resolve('app/src/main/assets/index.html') + '?graphicsAudit=1', { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(5000);
   const status = await page.evaluate(() => ({
     title: document.title,
@@ -100,7 +100,17 @@ try {
     await page.keyboard.up('ArrowUp');
     await page.waitForTimeout(1200);
     await page.screenshot({path:resolve(out,'royal-haven-civic-hall.png'),timeout:30000});
-    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,errors},null,2));
+    // Graphics-only camera audit uses the explicit query opt-in, not a normal
+    // player's save or route. Render the exact market court at play scale.
+    await page.evaluate(()=>window.DarkFallRoyalHaven.reviewMarket());
+    await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.marketArt();return a.assets.every(o=>o.ready)&&a.eastTiles===4&&a.eastReady.includes('8:3')&&a.squareReady&&a.contactCount>=7;},{},{timeout:30000});
+    await page.waitForTimeout(2500);
+    const marketArt=await page.evaluate(()=>window.DarkFallRoyalHaven.marketArt());
+    if(marketArt.assets.some(o=>!o.instances.length)||marketArt.assets.filter(o=>o.key.startsWith('stall')).reduce((n,o)=>n+o.instances.length,0)!==4)throw new Error('Market art instance audit failed: '+JSON.stringify(marketArt));
+    console.log('Royal Haven market graphics readiness',JSON.stringify(marketArt));
+    await page.screenshot({path:resolve(out,'royal-haven-market.png'),timeout:30000});
+    await writeFile(resolve(out,'royal-haven-market-audit.json'),JSON.stringify(marketArt,null,2));
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,marketArt,errors},null,2));
     if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
   }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.

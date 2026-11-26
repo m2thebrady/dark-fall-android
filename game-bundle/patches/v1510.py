@@ -35,6 +35,8 @@ def apply(html: bytes) -> bytes:
     art+=("const rh1510ShoulderData="+json.dumps(shoulders,separators=(",",":"))+";\n").encode()
     civic_meta=json.loads((patch_dir/"art-v1510/civic-metadata.json").read_text())
     art+=("const rh1510CivicMeta="+json.dumps(civic_meta,separators=(",",":"))+";\n").encode()
+    market_meta=json.loads((patch_dir/"art-v1510/market-metadata.json").read_text())
+    art+=("const rh1510MarketMeta="+json.dumps(market_meta,separators=(",",":"))+";\n").encode()
     js=art+patch_dir.joinpath("royal-haven-v1510.js").read_bytes()
     html=html[:start]+js+b"\n"+html[end:]
     edit(old_gate,revised_gate)
@@ -42,7 +44,7 @@ def apply(html: bytes) -> bytes:
     # foundation, bounds query and visible instance uses the same revised sprite.
     def civic_group(symbol, files):
         nonlocal html
-        rx=rb'const '+symbol.encode()+rb'=\{\};for\(const \[k,src\] of Object.entries\((\{[^\n]+?\})\)'
+        rx=rb'const '+symbol.encode()+rb'=\{\};\s*for\(const \[k,src\] of Object.entries\((\{[^\n]+?\})\)'
         match=re.search(rx,html)
         if not match:
             raise ValueError("Missing civic art dictionary: "+symbol)
@@ -55,6 +57,37 @@ def apply(html: bytes) -> bytes:
     civic_group("rh193Art",{"hall":civic_meta["hall"]["file"]})
     civic_group("rh187Art",{k:civic_meta[k]["file"] for k in ("store","supply","herb")})
     civic_group("rh1340ServiceArt",{"herb":civic_meta["activeHerb"]["file"]})
+    civic_group("rh1475Images",{k:market_meta[k]["file"] for k in ("stall0","stall1","well","cart")})
+    freight=re.search(rb'for\(const \[k,src\] of Object.entries\((\{"rh1498warehouse":[^\n]+?\})\)',html)
+    if not freight:
+        raise ValueError("Market freight art dictionary not found")
+    values=json.loads(freight.group(1))
+    for k in ("rh1498warehouse","rh1498shelter"):
+        values[k]="data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510"/market_meta[k]["file"]).read_bytes()).decode()
+    html=html[:freight.start(1)]+json.dumps(values,separators=(",",":")).encode()+html[freight.end(1):]
+    terrain=re.search(rb'const rh119ChunkData=(\{[^\n]+?\}), rh119ChunkImages',html)
+    if not terrain:
+        raise ValueError("Painted terrain atlas not found")
+    values=json.loads(terrain.group(1))
+    for j in range(4):
+        key=f"8:{j}"
+        if key in values:
+            raise ValueError("East tile already exists: "+key)
+        values[key]="data:image/webp;base64,"+base64.b64encode((patch_dir/f"art-v1510/east-ground-{j}.webp").read_bytes()).decode()
+    html=html[:terrain.start(1)]+json.dumps(values,separators=(",",":")).encode()+html[terrain.end(1):]
+    edit("  g.globalCompositeOperation='source-atop';rh1472Trace(g,rh1475Square,b.x,b.y);g.lineWidth=9;g.strokeStyle='#514e405a';g.stroke();g.lineWidth=2;g.strokeStyle='#d0bda568';g.stroke();",
+         "  rh1510MarketSquareEdge(g,b,rh1475Square);g.globalCompositeOperation='source-atop';")
+    edit("rh1221Shadow(o.x+3,o.y-1,o.rx*2+13,o.ry*2+15,.42);\n c.save();if(o.flip){c.translate(o.x*2,0);c.scale(-1,1);}\n rh1432FacadeDraw(im,x,y,o.w,o.h);c.restore();",
+         "rh1457Facade(rh1510MarketBounds(o),o.y,()=>{c.save();if(o.flip){c.translate(o.x*2,0);c.scale(-1,1);}rh1432FacadeDraw(im,x,y,o.w,o.h);c.restore();});")
+    # Retire the detached radial light blob; use existing street lamps, the
+    # actual textured, painted market props and existing atmospheric lighting.
+    start=html.index(b" if(o.k.startsWith('stall')){const night=rh1433Day().night;")
+    end=html.index(b"\n}\nfunction rh1475AddResident",start)
+    html=html[:start]+html[end:]
+    edit("rh1430PuddleDraw(cx,cy,townTime);", "rh1510MarketGround(cx,cy);rh1430PuddleDraw(cx,cy,townTime);")
+    edit("const glow=rh1464Art[o.k+'Night'];", "const glow=rh1510MarketBuilding(o)?null:rh1464Art[o.k+'Night'];")
+    edit("rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;if(glow?.complete", "rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);if(rh1510MarketBuilding(o))rh1510MarketGlass(o,b);const a=rh1433Day().night;if(glow?.complete")
+
     edit("if(o.rebuilt1340)rh1376DrawGlass('workshop:herb',o.x-o.w/2,o.y-h,o.w,h);","rh1510AnnexGlass(o,o.x-o.w/2,o.y-h,o.w,h);")
     edit("rh1503Tavern.init();rh1504Artisan.init();","rh1503Tavern.init();rh1504Artisan.init();rh1510PlaceAnnexes();")
     edit("function rh1269Landmark(s,im){const academy=", "function rh1269Landmark(s,im){if(s.type==='future'&&im===rh193Art.hall)return rh1510HallFit(s,im);const academy=")
@@ -102,9 +135,9 @@ def apply(html: bytes) -> bytes:
     edit("function rh1454FireGeometry(s){return rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire;}", "function rh1454FireGeometry(s){return rh1510ArtPoints(s,'fire')||(rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire);}")
     edit("rh1430PuddleDraw(cx,cy,townTime);", "rh1510Ground(cx,cy);rh1430PuddleDraw(cx,cy,townTime);")
     edit("function rh1432ClearFacades(){rh1510CutawayCanvas=null;", "function rh1432ClearFacades(){rh1510ShoulderReset();rh1510GroundReset();rh1510CutawayCanvas=null;")
-    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),streetArt:rh1510StreetArtStatus,civicArt:rh1510CivicArtStatus,secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
-    edit("rh1457Facade(b,o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;", "rh1457Facade(rh1510HomeContext(b,o,im),o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;")
-    edit("if(Number.isFinite(o.flue)&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*o.flue,b.top+(o.flueY===undefined?3:b.h*o.flueY),now,cx,cy,o.x+o.y,'house');", "const updatedFlue=rh1510HomeFlues(o)?.[0];if((updatedFlue||Number.isFinite(o.flue))&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*(updatedFlue?.[0]??o.flue),b.top+(updatedFlue?b.h*updatedFlue[1]:(o.flueY===undefined?3:b.h*o.flueY)),now,cx,cy,o.x+o.y,'house');")
+    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),streetArt:rh1510StreetArtStatus,civicArt:rh1510CivicArtStatus,marketArt:rh1510MarketArtStatus,reviewMarket:new URLSearchParams(location.search).has('graphicsAudit')?()=>{p.x=6100;p.y=1980;return true}:undefined,secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
+    edit("rh1457Facade(b,o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);if(rh1510MarketBuilding(o))rh1510MarketGlass(o,b);const a=rh1433Day().night;", "rh1457Facade(rh1510HomeContext(b,o,im),o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);if(rh1510MarketBuilding(o))rh1510MarketGlass(o,b);const a=rh1433Day().night;")
+    edit("if(Number.isFinite(o.flue)&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*o.flue,b.top+(o.flueY===undefined?3:b.h*o.flueY),now,cx,cy,o.x+o.y,'house');", "const updatedFlue=rh1510MarketMeta[o.k]?.flue||rh1510HomeFlues(o)?.[0];if((updatedFlue||Number.isFinite(o.flue))&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*(updatedFlue?.[0]??o.flue),b.top+(updatedFlue?b.h*updatedFlue[1]:(o.flueY===undefined?3:b.h*o.flueY)),now,cx,cy,o.x+o.y,'house');")
     # Preserve existing draw order and special northern citadel (painted behind the party).
     # Every occurrence was checked against the text-only source (no embedded image bytes).
     if html.count(b"V1509")!=108:

@@ -99,3 +99,19 @@ assert.equal(pathCross({l:50,t:50,r:150,b:90},[[0,70],[200,70]],10),true,'protec
 assert.equal(pathCross({l:50,t:50,r:150,b:90},[[0,115],[200,115]],10),false,'open route beside foundation');
 assert.equal(pathCross({l:50,t:50,r:150,b:90},[[100,0],[100,40]],12),true,'walking margin protected');
 console.log('Vacant-lot path clearance tests PASS');
+
+const market=JSON.parse(readFileSync(folder+'market-metadata.json','utf8'));
+assert.deepEqual(Object.keys(market).sort(),['cart','rh1498shelter','rh1498warehouse','stall0','stall1','well']);
+for(const [k,m] of Object.entries(market)){
+ const a=readFileSync(folder+m.file);
+ assert.equal(a.toString('ascii',0,4),'RIFF');
+ assert.equal(a.toString('ascii',8,12),'WEBP');
+ assert.ok(a.length>10000&&a.length<450000,k+' compact textured alpha art');
+ assert.ok(m.width>200&&m.height>200);
+}
+for(let j=0;j<4;j++){
+ const a=readFileSync(folder+'east-ground-'+j+'.webp');
+ assert.equal(a.toString('ascii',8,12),'WEBP');
+ assert.ok(a.length>30000&&a.length<180000);
+}
+console.log('Market artwork and 4 additional seamless east terrain chunks PASS');

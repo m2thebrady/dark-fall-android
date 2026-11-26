@@ -119,7 +119,7 @@ function rh1457Facade(b,base,draw){
 // thresholds are ground-only, cached and independent of collision or doors.
 const rh1510GroundCache=new Map();
 let rh1510GroundBuilds=0,rh1510GroundPixels=0;
-function rh1510GroundReset(){rh1510AnnexApproaches.clear();rh1510GroundCache.clear();rh1510GroundPixels=0;rh1510GroundBuilds=0;}
+function rh1510GroundReset(){rh1510MarketContacts.clear();rh1510AnnexApproaches.clear();rh1510GroundCache.clear();rh1510GroundPixels=0;rh1510GroundBuilds=0;}
 function rh1510GroundBuild(b,im,site){
  const seed=rh1510Seed(b),sw=Math.max(8,Math.ceil(b.w/3)),sh=Math.max(8,Math.ceil(b.h/3));
  const silhouette=rhSurface(sw,sh),sg=silhouette.getContext('2d',{willReadFrequently:true});
@@ -400,4 +400,64 @@ function rh1510AnnexApproach(cx,cy){
   }
   c.save();c.globalAlpha=.78;c.drawImage(a,x,y);c.restore();
  }
+}
+
+// Market Court: blend the irregular paving edge into the actual east atlas.
+// This runs only during construction of the existing cached square canvas.
+function rh1510MarketSquareEdge(g,b,points){
+ const image=g.getImageData(0,0,b.w,b.h),d=image.data;
+ const field=rh1510Field(b.w,b.h,13,12,1510475),fine=rh1510Field(b.w,b.h,4,4,1510476);
+ const edges=points.map((p,i)=>{const q=points[(i+1)%points.length],dx=q[0]-p[0],dy=q[1]-p[1];return [p[0]-b.x,p[1]-b.y,dx,dy,dx*dx+dy*dy]});
+ for(let y=0;y<b.h;y++)for(let x=0;x<b.w;x++){
+  const j=y*b.w+x,i=j*4;if(!d[i+3])continue;
+  let dist=Infinity;
+  for(const [ax,ay,dx,dy,len] of edges){const t=rh1510Clamp(((x-ax)*dx+(y-ay)*dy)/len);dist=Math.min(dist,Math.hypot(x-ax-t*dx,y-ay-t*dy));}
+  const width=9+field[j]*17+fine[j]*5,edge=rh1510Clamp((dist-1.5)/width);
+  const fade=edge*edge*(3-2*edge),grime=(1-fade)*(.28+.72*field[j]);
+  // Natural weathered green grout and earthy color at the ragged stone margin.
+  d[i]=d[i]*(1-grime*.22)+88*grime*.22;d[i+1]=d[i+1]*(1-grime*.18)+94*grime*.18;d[i+2]=d[i+2]*(1-grime*.24)+55*grime*.24;
+  d[i+3]*=fade;
+ }
+ g.putImageData(image,0,0);
+}
+function rh1510MarketBounds(o){return {left:o.x-o.w/2,top:o.y-o.h+6,w:o.w,h:o.h};}
+const rh1510MarketContacts=new Map();
+function rh1510MarketGround(cx,cy){
+ for(const o of rh1475Furniture){
+  if(!rh1365Intersects(rh1510MarketBounds(o),cx,cy,45))continue;
+  let a=rh1510MarketContacts.get(o);
+  if(!a){
+   const w=Math.ceil(o.rx*2+76),h=Math.ceil(o.ry*2+62),can=rhSurface(w,h),g=can.getContext('2d');
+   const centerX=w/2,centerY=h/2,seed=Math.round(o.x+o.y);
+   // Old market furniture had shadows painted through the character layer.
+   // These ground-only contact beds stay under both scenery and characters.
+   g.save();g.translate(centerX,centerY);g.scale(o.rx+22,o.ry+18);
+   const soil=g.createRadialGradient(0,0,.20,0,0,1);
+   soil.addColorStop(0,'#27261564');soil.addColorStop(.55,'#403a2b37');soil.addColorStop(1,'#453a2400');
+   g.fillStyle=soil;g.fillRect(-1,-1,2,2);g.restore();
+   for(let i=0;i<48;i++){
+    const angle=rh1510Hash(i,1,seed)*Math.PI*2,r=.66+rh1510Hash(i,2,seed)*.54;
+    const x=centerX+Math.cos(angle)*(o.rx+12)*r,y=centerY+Math.sin(angle)*(o.ry+6)*r;
+    const d=1+rh1510Hash(i,3,seed)*2.3;
+    g.fillStyle=i%4===0?'#74775266':i%3===0?'#a7936b55':'#493c2b4d';
+    g.beginPath();g.ellipse(x,y,d,d*.45,angle,0,Math.PI*2);g.fill();
+   }
+   a={can,left:o.x-w/2,top:o.y-h/2};rh1510MarketContacts.set(o,a);
+  }
+  c.drawImage(a.can,a.left,a.top);
+ }
+}
+function rh1510MarketBuilding(o){return o.k==='rh1498warehouse'||o.k==='rh1498shelter';}
+function rh1510MarketGlass(o,b){
+ const m=rh1510MarketMeta[o.k];
+ if(m?.windows?.length)rh1510WindowTint(m.windows,b.left,b.top,b.w,b.h);
+}
+function rh1510MarketArtStatus(){
+ const keys=['stall0','stall1','well','cart','rh1498warehouse','rh1498shelter'];
+ return {assets:keys.map(key=>{
+  const im=rh1475Images[key]||rh1464Art[key],objects=key.startsWith('rh1498')?rh1464Homes:rh1475Furniture;
+  return {key,ready:!!im?.complete&&im.naturalWidth>1,instances:objects.filter(o=>o.k===key).map(o=>({x:o.x,y:o.y,w:o.w,h:o.h,flip:!!o.flip}))};
+ }),eastTiles:Object.keys(rh119ChunkData).filter(k=>k.startsWith('8:')).length,
+ eastReady:[...rh119ChunkImages.entries()].filter(([k,im])=>k.startsWith('8:')&&im.complete&&im.naturalWidth===720).map(([k])=>k),
+ squareReady:!!rh1475SquareArt,contactCount:rh1510MarketContacts.size};
 }
