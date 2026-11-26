@@ -264,3 +264,27 @@ vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1516.js','utf8'),
 assert.equal(vm.runInContext("rh1516Foundry.draw({name:'Weapon Smith',doorX:350,doorY:1333})",foundryCtx),true);
 assert.deepEqual(flameCalls,[12.345,12.345],'animated furnace and embers use the real render clock');
 console.log('Foundry furnace paint and time source PASS');
+// The replacement home footprints must stay inside previously solid ground.
+// This protects established citizen routes and other district collision.
+const residentialDir='game-bundle/patches/art-v1517/';
+const residential=JSON.parse(readFileSync(residentialDir+'layout-metadata.json','utf8'));
+const oldHomeBoxes={
+ forward:{y:2393,boxes:[[-145,-78,145,-36],[-86,-37,25,4]]},
+ deepstone:{y:2034,boxes:[[-140.6,-64.66,107.06,3.97]]}
+};
+for(const [key,m] of Object.entries(residential.homes)){
+ const g=m.geometry,old=oldHomeBoxes[key],y=g.y??old.y;
+ assert.ok(g.h*m.doorHeight>=78&&g.w*m.doorWidth>=47,key+' human-scaled doorway');
+ assert.ok(Math.abs(g.dx-g.w/2+g.w*m.door[0]-g.doorWorldOffset)<.001,key+' aligned horizontal entrance');
+ assert.ok(Math.abs(g.artDy-g.h+g.h*m.door[1])<.001,key+' aligned vertical entrance');
+ assert.ok(m.windows.some(x=>x.lit)&&m.windows.some(x=>!x.lit),key+' non-uniform glass lighting');
+ for(const [l,t,r,b] of g.boxes)for(let x=l+.5;x<r;x+=1)for(let yy=t+.5;yy<b;yy+=1)
+   assert.ok(old.boxes.some(([ol,ot,or,ob])=>x>ol&&x<or&&y+yy>old.y+ot&&y+yy<old.y+ob),key+' footprint must not consume new walkable land');
+ assert.ok(readFileSync(residentialDir+m.file).length>10000);
+}
+assert.equal(residential.homes.forward.geometry.y,2360);
+for(const b of residential.ground){
+ assert.ok(b.w*b.h<45000,'bounded cache allocation');
+ assert.ok(b.shape.every(([x,y])=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h));
+}
+console.log('Two distinct human-scale homes, non-expanding footprints, and bounded organic paving overlays PASS');
