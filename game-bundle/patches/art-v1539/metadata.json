@@ -1,0 +1,39 @@
+{
+  "models": [
+    {
+      "key": "rock0",
+      "file": "rock0.webp",
+      "width": 336,
+      "height": 289,
+      "bytes": 41370,
+      "sha256": "875291846bc220d769ad4088f5e5de072d2a8b485d6b400773a21548d59f3081"
+    },
+    {
+      "key": "rock1",
+      "file": "rock1.webp",
+      "width": 336,
+      "height": 252,
+      "bytes": 43266,
+      "sha256": "985a02e476a22de362f485a4faea3b7dad7404876e9fdab7989886c959a54a37"
+    },
+    {
+      "key": "rock2",
+      "file": "rock2.webp",
+      "width": 336,
+      "height": 241,
+      "bytes": 32434,
+      "sha256": "68d39b04dadcbc7f03db269f7aa6d0517e3751ffeb0def141e07cabe7f72c5f8"
+    },
+    {
+      "key": "fern",
+      "file": "fern.webp",
+      "width": 336,
+      "height": 293,
+      "bytes": 60528,
+      "sha256": "197ae5e43499ff0b179af59543ccea91e82169cead8937ba32d7ca98f32780e4"
+    }
+  ],
+  "newColliders": 0,
+  "newDrawLayers": 0,
+  "npcChanges": 0
+}

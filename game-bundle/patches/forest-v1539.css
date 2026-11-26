@@ -1,0 +1,25 @@
+/* V1539: one full-window forest stage in browser, native fullscreen and mobile.
+   JS matches the logical canvas to this box, so the CSS fill never stretches actors. */
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+#gameWrap,#gameWrap:is(:fullscreen,:-webkit-full-screen){
+ position:fixed!important;inset:0!important;width:100%!important;height:100vh!important;height:100dvh!important;
+ max-width:none!important;max-height:none!important;min-height:0!important;margin:0!important;padding:0!important;
+ display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+#gameWrap>.tw-topbar{flex:0 0 auto;box-sizing:border-box;width:100%}
+#gameWrap>.stage,#gameWrap:is(:fullscreen,:-webkit-full-screen)>.stage{
+ position:relative!important;inset:auto!important;display:block!important;flex:1 1 0!important;
+ min-height:0!important;max-height:none!important;width:100%!important;height:auto!important;
+ margin:0!important;padding:0!important;overflow:hidden!important;
+}
+#gameWrap #screen,#gameWrap:is(:fullscreen,:-webkit-full-screen) #screen{
+ display:block!important;width:100%!important;height:100%!important;
+ min-width:0!important;max-width:none!important;max-height:none!important;
+ object-fit:fill!important;aspect-ratio:auto!important;
+}
+/* Keep assistance accessible without sacrificing terrain visibility. */
+#gameWrap>.foot{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:0!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap;pointer-events:none}
+/* Desktop return button sits below the scaled road-progress panel. */
+@media (hover:hover) and (pointer:fine) and (min-width:801px){
+ #gameWrap #dfTownLaunchV1166{top:max(112px,var(--df1539-road-bottom,112px))!important}
+}
