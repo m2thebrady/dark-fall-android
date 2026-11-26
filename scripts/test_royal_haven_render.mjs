@@ -288,3 +288,23 @@ for(const b of residential.ground){
  assert.ok(b.shape.every(([x,y])=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h));
 }
 console.log('Two distinct human-scale homes, non-expanding footprints, and bounded organic paving overlays PASS');
+// The optimized world-noise grid must reproduce the previous scalar noise
+// at every sampled position, including mirrored sides and nonzero origins.
+const perfCtx=vm.createContext({});vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1510.js','utf8'),perfCtx);
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1518.js','utf8'),perfCtx);
+const prevNoise=(x,y,sx,sy,seed)=>{let a=Math.floor(x/sx),b=Math.floor(y/sy),dx=x/sx-a,dy=y/sy-b,u=dx*dx*(3-2*dx),v=dy*dy*(3-2*dy);let k=perfCtx.rh1510Hash(a,b,seed),l=perfCtx.rh1510Hash(a+1,b,seed),m=perfCtx.rh1510Hash(a,b+1,seed),n=perfCtx.rh1510Hash(a+1,b+1,seed);return (k+(l-k)*u)*(1-v)+(m+(n-m)*u)*v;};
+for(const [ox,oy,dx,dy] of [[0,2360,.5,.5],[6460,1200,-.5,.5],[480,2322,1,1],[-28,-14,1,1]]){
+ const grid=perfCtx.rh1518NoiseField(130,96,ox,oy,dx,dy,8,11,1513);
+ for(let y=0;y<96;y++)for(let x=0;x<130;x++)assert.ok(Math.abs(grid[y*130+x]-prevNoise(ox+x*dx,oy+y*dy,8,11,1513))<1e-7);
+}
+let q=perfCtx.rh1518CutawayRect({left:200,top:200,w:250,h:300,rh1518LocalPad:8},{a:.7,b:0,c:0,d:.7,e:-70,f:-70},896,504);
+assert.ok(q.w*q.h<896*504*.3&&q.x>=0&&q.y>=0&&q.x+q.w<=896&&q.y+q.h<=504);
+perfCtx.rh1431InitialTier=()=>1;perfCtx.rh1431Perf={tier:1};perfCtx.rh176Moving=true;
+perfCtx.rh1518Begin();assert.equal(perfCtx.rh1518Claim('terrain'),true);assert.equal(perfCtx.rh1518Claim('facade'),false);perfCtx.rh1518End();
+perfCtx.rh1431InitialTier=()=>0;perfCtx.rh1431Perf={tier:0};perfCtx.rh176Moving=false;
+perfCtx.rh1518Begin();assert.equal(perfCtx.rh1518Claim('terrain'),true);assert.equal(perfCtx.rh1518Claim('facade'),true);assert.equal(perfCtx.rh1518Claim('contact'),false);perfCtx.rh1518End();
+perfCtx.W=1280;perfCtx.H=720;
+assert.equal(perfCtx.rh1518StreetTiles(0,0).length,4);
+assert.equal(perfCtx.rh1518StreetTiles(1,1).length,9);
+assert.equal(perfCtx.rh1518StreetTiles(640,360).length,4);
+console.log('Optimized world noise, bounded cutaway rectangle, raster budget, and tile coverage PASS');
