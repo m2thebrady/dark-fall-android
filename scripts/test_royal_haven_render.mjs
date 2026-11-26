@@ -115,3 +115,21 @@ for(let j=0;j<4;j++){
  assert.ok(a.length>30000&&a.length<180000);
 }
 console.log('Market artwork and 4 additional seamless east terrain chunks PASS');
+const districtDir='game-bundle/patches/art-v1511/';
+const district=JSON.parse(readFileSync(districtDir+'district-metadata.json','utf8'));
+assert.deepEqual(Object.keys(district).sort(),['rh1478East','rh1478Rear','rh1478West','rh1493Longhouse','rh1494Gatehouse','rh1495stepHouse','rh1495workshop','rh1496herbCourt','rh1499bellCourt']);
+for(const [k,m] of Object.entries(district)){
+ const a=readFileSync(districtDir+m.file);
+ assert.equal(a.toString('ascii',0,4),'RIFF');
+ assert.equal(a.toString('ascii',8,12),'WEBP');
+ assert.ok(a.length>30000&&a.length<500000,k+' compact art');
+ assert.ok(m.width>240&&m.height>240);
+ for(const p of m.flues)assert.ok(p.length===2&&p.every(x=>x>=0&&x<=1),k+' chimney anchor');
+ for(const w of m.windows)assert.ok(w.points.length>=3&&w.points.every(p=>p.every(x=>x>=0&&x<=1)),k+' window coordinates');
+}
+vm.runInContext(readFileSync('game-bundle/patches/royal-haven-v1511.js','utf8'),scope);
+const doorRows=scope.rh1511DoorRows;
+assert.equal(doorRows({x:200,y:130,doorWorldOffset:15,doorHeight:80})[0][0],215);
+assert.equal(doorRows({doors:[[210,110,85],[245,115,73]]}).length,2);
+assert.equal(doorRows({archWidth:100,archHeight:120}).length,0,'open arch and bell court do not fabricate thresholds');
+console.log('Nine eastern district assets and preserved multi-door geometry PASS');

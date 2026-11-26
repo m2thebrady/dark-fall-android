@@ -18,6 +18,7 @@ try {
     function rhSurface(w,h){const a=document.createElement('canvas');a.width=w;a.height=h;return a;}
   `});
   await probe.addScriptTag({content:await readFile('game-bundle/patches/royal-haven-v1510.js','utf8')});
+  await probe.addScriptTag({content:await readFile('game-bundle/patches/royal-haven-v1511.js','utf8')});
   const cutaway=await probe.evaluate(()=>{
     const main=c;
     c.fillStyle='#983027';c.fillRect(0,0,256,240);
@@ -35,12 +36,16 @@ try {
     const blend=rh1510GroundBuild({left:100,top:30,w:140,h:180},sprite,{name:'Herbalist',type:'shop',doorX:170,doorY:198});
     const bg=blend.canvas.getContext('2d'),contact=bg.getImageData(170-blend.left,204-blend.top,1,1).data[3],
       far=bg.getImageData(92-blend.left,160-blend.top,1,1).data[3];
-    return {center,feet,feather,roof,street,front,behindDraws,draws,restored,contact,far};
+    const apron=rhSurface(120,100),ag=apron.getContext('2d');
+    ag.fillStyle='#9b8771';ag.fillRect(0,0,120,100);
+    rh1511PavingEdge(ag,{x:0,y:0,w:120,h:100},[[0,0],[119,0],[119,99],[0,99]],1493);
+    const pavingEdge=ag.getImageData(2,2,1,1).data[3],pavingCore=ag.getImageData(60,50,1,1).data[3];
+    return {center,feet,feather,roof,street,front,behindDraws,draws,restored,contact,far,pavingEdge,pavingCore};
   });
   await probe.close();
   if(cutaway.center[1]>75||cutaway.feet[1]>85||cutaway.feather[1]<=cutaway.center[1]||
      cutaway.roof[1]<170||cutaway.front[1]<170||cutaway.street[1]!==48||
-     cutaway.behindDraws!==1||cutaway.draws!==2||!cutaway.restored||cutaway.contact<=0||cutaway.far!==0||
+     cutaway.behindDraws!==1||cutaway.draws!==2||!cutaway.restored||cutaway.contact<=0||cutaway.far!==0||cutaway.pavingEdge>=40||cutaway.pavingCore!==255||
      [cutaway.center,cutaway.feet,cutaway.street,cutaway.roof].some(p=>p[3]!==255))
     throw new Error('Royal Haven cutaway pixel test failed: '+JSON.stringify(cutaway));
   await writeFile(resolve(out,'royal-haven-cutaway.json'),JSON.stringify(cutaway,null,2));
@@ -74,7 +79,7 @@ try {
   await writeFile(resolve(out, 'report.json'), JSON.stringify({ status, errors }, null, 2));
   console.log(JSON.stringify({ status, errors: errors.slice(0, 12) }, null, 2));
   if (!status.canvases) throw new Error('Game canvas not found');
-  if(status.title==='Dark Fall V1510'){
+  if(['Dark Fall V1510','Dark Fall V1511'].includes(status.title)){
     // The built-in entry point is used for an exterior runtime smoke, not a modified game.
     await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven?.exteriorArt?.();return a?.length===16&&a.every(s=>s.ready&&(!s.active||s.bounds))&&window.DarkFallRoyalHaven.secondaryArt().every(s=>s.ready);},{},{timeout:45000});
     const art=await page.evaluate(()=>({stores:window.DarkFallRoyalHaven.exteriorArt(),homes:window.DarkFallRoyalHaven.secondaryArt()}));
@@ -110,7 +115,31 @@ try {
     console.log('Royal Haven market graphics readiness',JSON.stringify(marketArt));
     await page.screenshot({path:resolve(out,'royal-haven-market.png'),timeout:30000});
     await writeFile(resolve(out,'royal-haven-market-audit.json'),JSON.stringify(marketArt,null,2));
-    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,marketArt,errors},null,2));
+    let districtArt=null;
+    if(status.title==='Dark Fall V1511'){
+      await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.districtArt();return a.assets.length===9&&a.assets.every(o=>o.ready);},{},{timeout:30000});
+      // Review each revised neighborhood in the real game, while the explicit
+      // audit-only camera option keeps test positioning out of normal gameplay.
+      for(const key of ['market','civic','gate','artisan','herb']){
+        await page.evaluate(k=>window.DarkFallRoyalHaven.reviewDistrict(k),key);
+        await page.waitForTimeout(1600);
+        await page.screenshot({path:resolve(out,'royal-haven-district-'+key+'.png'),timeout:30000});
+      }
+      districtArt=await page.evaluate(()=>window.DarkFallRoyalHaven.districtArt(true));
+      await writeFile(resolve(out,'royal-haven-district-audit.json'),JSON.stringify(districtArt,null,2));
+      const {court,estate,gate,artisan,herb,civic}=districtArt;
+      if(districtArt.assets.some(o=>o.instances.length!==1||o.openings?.some(x=>x<.9))||districtArt.thresholds<7||
+         ![court,estate,gate,artisan,herb,civic].every(o=>o.installed)||
+         court.route.badCount||court.footprintErrors||court.npcErrors||
+         estate.paths.bad||estate.footprint.bad||estate.npcs.bad||
+         gate.arch.bad||gate.footprint.bad||gate.doors.bad||gate.citizens.bad||
+         artisan.main.bad||artisan.approaches.bad||artisan.residents.bad||
+         herb.lanes.bad||herb.residents.bad||herb.foot.bad||
+         civic.passage.bad||civic.routes.bad||civic.people.bad)
+        throw new Error('Eastern district placement/walkway audit failed: '+JSON.stringify(districtArt));
+      console.log('Royal Haven eastern district audit PASS',JSON.stringify(districtArt));
+    }
+    await writeFile(resolve(out,'royal-haven-runtime.json'),JSON.stringify({town,art,streetArt,civicArt,marketArt,districtArt,errors},null,2));
     if(errors.some(e=>/ReferenceError|SyntaxError|TypeError|InvalidStateError|not defined/i.test(e)))throw new Error('Fatal Royal Haven JavaScript error: '+errors.join('\n').slice(0,2000));
   }
   // Record pixel samples for diagnostics; some games draw via WebGL or a second canvas.

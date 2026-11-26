@@ -1,7 +1,7 @@
 {
-  "version": 1510,
-  "bytes": 218097494,
-  "sha256": "6f9e4559c1208103de74724beb8b26896fef9742481324a2baa3806c64a5e650",
+  "version": 1511,
+  "bytes": 212135083,
+  "sha256": "608177a50f3f92b408291fc83e4f3fd82ff137147a983e892d81010b81e457a3",
   "parts": [
     {
       "name": "index-000.html.gz",
@@ -55,6 +55,7 @@
     "sha256": "fe8b6a8100ea93f70b4b3f627136136d09c62c2a66c406753fffcf13b191d8bb"
   },
   "patches": [
-    "patches/v1510.py"
+    "patches/v1510.py",
+    "patches/v1511.py"
   ]
 }
