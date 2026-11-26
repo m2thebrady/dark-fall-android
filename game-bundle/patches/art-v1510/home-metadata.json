@@ -1,0 +1,93 @@
+{
+  "home:townhouse": {
+    "file": "home-townhouse.webp",
+    "width": 460,
+    "height": 665,
+    "door": [
+      0.247826,
+      0.98773
+    ],
+    "flues": [
+      [
+        0.741531,
+        0.010225
+      ]
+    ],
+    "lanterns": []
+  },
+  "home:forward": {
+    "file": "home-forward.webp",
+    "width": 460,
+    "height": 407,
+    "door": [
+      0.384783,
+      0.986207
+    ],
+    "flues": [
+      [
+        0.428283,
+        0.009195
+      ]
+    ],
+    "lanterns": []
+  },
+  "home:deepstone": {
+    "file": "home-deepstone.webp",
+    "width": 460,
+    "height": 652,
+    "door": [
+      0.282609,
+      0.983871
+    ],
+    "flues": [
+      [
+        0.761724,
+        0.006048
+      ]
+    ],
+    "lanterns": []
+  },
+  "home:leftcourt": {
+    "file": "home-leftcourt.webp",
+    "width": 460,
+    "height": 404,
+    "door": [
+      0.617391,
+      0.984163
+    ],
+    "flues": [
+      [
+        0.67205,
+        0.00905
+      ]
+    ],
+    "lanterns": []
+  },
+  "home:courtmain": {
+    "file": "home-courtmain.webp",
+    "width": 465,
+    "height": 437,
+    "door": [
+      0.619355,
+      0.980973
+    ],
+    "flues": [
+      [
+        0.816372,
+        0.010571
+      ]
+    ],
+    "lanterns": []
+  },
+  "home:courtwing": {
+    "file": "home-courtwing.webp",
+    "width": 316,
+    "height": 458,
+    "door": [
+      0.405063,
+      0.979424
+    ],
+    "flues": [],
+    "lanterns": []
+  }
+}

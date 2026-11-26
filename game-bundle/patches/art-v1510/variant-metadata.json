@@ -1,0 +1,24 @@
+{
+  "variant:cellar-relocated": {
+    "file": "cellar-relocated.webp",
+    "width": 525,
+    "height": 359,
+    "door": [
+      0.29714285714285715,
+      0.964427
+    ],
+    "flues": [
+      [
+        0.168381,
+        0.005929
+      ]
+    ],
+    "lanterns": [
+      [
+        0.474788,
+        0.586957
+      ]
+    ],
+    "legacy": true
+  }
+}

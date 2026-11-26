@@ -17,6 +17,8 @@ def apply(html: bytes) -> bytes:
     end=html.index(b"function rh1457Shade(",start)
     patch_dir=Path(__file__).parent
     metadata=json.loads((patch_dir/"art-v1510/metadata.json").read_text())
+    metadata.update(json.loads((patch_dir/"art-v1510/home-metadata.json").read_text()))
+    metadata.update(json.loads((patch_dir/"art-v1510/variant-metadata.json").read_text()))
     assets={name:"data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510"/item["file"]).read_bytes()).decode() for name,item in metadata.items()}
     art=("const rh1510ArtMeta="+json.dumps(metadata,separators=(",",":"))+";\nconst rh1510Art={};for(const [name,src] of Object.entries("+json.dumps(assets,separators=(",",":"))+")){const im=rh1200Image();im.src=src;rh1510Art[name]=im;}\n").encode()
     js=art+patch_dir.joinpath("royal-haven-v1510.js").read_bytes()
@@ -55,7 +57,9 @@ def apply(html: bytes) -> bytes:
     edit("function rh1454FireGeometry(s){return rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire;}", "function rh1454FireGeometry(s){return rh1510ArtPoints(s,'fire')||(rh1454ForgeReady(s)?rh1454ForgeFire:rh1454OldFire);}")
     edit("rh1430PuddleDraw(cx,cy,townTime);", "rh1510Ground(cx,cy);rh1430PuddleDraw(cx,cy,townTime);")
     edit("function rh1432ClearFacades(){rh1510CutawayCanvas=null;", "function rh1432ClearFacades(){rh1510GroundReset();rh1510CutawayCanvas=null;")
-    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>sites.filter(s=>rh1510ArtMeta[s.name]).map(s=>({name:s.name,ready:!!rh1510Upgrade(s),bounds:!!rh1365SiteBounds(s),legacy:rh1510ArtMeta[s.name].legacy}))};")
+    edit("sites:sites.map(s=>s.name)};", "sites:sites.map(s=>s.name),exteriorArt:()=>Object.keys(rh1510ArtMeta).filter(name=>!name.includes(':')).map(name=>{const s=sites.find(o=>o.name===name),im=s?rh1510Upgrade(s):rh1510Art[name];return {name,active:!!s,ready:!!im?.complete&&im.naturalWidth>1,bounds:s?!!rh1365SiteBounds(s):null,legacy:rh1510ArtMeta[name].legacy};}),secondaryArt:()=>Object.keys(rh1510ArtMeta).filter(k=>k.startsWith('home:')).map(name=>({name,ready:!!rh1510Art[name]?.complete&&rh1510Art[name].naturalWidth>1}))};")
+    edit("rh1457Facade(b,o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;", "rh1457Facade(rh1510HomeContext(b,o,im),o.y,()=>{rh1432FacadeDraw(im,b.left,b.top,b.w,b.h);const a=rh1433Day().night;")
+    edit("if(Number.isFinite(o.flue)&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*o.flue,b.top+(o.flueY===undefined?3:b.h*o.flueY),now,cx,cy,o.x+o.y,'house');", "const updatedFlue=rh1510HomeFlues(o)?.[0];if((updatedFlue||Number.isFinite(o.flue))&&rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))rh1424Plume(b.left+b.w*(updatedFlue?.[0]??o.flue),b.top+(updatedFlue?b.h*updatedFlue[1]:(o.flueY===undefined?3:b.h*o.flueY)),now,cx,cy,o.x+o.y,'house');")
     # Preserve existing draw order and special northern citadel (painted behind the party).
     # Every occurrence was checked against the text-only source (no embedded image bytes).
     if html.count(b"V1509")!=108:

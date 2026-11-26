@@ -69,9 +69,12 @@ function rh1510WeatherRaster(g,w,h,seed){
   for(let i=0;i<im.data.length;i+=4)for(let k=0;k<3;k++)im.data[i+k]=original[i+k]+(im.data[i+k]-original[i+k])*.35;
  }else rh1510WeatherPixels(im.data,w,h,seed,style);g.putImageData(im,0,0);}catch(_){}
 }
-function rh1510Upgrade(s){const a=rh1510Art[s.name];return a?.complete&&a.naturalWidth>1?a:null;}
-function rh1510Legacy(s){return !!rh1510Upgrade(s)&&!!rh1510ArtMeta[s.name]?.legacy;}
-function rh1510ArtPoints(s,key){return rh1510Upgrade(s)?rh1510ArtMeta[s.name]?.[key]:null;}
+function rh1510SiteKey(s){return s.name==='Storehouse Cellar'&&rhPainted[s.name][4]<.35?'variant:cellar-relocated':s.name;}
+function rh1510Upgrade(s){const a=rh1510Art[rh1510SiteKey(s)];return a?.complete&&a.naturalWidth>1?a:null;}
+function rh1510HomeUpgrade(o){const a=rh1510Art['home:'+o.k];return a?.complete&&a.naturalWidth>1?a:null;}
+function rh1510HomeFlues(o){return rh1510HomeUpgrade(o)?rh1510ArtMeta['home:'+o.k]?.flues:null;}
+function rh1510HomeContext(b,o,im){return {...b,primary:im,upgrade:rh1510HomeUpgrade(o),style:{green:true,flues:rh1510HomeFlues(o)||[]}};}
+function rh1510ArtPoints(s,key){return rh1510Upgrade(s)?rh1510ArtMeta[rh1510SiteKey(s)]?.[key]:null;}
 function rh1510SiteBounds(b,s){
  const fit=b||{left:s.x,top:s.y,w:s.w,h:s.h};
  return {...fit,primary:rh1451SiteArt(s),upgrade:rh1510Upgrade(s),style:{hearth:s.type==='forge'||s.type==='tavern'||s.type==='inn'||s.name==='Bakery',
@@ -171,24 +174,38 @@ function rh1510GroundBuild(b,im,site){
  }
  return {canvas,left,top,n:w*h,im};
 }
+function rh1510GroundEntry(key,b,im,site,cx,cy){
+ if(!b||!rh1365Intersects(b,cx,cy,45)||!im?.complete||!im.naturalWidth)return;
+ const stamp=[b.left,b.top,b.w,b.h].join(':');
+ let a=rh1510GroundCache.get(key);
+ if(a&&(a.im!==im||a.stamp!==stamp)){rh1510GroundPixels-=a.n;rh1510GroundCache.delete(key);a=null;}
+ if(a){rh1510GroundCache.delete(key);rh1510GroundCache.set(key,a);}
+ else if(rh1510GroundBuilds<1){
+  rh1510GroundBuilds++;
+  try{
+   a=rh1510GroundBuild(b,im,site);a.stamp=stamp;
+   while(rh1510GroundPixels+a.n>1900000&&rh1510GroundCache.size){const k=rh1510GroundCache.keys().next().value;rh1510GroundPixels-=rh1510GroundCache.get(k).n;rh1510GroundCache.delete(k);}
+   rh1510GroundCache.set(key,a);rh1510GroundPixels+=a.n;
+  }catch(_){}
+ }
+ if(a)c.drawImage(a.canvas,a.left,a.top);
+}
+function rh1510GroundHome(o,b,im,cx,cy){
+ if(!b)return;
+ const d=o.door||o.doors?.[0]||(Number.isFinite(o.doorWorldOffset)?[o.x+o.doorWorldOffset,o.y]:null);
+ rh1510GroundEntry(o,b,im,{name:o.k,type:'home',doorX:d?.[0]??NaN,doorY:d?.[1]??NaN},cx,cy);
+}
 function rh1510Ground(cx,cy){
  rh1510GroundBuilds=0;
  for(const s of sites){
   if(!rhPainted[s.name])continue;
-  const b=rh1365SiteBounds(s);if(!b||!rh1365Intersects(b,cx,cy,45))continue;
-  const im=rh1510Upgrade(s)||rh1451SiteArt(s);
-  if(!im?.complete||!im.naturalWidth)continue;
-  let a=rh1510GroundCache.get(s);
-  if(a&&a.im!==im){rh1510GroundPixels-=a.n;rh1510GroundCache.delete(s);a=null;}
-  if(a){rh1510GroundCache.delete(s);rh1510GroundCache.set(s,a);}
-  else if(rh1510GroundBuilds<1){
-   rh1510GroundBuilds++;
-   try{
-    a=rh1510GroundBuild(b,im,s);
-    while(rh1510GroundPixels+a.n>1600000&&rh1510GroundCache.size){const key=rh1510GroundCache.keys().next().value;rh1510GroundPixels-=rh1510GroundCache.get(key).n;rh1510GroundCache.delete(key);}
-    rh1510GroundCache.set(s,a);rh1510GroundPixels+=a.n;
-   }catch(_){}
-  }
-  if(a)c.drawImage(a.canvas,a.left,a.top);
+  const b=rh1365SiteBounds(s);
+  rh1510GroundEntry(s,b,rh1510Upgrade(s)||rh1451SiteArt(s),s,cx,cy);
  }
+ // The same irregular contact follows estate houses, outbuildings and passage
+ // structures so the shops and neighboring residential streets read as one town.
+ for(const o of rh1464Homes)if(o.large)rh1510GroundHome(o,rh1464Bounds(o),rh1510HomeUpgrade(o)||rh1464Art[o.k],cx,cy);
+ for(const o of rh1474Parts)rh1510GroundHome(o,rh1474Bounds(o),rh1474Art[o.k],cx,cy);
+ for(const o of rh189Houses)rh1510GroundHome(o,rh1365HouseBounds(o),rh1365HouseImage(o),cx,cy);
+ for(const o of rh187Annex)rh1510GroundHome(o,rh1399AnnexBounds(o),o.rebuilt1340?rh1340ServiceArt.herb:rh187Art[o.k],cx,cy);
 }

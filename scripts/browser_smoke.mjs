@@ -76,8 +76,11 @@ try {
   if (!status.canvases) throw new Error('Game canvas not found');
   if(status.title==='Dark Fall V1510'){
     // The built-in entry point is used for an exterior runtime smoke, not a modified game.
-    await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven?.exteriorArt?.();return a?.length===16&&a.every(s=>s.ready&&s.bounds);},{},{timeout:45000});
-    const art=await page.evaluate(()=>window.DarkFallRoyalHaven.exteriorArt());
+    await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven?.exteriorArt?.();return a?.length===16&&a.every(s=>s.ready&&(!s.active||s.bounds))&&window.DarkFallRoyalHaven.secondaryArt().every(s=>s.ready);},{},{timeout:45000});
+    const art=await page.evaluate(()=>({stores:window.DarkFallRoyalHaven.exteriorArt(),homes:window.DarkFallRoyalHaven.secondaryArt()}));
+    console.log('Royal Haven artwork readiness',JSON.stringify(art));
+    const first=page.locator('.chooseCard').first();
+    if(await first.isVisible())await first.click({timeout:15000});
     const town=await page.evaluate(()=>{const api=window.DarkFallRoyalHaven;if(!api)return false;api.open();return api.active;});
     if(!town)throw new Error('Royal Haven failed to open');
     await page.waitForTimeout(4000);

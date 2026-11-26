@@ -44,3 +44,16 @@ for(const [name,m] of Object.entries(art)){
  for(const p of [...m.flues,...m.lanterns])assert.ok(p.every(v=>v>=0&&v<=1),name+' light/smoke anchor');
 }
 console.log('All 16 revised exterior sprites and entrance/smoke/light metadata PASS');
+const homes=JSON.parse(readFileSync(folder+'home-metadata.json','utf8'));
+assert.equal(Object.keys(homes).length,6);
+for(const [name,m] of Object.entries(homes)){
+ const b=readFileSync(folder+m.file);
+ assert.equal(b.toString('ascii',0,4),'RIFF',name);assert.equal(b.toString('ascii',8,12),'WEBP',name);
+ assert.ok(m.width>100&&m.height>100&&m.door[0]>.2&&m.door[0]<.8&&m.door[1]>.8&&m.door[1]<=1,name);
+}
+console.log('Six residential facade upgrades PASS');
+
+const variant=JSON.parse(readFileSync(folder+'variant-metadata.json','utf8'))['variant:cellar-relocated'];
+assert.ok(Math.abs(variant.door[0]-193/650)<.003,'relocated cellar artwork uses its actual door anchor');
+assert.equal(readFileSync(folder+variant.file).toString('ascii',8,12),'WEBP');
+console.log('Relocated cellar entrance variant PASS');
