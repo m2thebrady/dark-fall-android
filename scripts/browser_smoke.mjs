@@ -93,8 +93,8 @@ try {
   await writeFile(resolve(out, 'report.json'), JSON.stringify({ status, errors }, null, 2));
   console.log(JSON.stringify({ status, errors: errors.slice(0, 12) }, null, 2));
   if (!status.canvases) throw new Error('Game canvas not found');
-  if(['Dark Fall V1510','Dark Fall V1511','Dark Fall V1512','Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
-    const masterGround=['Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title);
+  if(['Dark Fall V1510','Dark Fall V1511','Dark Fall V1512','Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
+    const masterGround=['Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title);
     // The built-in entry point is used for an exterior runtime smoke, not a modified game.
     await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven?.exteriorArt?.();return a?.length===16&&a.every(s=>s.ready&&(!s.active||s.bounds))&&window.DarkFallRoyalHaven.secondaryArt().every(s=>s.ready);},{},{timeout:45000});
     const art=await page.evaluate(()=>({stores:window.DarkFallRoyalHaven.exteriorArt(),homes:window.DarkFallRoyalHaven.secondaryArt()}));
@@ -131,7 +131,7 @@ try {
     await page.screenshot({path:resolve(out,'royal-haven-market.png'),timeout:30000});
     await writeFile(resolve(out,'royal-haven-market-audit.json'),JSON.stringify(marketArt,null,2));
     let districtArt=null;
-    if(['Dark Fall V1511','Dark Fall V1512','Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1511','Dark Fall V1512','Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.districtArt();return a.assets.length===9&&a.assets.every(o=>o.ready);},{},{timeout:30000});
       // Review each revised neighborhood in the real game, while the explicit
       // audit-only camera option keeps test positioning out of normal gameplay.
@@ -155,7 +155,7 @@ try {
       console.log('Royal Haven eastern district audit PASS',JSON.stringify(districtArt));
     }
     let fortificationArt=null;
-    if(['Dark Fall V1512','Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1512','Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.fortificationArt();return a.towers.every(o=>o.ready)&&a.market.every(o=>o.ready);},{},{timeout:30000});
       for(const key of ['market','south','west','east','middle']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewFortifications(k),key);
@@ -171,7 +171,7 @@ try {
       console.log('Royal Haven fortification & market diversity audit PASS',JSON.stringify(fortificationArt));
     }
     let streetLayout=null;
-    if(['Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1513','Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.streetLayout();return a.row.every(o=>o.ready)&&a.court.every(o=>o.ready);},{},{timeout:30000});
       for(const key of ['courtyard','row','tailor','bakery']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewLayout(k),key);
@@ -189,7 +189,7 @@ try {
       console.log('Royal Haven street alignment and inward courtyard audit PASS',JSON.stringify(streetLayout));
     }
     let streetAlignment=null;
-    if(['Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1514','Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.streetAlignment();return a.row.every(o=>o.ready)&&a.gate.ready;},{},{timeout:30000});
       for(const key of ['homes','row','herbalist','fletcher','gate']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewAlignment(k),key);
@@ -208,7 +208,7 @@ try {
       console.log('Royal Haven straight shop and gatehouse layout PASS',JSON.stringify(streetAlignment));
     }
     let merchantQuarter=null;
-    if(['Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1515','Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.merchantQuarter();return a.row.every(o=>o.ready)&&a.civic.every(o=>o.ready);},{},{timeout:30000});
       for(const key of ['merchants','residence','vacant','bell']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewQuarter(k),key);
@@ -228,7 +228,7 @@ try {
       console.log('Royal Haven merchant terrace / civic square PASS',JSON.stringify(merchantQuarter));
     }
     let foundryDistrict=null;
-    if(['Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1516','Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.foundryDistrict();return a.shops.every(o=>o.ready)&&a.gallery.ready&&a.townhouse.ready;},{},{timeout:30000});
       for(const key of ['forge','armor','leather','corridor','townhouse']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewFoundry(k),key);
@@ -246,7 +246,7 @@ try {
       console.log('Royal Haven foundry district and open gallery PASS',JSON.stringify(foundryDistrict));
     }
     let residentialDistrict=null;
-    if(['Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1517','Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>window.DarkFallRoyalHaven.residentialDistrict().homes.every(o=>o.ready),{},{timeout:30000});
       for(const key of ['cottage','stone','lane','court']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewResidential(k),key);
@@ -262,7 +262,7 @@ try {
       console.log('Royal Haven residential street integration PASS',JSON.stringify(residentialDistrict));
     }
     let landmarkRenewal=null;
-    if(['Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>window.DarkFallRoyalHaven.landmarkRenewal().entries.every(e=>e.ready),{},{timeout:30000});
       for(const key of ['mage','cave','cellar']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewLandmark(k),key);
@@ -292,7 +292,7 @@ try {
       console.log('Royal Haven connected ground plan and spacious market PASS',JSON.stringify(groundPlan));
     }
     let frontageAudit=null;
-    if(['Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.evaluate(()=>window.DarkFallRoyalHaven.reviewGround('merchants'));
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.frontage();return a.ready&&a.stats.draws>0;},{},{timeout:30000});
       frontageAudit=await page.evaluate(()=>window.DarkFallRoyalHaven.frontage(true));
@@ -305,7 +305,7 @@ try {
       await page.screenshot({path:resolve(out,'royal-haven-frontage-merchants.png'),timeout:30000});
       console.log('Royal Haven unobstructed merchant frontage PASS',JSON.stringify(frontageAudit));
     }
-    if(['Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       for(const key of ['gatehouse','longhouse','residences','south','herbs']){
         await page.evaluate(k=>window.DarkFallRoyalHaven.reviewLandscape(k),key);
         await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.landscape();return a.tiles.length&&a.tiles.every(t=>t.ready);},{},{timeout:30000});
@@ -318,7 +318,7 @@ try {
        throw new Error('Landscape audit failed: '+JSON.stringify(a));
       console.log('Royal Haven V1524 landscape PASS',JSON.stringify(a));
     }
-    if(['Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.northcourt();return a.installed&&a.homes.every(h=>h.ready);},{},{timeout:30000});
       const a=await page.evaluate(()=>window.DarkFallRoyalHaven.northcourt(true));
       await writeFile(resolve(out,'royal-haven-northcourt-audit.json'),JSON.stringify(a,null,2));
@@ -330,7 +330,7 @@ try {
       await page.screenshot({path:resolve(out,'royal-haven-northcourt.png'),timeout:30000});
       console.log('Royal Haven V1525 Northcourt PASS',JSON.stringify(a));
     }
-    if(['Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       const a=await page.evaluate(()=>window.DarkFallRoyalHaven.gardens(true));
       if(a.version!==1526||a.gardenCount!==15||a.kinds.length!==4||a.tiles.length<5||
          !a.centersClear||a.gardens.some(g=>!g.clear||g.roadClearance<5)||
@@ -345,7 +345,7 @@ try {
       await writeFile(resolve(out,'royal-haven-garden-audit.json'),JSON.stringify(a,null,2));
       console.log('Royal Haven V1526 garden renewal PASS',JSON.stringify(a));
     }
-    if(status.title==='Dark Fall V1527'){
+    if(['Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.marketRenewal();return a.assets.length===2&&a.assets.every(o=>o.ready);},{},{timeout:30000});
       const a=await page.evaluate(()=>window.DarkFallRoyalHaven.marketRenewal(true));
       const expected={spice:{x:5820,y:2084,w:205,h:182,rx:59,ry:27,flip:false},pottery:{x:6280,y:2085,w:207,h:184,rx:60,ry:27,flip:true}};
@@ -360,8 +360,24 @@ try {
       await writeFile(resolve(out,'royal-haven-market-renewal-audit.json'),JSON.stringify(a,null,2));
       console.log('Royal Haven V1527 market renewal PASS',JSON.stringify(a));
     }
+    if(status.title==='Dark Fall V1528'){
+      const a=await page.evaluate(()=>window.DarkFallRoyalHaven.streetClearance(true));
+      if(a.version!==1528||a.removed!==12||a.remaining!==0||a.clearCenters!==12||a.openCrossings!==12||
+         a.courts.length!==6||a.bakedTiles.length!==6||a.marketCount!==7||a.structuralTowers!==8||
+         a.cleared.some(o=>!o.wasBlocked||!o.free||o.crossing.bad)||
+         a.newColliders!==0||a.additionalGroundPasses!==0||a.npcChanges!==0)
+        throw new Error('V1528 open courtyard audit failed: '+JSON.stringify(a));
+      for(const key of ['east','west']){
+        if(!await page.evaluate(k=>window.DarkFallRoyalHaven.reviewStreetClearance(k),key))throw new Error('Courtyard review camera unavailable: '+key);
+        await page.waitForFunction(()=>window.DarkFallRoyalHaven.groundPlan().tiles.every(t=>t.ready),{},{timeout:30000});
+        await page.waitForTimeout(1000);
+        await page.screenshot({path:resolve(out,'royal-haven-open-courtyard-'+key+'.png'),timeout:30000});
+      }
+      await writeFile(resolve(out,'royal-haven-open-courtyard-audit.json'),JSON.stringify(a,null,2));
+      console.log('Royal Haven V1528 open courtyard PASS',JSON.stringify(a));
+    }
     let navigationAudit=null;
-    if(['Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       const initial=await page.evaluate(()=>window.DarkFallRoyalHaven.navigation());
       if(initial.inside||initial.zoom!==1.12||initial.benches!==0||initial.removedSeats<10||initial.openDecor<10||
          !initial.solidFountain||initial.solidMarket!==initial.marketCount||initial.roundTrip>.001||
@@ -382,7 +398,7 @@ try {
       console.log('Royal Haven closer zoom and real keyboard traversal of removed physics PASS',JSON.stringify(navigationAudit));
     }
     let performanceAudit=null;
-    if(['Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+    if(['Dark Fall V1518','Dark Fall V1519','Dark Fall V1520','Dark Fall V1521','Dark Fall V1522','Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
       const begin=await page.evaluate(()=>window.DarkFallRoyalHaven.performance());
       await page.setViewportSize({width:390,height:844});
       await page.evaluate(()=>{window.DarkFallRoyalHaven.close();window.DarkFallRoyalHaven.open();});
@@ -404,7 +420,7 @@ try {
          end.localCutaways<1||end.cutawayPixels>=end.fullEquivalentPixels||[...readings,end].some(x=>x.streetTiles>x.streetLimit||x.staticTiles>14||x.terrainImages>20||x.shoulderImages>4))
         throw new Error('Royal Haven resource and cache budget audit failed: '+JSON.stringify(performanceAudit));
       console.log('Royal Haven mobile viewport cache and render workload audit PASS',JSON.stringify(performanceAudit));
-      if(['Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527'].includes(status.title)){
+      if(['Dark Fall V1523','Dark Fall V1524','Dark Fall V1525','Dark Fall V1526','Dark Fall V1527','Dark Fall V1528'].includes(status.title)){
         const session=await page.context().newCDPSession(page);
         await session.send('Emulation.setCPUThrottlingRate',{rate:2});
         try{

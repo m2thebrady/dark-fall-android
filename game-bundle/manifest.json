@@ -1,7 +1,7 @@
 {
-  "version": 1527,
-  "bytes": 207786161,
-  "sha256": "0c92a1f7716a10a651f5578bd87385c1d011ce1b353eaf4aaea9a50c72492f1d",
+  "version": 1528,
+  "bytes": 207933929,
+  "sha256": "c61f909a9e3bf0d037333090430b81da7556203e391544b0f108eb28a0f0bc54",
   "parts": [
     {
       "name": "index-000.html.gz",
@@ -72,6 +72,7 @@
     "patches/v1524.py",
     "patches/v1525.py",
     "patches/v1526.py",
-    "patches/v1527.py"
+    "patches/v1527.py",
+    "patches/v1528.py"
   ]
 }
