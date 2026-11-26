@@ -1,0 +1,267 @@
+{
+  "version": 1538,
+  "models": [
+    {
+      "key": "wood0",
+      "file": "wood0.webp",
+      "width": 420,
+      "height": 247,
+      "bytes": 38878,
+      "sha256": "4ef7fd7b75702fc2153a0152b8e5a0b355dca9186d6504084ced669468f639e6",
+      "sourceBounds": [
+        15,
+        120,
+        429,
+        361
+      ]
+    },
+    {
+      "key": "wood1",
+      "file": "wood1.webp",
+      "width": 407,
+      "height": 231,
+      "bytes": 34242,
+      "sha256": "92c41aaf6b8126e4afc3081af24fe22f834813a95f4bcea9c1ac2afefd63bda6",
+      "sourceBounds": [
+        20,
+        139,
+        421,
+        364
+      ]
+    },
+    {
+      "key": "wood2",
+      "file": "wood2.webp",
+      "width": 414,
+      "height": 216,
+      "bytes": 33396,
+      "sha256": "dc59a14a5cf1c069d3079d245178d8c049d3e6f4a5ec0817abdcff7c648f98d7",
+      "sourceBounds": [
+        17,
+        156,
+        425,
+        366
+      ]
+    },
+    {
+      "key": "arcaneTable",
+      "file": "arcaneTable.webp",
+      "width": 424,
+      "height": 324,
+      "bytes": 41432,
+      "sha256": "df9bd118cd7ec966e930c3490289997c847be0ed3ea1d15f4246a896ca233ce7",
+      "sourceBounds": [
+        14,
+        73,
+        432,
+        391
+      ]
+    },
+    {
+      "key": "rack0_0",
+      "file": "rack0_0.webp",
+      "width": 432,
+      "height": 295,
+      "bytes": 33406,
+      "sha256": "a1a3caf8d52a1248550ed7c6788a20ed1a4802aa35f057ef274b47ff03cab996",
+      "sourceBounds": [
+        15,
+        92,
+        429,
+        373
+      ]
+    },
+    {
+      "key": "rack0_1",
+      "file": "rack0_1.webp",
+      "width": 432,
+      "height": 295,
+      "bytes": 32618,
+      "sha256": "083d8c6c7b29909772620a6c5e363573c2e6a561388c58859ddf7fd26a02fce0",
+      "sourceBounds": [
+        15,
+        92,
+        429,
+        373
+      ]
+    },
+    {
+      "key": "rack0_2",
+      "file": "rack0_2.webp",
+      "width": 432,
+      "height": 295,
+      "bytes": 32676,
+      "sha256": "f9c1e3862c7a7a27a4c105653777f63e36f93e1194d8a7806c2f8a1575f3aa34",
+      "sourceBounds": [
+        15,
+        92,
+        429,
+        373
+      ]
+    },
+    {
+      "key": "rack0_5",
+      "file": "rack0_5.webp",
+      "width": 432,
+      "height": 295,
+      "bytes": 32940,
+      "sha256": "b8f3c1637b660b7a8ef3e303ebc3753a5974c5eb7b25e0de34775c34d855c8eb",
+      "sourceBounds": [
+        15,
+        92,
+        429,
+        373
+      ]
+    },
+    {
+      "key": "rack0_6",
+      "file": "rack0_6.webp",
+      "width": 432,
+      "height": 295,
+      "bytes": 32958,
+      "sha256": "0d557f9ebe7563ef8bff000fc68c8e5c397105de370c3b415168dc6fbe39c7df",
+      "sourceBounds": [
+        15,
+        92,
+        429,
+        373
+      ]
+    },
+    {
+      "key": "rack1_0",
+      "file": "rack1_0.webp",
+      "width": 427,
+      "height": 295,
+      "bytes": 30678,
+      "sha256": "466a58c7e519af9be6641a803e7f267366a67a9fa64a512a7dc784df28579745",
+      "sourceBounds": [
+        18,
+        92,
+        427,
+        373
+      ]
+    },
+    {
+      "key": "rack1_1",
+      "file": "rack1_1.webp",
+      "width": 427,
+      "height": 295,
+      "bytes": 30340,
+      "sha256": "4946eab65346e379622fbc8df63dd69cba557579c157869244bdb960363ac5c0",
+      "sourceBounds": [
+        18,
+        92,
+        427,
+        373
+      ]
+    },
+    {
+      "key": "rack1_2",
+      "file": "rack1_2.webp",
+      "width": 427,
+      "height": 295,
+      "bytes": 30442,
+      "sha256": "79674b925ef44275a254abdca64ba22648f24df479973c13a7cf1c777dd8039f",
+      "sourceBounds": [
+        18,
+        92,
+        427,
+        373
+      ]
+    },
+    {
+      "key": "rack1_5",
+      "file": "rack1_5.webp",
+      "width": 427,
+      "height": 295,
+      "bytes": 30342,
+      "sha256": "70445c3b93f64476a6ac248b1a7412c52116998c2db140fb81ae14a0809b2ae9",
+      "sourceBounds": [
+        18,
+        92,
+        427,
+        373
+      ]
+    },
+    {
+      "key": "rack1_6",
+      "file": "rack1_6.webp",
+      "width": 427,
+      "height": 295,
+      "bytes": 30436,
+      "sha256": "c1f581400180406bedfd8f0c64c0ed1f4963c3bf8436c1a4122321ece24d48fc",
+      "sourceBounds": [
+        18,
+        92,
+        427,
+        373
+      ]
+    },
+    {
+      "key": "armillary",
+      "file": "armillary.webp",
+      "width": 224,
+      "height": 436,
+      "bytes": 39290,
+      "sha256": "9d06f15a5f58999a1f85d08bf1c88401237ee3c630c774d239473007aad2a1e0",
+      "sourceBounds": [
+        113,
+        3,
+        331,
+        433
+      ]
+    }
+  ],
+  "aliases": {
+    "rack0_3": "rack0_1",
+    "rack0_4": "rack0_0",
+    "rack0_7": "rack0_5",
+    "rack1_3": "rack1_1",
+    "rack1_4": "rack1_0",
+    "rack1_7": "rack1_5"
+  },
+  "woodVariants": 3,
+  "laundryVariants": 2,
+  "animationFrames": 8,
+  "uniqueLaundryFrames": 10,
+  "oldUniqueLaundryFrames": 16,
+  "lanternChanges": 0,
+  "moves": [
+    {
+      "k": "houseWood",
+      "old": [
+        5410,
+        2010
+      ],
+      "new": [
+        5410,
+        1910
+      ]
+    },
+    {
+      "k": "houseRack",
+      "old": [
+        4236,
+        1775
+      ],
+      "new": [
+        4196,
+        1885
+      ]
+    },
+    {
+      "k": "houseWood",
+      "old": [
+        5300,
+        2010
+      ],
+      "new": [
+        5210,
+        1970
+      ]
+    }
+  ],
+  "additionalDrawLayers": 0,
+  "newColliders": 0,
+  "npcChanges": 0
+}
