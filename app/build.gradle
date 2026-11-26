@@ -6,8 +6,8 @@ android {
         applicationId 'com.darkfall.game'
         minSdk 26
         targetSdk 35
-        versionCode 1524
-        versionName '0.1524'
+        versionCode 1525
+        versionName '0.1525'
     }
     signingConfigs {
         if (System.getenv('DARKFALL_KEYSTORE_PATH')) {
