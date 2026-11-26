@@ -77,7 +77,7 @@ assert.ok(gate.length>30000&&gate.length<400000);
 console.log('Gate artwork and seamless world-aligned shoulder atlas PASS');
 
 const civic=JSON.parse(readFileSync(folder+'civic-metadata.json','utf8'));
-assert.deepEqual(Object.keys(civic).sort(),['hall','herb','store','supply']);
+assert.deepEqual(Object.keys(civic).sort(),['activeHerb','hall','herb','store','supply']);
 scope.rh1510CivicMeta=civic;
 const f=scope.rh1510HallFit({w:550,h:320,doorX:1740,doorY:2038},{naturalWidth:civic.hall.width,naturalHeight:civic.hall.height});
 assert.ok(Math.abs(f.left+f.w*civic.hall.door[0]-1740)<.0001,'redesigned guild door preserves interaction X');
@@ -90,6 +90,12 @@ for(const [k,m] of Object.entries(civic)){
  assert.equal(a.toString('ascii',8,12),'WEBP');
  assert.ok(a.length>40000&&a.length<400000,k+' compact alpha sprite');
  assert.ok(m.door[0]>.3&&m.door[0]<.85&&m.door[1]>.85&&m.door[1]<1);
- if(k!=='hall') assert.ok(198*m.height/m.width*m.doorHeight>=54,k+' doorway human scale');
+ if(k!=='hall') assert.ok((k==='activeHerb'?350:198)*m.height/m.width*m.doorHeight>=54,k+' doorway human scale');
 }
 console.log('Civic hall entrance alignment, lighting metadata and proportioned service annexes PASS');
+
+const pathCross=scope.rh1510PathCross;
+assert.equal(pathCross({l:50,t:50,r:150,b:90},[[0,70],[200,70]],10),true,'protected route crosses new foundation');
+assert.equal(pathCross({l:50,t:50,r:150,b:90},[[0,115],[200,115]],10),false,'open route beside foundation');
+assert.equal(pathCross({l:50,t:50,r:150,b:90},[[100,0],[100,40]],12),true,'walking margin protected');
+console.log('Vacant-lot path clearance tests PASS');

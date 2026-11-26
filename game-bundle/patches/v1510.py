@@ -53,7 +53,10 @@ def apply(html: bytes) -> bytes:
             values[key]="data:image/webp;base64,"+base64.b64encode((patch_dir/"art-v1510"/file).read_bytes()).decode()
         html=html[:match.start(1)]+json.dumps(values,separators=(",",":")).encode()+html[match.end(1):]
     civic_group("rh193Art",{"hall":civic_meta["hall"]["file"]})
-    civic_group("rh187Art",{k:m["file"] for k,m in civic_meta.items() if k!="hall"})
+    civic_group("rh187Art",{k:civic_meta[k]["file"] for k in ("store","supply","herb")})
+    civic_group("rh1340ServiceArt",{"herb":civic_meta["activeHerb"]["file"]})
+    edit("if(o.rebuilt1340)rh1376DrawGlass('workshop:herb',o.x-o.w/2,o.y-h,o.w,h);","rh1510AnnexGlass(o,o.x-o.w/2,o.y-h,o.w,h);")
+    edit("rh1503Tavern.init();rh1504Artisan.init();","rh1503Tavern.init();rh1504Artisan.init();rh1510PlaceAnnexes();")
     edit("function rh1269Landmark(s,im){const academy=", "function rh1269Landmark(s,im){if(s.type==='future'&&im===rh193Art.hall)return rh1510HallFit(s,im);const academy=")
     edit("if(k==='mage'||k==='hall')rh1376DrawGlass('landmark:'+k,left,base-h,w,h);",
          "if(k==='mage')rh1376DrawGlass('landmark:'+k,left,base-h,w,h);if(k==='hall')rh1510HallGlass(left,base-h,w,h);")
@@ -68,8 +71,8 @@ def apply(html: bytes) -> bytes:
 
     edit("if(landmarkNames.has(s.name)||s.type==='future')facade();else rh1457Facade(b,rh1504Shop?.depth(s)??s.doorY,facade);",
          "rh1457Facade(rh1510SiteBounds(b,s),rh1504Shop?.depth(s)??s.doorY,facade);")
-    edit("rh117Push(o.y,()=>rh187Draw(o));}", "rh117Push(o.y,()=>rh1457Facade(b,o.y,()=>rh187Draw(o)));}")
-    edit("c.drawImage(im,o.x-o.w/2,o.y-h,o.w,h);if(o.rebuilt1340)", "rh1432FacadeDraw(im,o.x-o.w/2,o.y-h,o.w,h);if(o.rebuilt1340)")
+    edit("rh117Push(o.y,()=>rh187Draw(o));}", "rh117Push(o.y,()=>{rh1457Facade(b,o.y,()=>rh187Draw(o));rh1510AnnexSmoke(o,now,cx,cy);});}")
+    edit("c.drawImage(im,o.x-o.w/2,o.y-h,o.w,h);rh1510AnnexGlass", "rh1432FacadeDraw(im,o.x-o.w/2,o.y-h,o.w,h);rh1510AnnexGlass")
     edit("rh1457Facade(b,o.y,()=>c.drawImage(im,b.left,b.top,b.w,b.h));",
          "rh1457Facade(b,o.y,()=>rh1432FacadeDraw(im,b.left,b.top,b.w,b.h));")
     edit("rh117Push(o.y,()=>rh1335Tower(o));",

@@ -88,7 +88,8 @@ try {
     const streetArt=await page.evaluate(()=>window.DarkFallRoyalHaven.streetArt());
     await page.waitForFunction(()=>{const a=window.DarkFallRoyalHaven.civicArt();return a.hallReady&&a.annexes.length===3&&a.annexes.every(o=>o.ready);},{},{timeout:30000});
     const civicArt=await page.evaluate(()=>window.DarkFallRoyalHaven.civicArt());
-    if(!civicArt.hallDoorAligned||civicArt.hallDoorHeight<95||!civicArt.annexes.some(o=>o.instances.length)||
+    await writeFile(resolve(out,'royal-haven-civic-audit.json'),JSON.stringify(civicArt,null,2));
+    if(!civicArt.hallDoorAligned||civicArt.hallDoorHeight<95||!civicArt.annexes.every(o=>o.instances.length)||civicArt.placements.length!==2||
        civicArt.annexes.some(o=>o.instances.some(o=>o.doorHeight<54)))throw new Error('Revised civic building geometry audit failed: '+JSON.stringify(civicArt));
     console.log('Royal Haven civic building readiness',JSON.stringify(civicArt));
     console.log('Royal Haven gate / ground readiness',streetArt);
