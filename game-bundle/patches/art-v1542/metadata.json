@@ -1,0 +1,630 @@
+{
+  "version": 1542,
+  "regions": [
+    {
+      "name": "Foundry forecourt and west Merchant Street",
+      "polygon": [
+        [
+          125,
+          1325
+        ],
+        [
+          1410,
+          1325
+        ],
+        [
+          1480,
+          1370
+        ],
+        [
+          1480,
+          1465
+        ],
+        [
+          1390,
+          1515
+        ],
+        [
+          175,
+          1515
+        ],
+        [
+          125,
+          1470
+        ]
+      ],
+      "points": [
+        [
+          180,
+          1535
+        ],
+        [
+          540,
+          1575
+        ],
+        [
+          1380,
+          1555
+        ],
+        [
+          1460,
+          1535
+        ]
+      ],
+      "width": 148,
+      "material": 0,
+      "review": [
+        805,
+        1569
+      ],
+      "bounds": [
+        6,
+        1206,
+        1600,
+        1695
+      ],
+      "surfacePixels": 411303,
+      "tileKeys": [
+        "0:2",
+        "1:2",
+        "2:2"
+      ],
+      "textureScale": 315,
+      "nonRepeatingQuilt": true
+    },
+    {
+      "name": "Herbalist and artisan forecourt",
+      "polygon": [
+        [
+          145,
+          1945
+        ],
+        [
+          1470,
+          1945
+        ],
+        [
+          1515,
+          2020
+        ],
+        [
+          1460,
+          2070
+        ],
+        [
+          180,
+          2072
+        ],
+        [
+          145,
+          2035
+        ]
+      ],
+      "points": [
+        [
+          180,
+          2075
+        ],
+        [
+          640,
+          2095
+        ],
+        [
+          1480,
+          2095
+        ],
+        [
+          1500,
+          2075
+        ]
+      ],
+      "width": 144,
+      "material": 1,
+      "review": [
+        865,
+        2095
+      ],
+      "bounds": [
+        28,
+        1828,
+        1633,
+        2213
+      ],
+      "surfacePixels": 294353,
+      "tileKeys": [
+        "0:2",
+        "1:2",
+        "2:2",
+        "0:3",
+        "1:3",
+        "2:3"
+      ],
+      "textureScale": 305,
+      "nonRepeatingQuilt": true
+    },
+    {
+      "name": "Bell Court",
+      "polygon": [
+        [
+          5100,
+          1290
+        ],
+        [
+          5520,
+          1300
+        ],
+        [
+          5610,
+          1400
+        ],
+        [
+          5575,
+          1510
+        ],
+        [
+          5150,
+          1510
+        ],
+        [
+          5070,
+          1435
+        ]
+      ],
+      "points": [],
+      "width": 0,
+      "material": 1,
+      "review": [
+        5340,
+        1470
+      ],
+      "bounds": [
+        5025,
+        1245,
+        5656,
+        1556
+      ],
+      "surfacePixels": 99699,
+      "tileKeys": [
+        "7:1",
+        "7:2"
+      ],
+      "textureScale": 305,
+      "nonRepeatingQuilt": true
+    },
+    {
+      "name": "Foundry Residential Court",
+      "polygon": [
+        [
+          4350,
+          1895
+        ],
+        [
+          4890,
+          1880
+        ],
+        [
+          4950,
+          1975
+        ],
+        [
+          4880,
+          2078
+        ],
+        [
+          4420,
+          2078
+        ],
+        [
+          4340,
+          2020
+        ]
+      ],
+      "points": [],
+      "width": 0,
+      "material": 1,
+      "review": [
+        4625,
+        2045
+      ],
+      "bounds": [
+        4295,
+        1835,
+        4996,
+        2124
+      ],
+      "surfacePixels": 93689,
+      "tileKeys": [
+        "6:2",
+        "6:3"
+      ],
+      "textureScale": 305,
+      "nonRepeatingQuilt": true
+    },
+    {
+      "name": "East Warehouse Yard",
+      "polygon": [
+        [
+          5690,
+          2305
+        ],
+        [
+          6320,
+          2305
+        ],
+        [
+          6365,
+          2405
+        ],
+        [
+          6300,
+          2455
+        ],
+        [
+          5730,
+          2455
+        ],
+        [
+          5680,
+          2385
+        ]
+      ],
+      "points": [],
+      "width": 0,
+      "material": 0,
+      "review": [
+        6010,
+        2390
+      ],
+      "bounds": [
+        5635,
+        2260,
+        6411,
+        2501
+      ],
+      "surfacePixels": 82622,
+      "tileKeys": [
+        "7:3",
+        "8:3"
+      ],
+      "textureScale": 315,
+      "nonRepeatingQuilt": true
+    }
+  ],
+  "ground": [
+    {
+      "key": "0:2",
+      "file": "ground-0-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 167134,
+      "sha256": "0e475cc718d8cb9e160338bfe138d7cb41ae831a3bc3e12024e71a3089ba7262",
+      "oldSHA256": "79fbcb13e16d0194388022ab6a38060454e1987ade7c801092012ade20507b25",
+      "editedPixels": 196733
+    },
+    {
+      "key": "1:2",
+      "file": "ground-1-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 169090,
+      "sha256": "6b83f336bcfc3375b85a841e7e643859e592005886918faa5d73dd9f0947467a",
+      "oldSHA256": "48713e33815652440c21f1f574f122819071bd43a5a58e1aafdef8fb6c35e6c4",
+      "editedPixels": 237178
+    },
+    {
+      "key": "2:2",
+      "file": "ground-2-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 161936,
+      "sha256": "63c4f9ebebb483a7ee79aa1e42e1103d9568e9e59a5d38bbb4496519060fe2d4",
+      "oldSHA256": "ca1986af77cc9e425c2c6627987290f143a8f0c68b7fd14d36b8e85065100e14",
+      "editedPixels": 18979
+    },
+    {
+      "key": "0:3",
+      "file": "ground-0-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 156952,
+      "sha256": "da8fdb430136ed11713e3c5e56b680f4ef36d46f8bbb07109ef4a54a096bf2c2",
+      "oldSHA256": "0ce881e35bae15b6aeddcd516baa91d8184d131c5322607696fb620db1c82720",
+      "editedPixels": 126693
+    },
+    {
+      "key": "1:3",
+      "file": "ground-1-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 169460,
+      "sha256": "d1b9e66e3dad54edae54048c21d50ba7b418936e3a80a43f6a8900c55a6e464b",
+      "oldSHA256": "f6dfe4bd43ab1e9186aa29c6f496ee7a16cd6845f0c837f2224fae6c41df8aec",
+      "editedPixels": 160129
+    },
+    {
+      "key": "2:3",
+      "file": "ground-2-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 147244,
+      "sha256": "ac3b0459b7352af70f66139b3c68a249096e1f78574e5c537d157207c424083a",
+      "oldSHA256": "a1044aa6679792765e9205e71eb3f9d1edb36278a76dcd09879ebb81c476a14c",
+      "editedPixels": 22716
+    },
+    {
+      "key": "7:1",
+      "file": "ground-7-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 135764,
+      "sha256": "d89659b8813f4d3a7b1d6c0b32a63c3b7af75aaae09e16fe4b733b5969508baf",
+      "oldSHA256": "bd9f211dc5f20e42c40cdf1cc78095fc4b8ca24ca2d562a234f845b69180219c",
+      "editedPixels": 4164
+    },
+    {
+      "key": "6:2",
+      "file": "ground-6-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 157090,
+      "sha256": "c393d740f9ffc532f887f517944e7fc019843e2f0a2298837ca87cf9d664f98f",
+      "oldSHA256": "370a367fd78802b37fa414d767ae06b10825c8f4b53aecd33dd3d067c734f6f7",
+      "editedPixels": 33938
+    },
+    {
+      "key": "7:2",
+      "file": "ground-7-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 155144,
+      "sha256": "21bf687dbb414d93cf019e113d6348407ed83edaeeb008395977406bd990646c",
+      "oldSHA256": "1bc57038ea8d7ce7b264473d6b531faec156b183d7950d14624082278681dddd",
+      "editedPixels": 107636
+    },
+    {
+      "key": "6:3",
+      "file": "ground-6-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 157698,
+      "sha256": "3e145cd1e1b7c20560175565f28bf9b6a809f5ccb6eb0c42f5a278c95aa4559a",
+      "oldSHA256": "88d6690db7126c7cc9951e649f8efd3b51531e2145d5aa8aa5ebadce4367492b",
+      "editedPixels": 76760
+    },
+    {
+      "key": "7:3",
+      "file": "ground-7-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 146254,
+      "sha256": "58f2c9f02542d135364470e3797511b5600ab12b4210ffc7c431f2253e4e92d5",
+      "oldSHA256": "571855b963db1456bff73ca755849d7256688a5479b8ce66ae6322e539a90430",
+      "editedPixels": 11299
+    },
+    {
+      "key": "8:3",
+      "file": "ground-8-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 128240,
+      "sha256": "9ad7968b0641f8c96d2d140980861b5a516fffe390a343bfeb647d6ff81b3ef3",
+      "oldSHA256": "8a2857a7573b360db01d1eb88ebcce51f4a22dc8200855e922d3c71f27078056",
+      "editedPixels": 89225
+    }
+  ],
+  "models": [
+    {
+      "key": "sageStone",
+      "file": "sageStone.webp",
+      "width": 440,
+      "height": 170,
+      "bytes": 42148,
+      "sha256": "df51c5faa1fa7761f082c9aebc978bcd70f91b78a2fb64b3f541cea73cf30fe9",
+      "alphaBounds": [
+        0,
+        0,
+        440,
+        170
+      ]
+    },
+    {
+      "key": "rosemaryOak",
+      "file": "rosemaryOak.webp",
+      "width": 440,
+      "height": 180,
+      "bytes": 44200,
+      "sha256": "a2a0138ae9b22547aad3515cbb8fc6c12a9cbefaf1aae2947722b741081c410b",
+      "alphaBounds": [
+        0,
+        0,
+        440,
+        180
+      ]
+    },
+    {
+      "key": "lavenderSlate",
+      "file": "lavenderSlate.webp",
+      "width": 440,
+      "height": 178,
+      "bytes": 43150,
+      "sha256": "4af8037b9582659a785f375fc2fa63569a66745b9d959bc29bc5c3f3e06bb05e",
+      "alphaBounds": [
+        0,
+        0,
+        440,
+        178
+      ]
+    },
+    {
+      "key": "ivyLimestone",
+      "file": "ivyLimestone.webp",
+      "width": 440,
+      "height": 167,
+      "bytes": 43912,
+      "sha256": "b50dbc90a9bce77ad1a185b56bf6bc614ad727a00a4f5eccf0b4826a189998db",
+      "alphaBounds": [
+        0,
+        0,
+        440,
+        167
+      ]
+    },
+    {
+      "key": "kitchenOak",
+      "file": "kitchenOak.webp",
+      "width": 440,
+      "height": 161,
+      "bytes": 37672,
+      "sha256": "cad267d252189871bd0ef3402b139e84ce04307992e1fa0cda139c5728f708b3",
+      "alphaBounds": [
+        0,
+        0,
+        440,
+        161
+      ]
+    },
+    {
+      "key": "civicCarvedStone",
+      "file": "civicCarvedStone.webp",
+      "width": 440,
+      "height": 176,
+      "bytes": 43714,
+      "sha256": "93c0510ab6bc90e68f05e0e590c01e0a7cabe2e4a07bbaecd9f81a042068f9fd",
+      "alphaBounds": [
+        0,
+        0,
+        440,
+        176
+      ]
+    }
+  ],
+  "removed": [
+    {
+      "x": 335,
+      "y": 1510,
+      "w": 115,
+      "h": 38
+    },
+    {
+      "x": 805,
+      "y": 1510,
+      "w": 115,
+      "h": 38
+    },
+    {
+      "x": 1275,
+      "y": 1510,
+      "w": 115,
+      "h": 38
+    },
+    {
+      "x": 2385,
+      "y": 1510,
+      "w": 115,
+      "h": 38
+    },
+    {
+      "x": 2865,
+      "y": 1510,
+      "w": 115,
+      "h": 38
+    },
+    {
+      "x": 3345,
+      "y": 1510,
+      "w": 115,
+      "h": 38
+    },
+    {
+      "x": 335,
+      "y": 2160,
+      "w": 115,
+      "h": 36
+    },
+    {
+      "x": 805,
+      "y": 2160,
+      "w": 115,
+      "h": 36
+    },
+    {
+      "x": 1275,
+      "y": 2160,
+      "w": 115,
+      "h": 36
+    },
+    {
+      "x": 2385,
+      "y": 2160,
+      "w": 115,
+      "h": 36
+    },
+    {
+      "x": 2865,
+      "y": 2160,
+      "w": 115,
+      "h": 36
+    },
+    {
+      "x": 3345,
+      "y": 2160,
+      "w": 115,
+      "h": 36
+    }
+  ],
+  "placements": [
+    {
+      "x": 2910,
+      "y": 1604,
+      "key": "sageStone"
+    },
+    {
+      "x": 480,
+      "y": 2245,
+      "key": "rosemaryOak"
+    },
+    {
+      "x": 1390,
+      "y": 2280,
+      "key": "kitchenOak"
+    },
+    {
+      "x": 2220,
+      "y": 2280,
+      "key": "ivyLimestone"
+    },
+    {
+      "x": 2620,
+      "y": 2250,
+      "key": "lavenderSlate"
+    },
+    {
+      "x": 3090,
+      "y": 2245,
+      "key": "rosemaryOak"
+    },
+    {
+      "x": 1635,
+      "y": 1670,
+      "key": "civicCarvedStone"
+    },
+    {
+      "x": 1965,
+      "y": 1670,
+      "key": "ivyLimestone"
+    },
+    {
+      "x": 1480,
+      "y": 720,
+      "key": "civicCarvedStone"
+    },
+    {
+      "x": 2120,
+      "y": 720,
+      "key": "sageStone"
+    }
+  ],
+  "additionalDrawLayers": 0,
+  "newColliders": 0,
+  "npcChanges": 0
+}
