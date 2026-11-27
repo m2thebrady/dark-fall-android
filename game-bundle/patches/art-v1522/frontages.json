@@ -1,0 +1,106 @@
+[
+  {
+    "key": "foundry",
+    "x": 125,
+    "y": 1330,
+    "w": 1370,
+    "h": 104,
+    "sx": 0,
+    "sy": 0,
+    "doors": [
+      {
+        "x": 350,
+        "y": 1333,
+        "material": "forge"
+      },
+      {
+        "x": 805,
+        "y": 1333,
+        "material": "smith"
+      },
+      {
+        "x": 1275,
+        "y": 1333,
+        "material": "leather"
+      }
+    ]
+  },
+  {
+    "key": "merchants",
+    "x": 2160,
+    "y": 1330,
+    "w": 1770,
+    "h": 104,
+    "sx": 0,
+    "sy": 112,
+    "doors": [
+      {
+        "x": 2385,
+        "y": 1333,
+        "material": "market"
+      },
+      {
+        "x": 2865,
+        "y": 1333,
+        "material": "item"
+      },
+      {
+        "x": 3345,
+        "y": 1333,
+        "material": "alchemy"
+      }
+    ]
+  },
+  {
+    "key": "craft-west",
+    "x": 150,
+    "y": 1960,
+    "w": 1320,
+    "h": 102,
+    "sx": 0,
+    "sy": 224,
+    "doors": [
+      {
+        "x": 335,
+        "y": 1963,
+        "material": "herbs"
+      },
+      {
+        "x": 865,
+        "y": 1963,
+        "material": "arcane"
+      },
+      {
+        "x": 1275,
+        "y": 1963,
+        "material": "wood"
+      }
+    ]
+  },
+  {
+    "key": "craft-east",
+    "x": 2160,
+    "y": 1960,
+    "w": 1490,
+    "h": 102,
+    "sx": 0,
+    "sy": 336,
+    "doors": [
+      {
+        "x": 2325,
+        "y": 1963,
+        "material": "cloth"
+      },
+      {
+        "x": 2865,
+        "y": 1963,
+        "material": "apothecary"
+      },
+      {
+        "x": 3345,
+        "y": 1963,
+        "material": "bakery"
+      }
+    ]
+  }
+]

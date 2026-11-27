@@ -1,0 +1,463 @@
+// V1510 Royal Haven: material wear at the existing display-art cache resolution
+// and a local, depth-aware cutaway. No footprint, door or collision changes.
+let rh1510FacadeContext=null,rh1510CutawayCanvas=null;
+function rh1510Clamp(v){return Math.min(1,Math.max(0,v));}
+function rh1510Hash(x,y,seed){
+ let n=Math.imul(x+1,374761393)^Math.imul(y+1,668265263)^Math.imul(seed,1274126177);
+ n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)/4294967295;
+}
+function rh1510Seed(b){return ((Math.round(b.left)*73856093)^(Math.round(b.top)*19349663))>>>0;}
+function rh1510Field(w,h,sx,sy,seed){
+ const cols=Math.ceil(w/sx)+2,rows=Math.ceil(h/sy)+2,grid=new Float32Array(cols*rows);
+ for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)grid[j*cols+i]=rh1510Hash(i,j,seed);
+ const ix=new Int32Array(w),fx=new Float32Array(w);
+ for(let x=0;x<w;x++){ix[x]=Math.floor(x/sx);const f=x/sx-ix[x];fx[x]=f*f*(3-2*f);}
+ const out=new Float32Array(w*h);
+ for(let y=0;y<h;y++){
+  const j=Math.floor(y/sy),f=y/sy-j,t=f*f*(3-2*f),o=j*cols;
+  for(let x=0;x<w;x++){const k=o+ix[x],u=fx[x],a=grid[k]+(grid[k+1]-grid[k])*u,b=grid[k+cols]+(grid[k+cols+1]-grid[k+cols])*u;out[y*w+x]=a+(b-a)*t;}
+ }
+ return out;
+}
+// Preserve source silhouettes and details. Wear follows material colour, rather than
+// stamping identical decals over windows, signs, roof tiles and timber.
+function rh1510WeatherPixels(data,w,h,seed,style={}){
+ const broad=rh1510Field(w,h,46,39,seed+11),patch=rh1510Field(w,h,13,11,seed+41),
+       rain=rh1510Field(w,h,4,62,seed+83),fine=rh1510Field(w,h,2.8,3.6,seed+107);
+ const bottom=new Int32Array(w);bottom.fill(-1);
+ for(let x=0;x<w;x++)for(let y=h-1;y>=0;y--)if(data[(y*w+x)*4+3]>224){bottom[x]=y;break;}
+ const profile=rh1510Hash(2,5,seed),damp=(.8+profile*.65)*(style.green?1.30:1);
+ const flues=(style.flues||[]).filter(q=>Array.isArray(q)&&q.length>=2&&q.every(Number.isFinite));
+ const sootStrength=style.hearth?1.0:.55;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const j=y*w+x,i=j*4,a=data[i+3];if(a<225)continue;
+  const r=data[i],g=data[i+1],b=data[i+2],l=.299*r+.587*g+.114*b,span=Math.max(r,g,b)-Math.min(r,g,b);
+  // Lit windows, fabric, sign paint and cool glass retain their original contrast.
+  const vivid=rh1510Clamp((span-35)/48),light=rh1510Clamp((l-158)/62),guard=(1-vivid*.88)*(1-light*.58);
+  const plaster=rh1510Clamp((l-89)/59)*rh1510Clamp((38-span)/29);
+  const timber=rh1510Clamp((r-b-12)/35)*rh1510Clamp((141-l)/60);
+  const stone=rh1510Clamp((l-43)/47)*(1-vivid*.74);
+  const ground=rh1510Clamp(1-(bottom[x]-y)/(22+profile*22))*rh1510Clamp((y/h-.51)/.33);
+  const stain=rh1510Clamp((broad[j]-.45)*2.3)*(.42+.58*patch[j]);
+  const drip=rh1510Clamp((rain[j]-.57)*3.1)*rh1510Clamp((broad[j]-.21)*1.6);
+  const chip=rh1510Clamp((patch[j]-.57)*3.1)*rh1510Clamp((fine[j]-.28)*1.42);
+  const lichen=rh1510Clamp((patch[j]-.54)*3.3)*rh1510Clamp((fine[j]-.23)*1.6)*(ground*.80+stain*.20);
+  // Broken patches of limewash expose the darker foundation, with ragged pale edges.
+  const peel=plaster*rh1510Clamp((broad[j]-.57)*4.8)*rh1510Clamp((patch[j]-.40)*3.6);
+  const wearEdge=peel*rh1510Clamp((fine[j]-.56)*3.1);
+  let soot=0;
+  for(const [u,v] of flues){const dx=(x-u*w)/(11+w*.013),dy=(y-v*h)/(24+h*.035);
+   if(dy>-.15&&dy<1.7&&Math.abs(dx)<1.6)soot=Math.max(soot,Math.exp(-dx*dx*2)*rh1510Clamp(1-dy/1.7)*(.5+.5*rain[j]));}
+  const grit=(fine[j]-.5)*(7+plaster*12+stone*4)+(rh1510Hash(x,y,seed+179)-.5)*3.2;
+  const weather=guard*(grit+plaster*(chip*24-stain*39-drip*22)+stone*((patch[j]-.5)*17-stain*19-drip*12)
+                       +timber*(chip*12-stain*10-drip*6)-ground*(10+patch[j]*17)*damp
+                       -peel*24+wearEdge*16-soot*40*sootStrength);
+  const moss=guard*stone*lichen*damp;
+  data[i]=r+weather-moss*13+peel*5;data[i+1]=g+weather+moss*11;data[i+2]=b+weather-moss*18-peel*5;
+ }
+}
+function rh1510WeatherKey(w,h){
+ const b=rh1510FacadeContext;if(!b||w<48||h<48||Math.abs(w-b.w)>Math.max(5,b.w*.035)||Math.abs(h-b.h)>Math.max(5,b.h*.035))return null;
+ return rh1510Seed(b);
+}
+function rh1510WeatherRaster(g,w,h,seed){
+ if(seed===null)return;
+ // Cached once at world display resolution, never read back from the live game canvas.
+ try{const im=g.getImageData(0,0,w,h);const style=rh1510FacadeContext?.style||{};
+ if(rh1510FacadeContext?.upgrade){
+  const original=im.data.slice();rh1510WeatherPixels(im.data,w,h,seed,style);
+  for(let i=0;i<im.data.length;i+=4)for(let k=0;k<3;k++)im.data[i+k]=original[i+k]+(im.data[i+k]-original[i+k])*.35;
+ }else rh1510WeatherPixels(im.data,w,h,seed,style);g.putImageData(im,0,0);}catch(_){}
+}
+function rh1510SiteKey(s){return s.name==='Storehouse Cellar'&&rhPainted[s.name][4]<.35?'variant:cellar-relocated':s.name;}
+function rh1510Upgrade(s){const a=rh1510Art[rh1510SiteKey(s)];return a?.complete&&a.naturalWidth>1?a:null;}
+function rh1510HomeUpgrade(o){const a=rh1510Art['home:'+o.k];return a?.complete&&a.naturalWidth>1?a:null;}
+function rh1510HomeFlues(o){return rh1510HomeUpgrade(o)?rh1510ArtMeta['home:'+o.k]?.flues:null;}
+function rh1510HomeContext(b,o,im){return {...b,primary:im,upgrade:rh1510HomeUpgrade(o),style:{green:true,flues:rh1510HomeFlues(o)||[]}};}
+function rh1510ArtPoints(s,key){return rh1510Upgrade(s)?rh1510ArtMeta[rh1510SiteKey(s)]?.[key]:null;}
+function rh1510SiteBounds(b,s){
+ const fit=b||{left:s.x,top:s.y,w:s.w,h:s.h};
+ return {...fit,primary:rh1451SiteArt(s),upgrade:rh1510Upgrade(s),style:{hearth:s.type==='forge'||s.type==='tavern'||s.type==='inn'||s.name==='Bakery',
+  green:s.name==='Herbalist'||s.name==='Apothecary'||s.type==='home',flues:rh1451SiteFlues(s)}};
+}
+function rh1457Overlap(b,base,x,y){
+ // This includes the feather around the 68-unit player, not just the centre.
+ return !!b&&base>y+.5&&b.left<x+54&&b.left+b.w>x-54&&b.top<y+20&&b.top+b.h>y-94;
+}
+function rh1510Mask(g,x,y){
+ // The centre exposes the whole sprite; the outer edge blends into the untouched roof.
+ g.save();g.translate(x,y-31);g.scale(54,63);
+ const gradient=g.createRadialGradient(0,0,0,0,0,1);
+ gradient.addColorStop(0,'rgba(0,0,0,.94)');gradient.addColorStop(.56,'rgba(0,0,0,.92)');
+ gradient.addColorStop(.76,'rgba(0,0,0,.53)');gradient.addColorStop(1,'rgba(0,0,0,0)');
+ g.globalCompositeOperation='destination-out';g.globalAlpha=1;g.fillStyle=gradient;g.fillRect(-1,-1,2,2);g.restore();
+}
+function rh1457Facade(b,base,draw){
+ const previous=rh1510FacadeContext;rh1510FacadeContext=b||null;
+ try{
+  if(!rh1457Overlap(b,base,p.x,p.y)){draw();return;}
+  const main=c,w=main.canvas.width,h=main.canvas.height;
+  // One reusable layer at the adaptive backing resolution; only allocated for an occluder.
+  // Punching a hole into this isolated layer never erases the street or the player.
+  let layer=rh1510CutawayCanvas;
+  if(!layer||layer.width!==w||layer.height!==h)layer=rh1510CutawayCanvas=rhSurface(w,h);
+  const g=layer.getContext('2d'),transform=main.getTransform();
+  g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,w,h);
+  g.save();
+  try{
+   g.setTransform(transform);g.imageSmoothingEnabled=main.imageSmoothingEnabled;g.imageSmoothingQuality=main.imageSmoothingQuality;
+   g.globalAlpha=1;g.globalCompositeOperation='source-over';
+   c=g;try{draw();}finally{c=main;}
+   rh1510Mask(g,p.x,p.y);
+  }finally{g.restore();c=main;}
+  main.save();try{main.setTransform(1,0,0,1,0,0);main.drawImage(layer,0,0);}finally{main.restore();}
+ }finally{rh1510FacadeContext=previous;}
+}
+
+// V1510 street integration: use each facade's true lower alpha contour, not
+// a rectangular lot. Contact shadows, damp edges, stone fragments and worn
+// thresholds are ground-only, cached and independent of collision or doors.
+const rh1510GroundCache=new Map();
+let rh1510GroundBuilds=0,rh1510GroundPixels=0;
+function rh1510GroundReset(){rh1510MarketContacts.clear();rh1510AnnexApproaches.clear();rh1510GroundCache.clear();rh1510GroundPixels=0;rh1510GroundBuilds=0;}
+function rh1510GroundBuild(b,im,site){
+ const seed=rh1510Seed(b),sw=Math.max(8,Math.ceil(b.w/3)),sh=Math.max(8,Math.ceil(b.h/3));
+ const silhouette=rhSurface(sw,sh),sg=silhouette.getContext('2d',{willReadFrequently:true});
+ sg.drawImage(im,0,0,sw,sh);
+ const pixels=sg.getImageData(0,0,sw,sh).data;
+ const pad=28,top=Math.floor(b.top+b.h-Math.min(142,b.h*.34)),left=Math.floor(b.left-pad);
+ const w=Math.ceil(b.w+2*pad),h=Math.ceil(b.top+b.h+39-top);
+ const canvas=rhSurface(w,h),g=canvas.getContext('2d');
+ const type=site.type,green=site.name==='Herbalist'||site.name==='Apothecary'||site.name==='Herb Workshop'||type==='home',soot=type==='forge'||site.name==='Bakery';
+ const pale=site.name==='Bakery',wood=site.name==='Fletcher'||site.name==='Leatherworker'||site.name==='Storage Annex'||site.name==='Supply Annex';
+ const groundY=[];
+ function spot(x,y,rx,ry,color){
+  g.save();g.translate(x,y);g.scale(rx,ry);
+  const r=g.createRadialGradient(0,0,.10,0,0,1);r.addColorStop(0,color);r.addColorStop(.62,color);r.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=r;g.fillRect(-1,-1,2,2);g.restore();
+ }
+ for(let xx=0;xx<sw;xx+=2){
+  let yy=sh-1;while(yy>sh*.66&&pixels[(yy*sw+xx)*4+3]<155)yy--;
+  if(yy<=sh*.66)continue;
+  const x=b.left+xx*b.w/sw-left,y=b.top+(yy+.5)*b.h/sh-top,k=rh1510Hash(xx,0,seed);
+  if(y<8||y>h-18)continue;
+  groundY.push([x,y]);
+  // Uneven soil/cobble boundary, tight dark contact and broad natural grime.
+  spot(x,y+3,13+k*13,5+k*5,'rgba(26,29,23,.115)');
+  spot(x,y+9,19+k*14,7+k*9,soot?'rgba(39,34,29,.082)':'rgba(62,57,44,.070)');
+  if(k>.43)spot(x+2,y+7,9+k*8,4+k*4,green?'rgba(64,75,43,.13)':'rgba(77,72,55,.09)');
+ }
+ // A few irregularly scattered chips, moss, timber shavings or ash hug
+ // the actual footing. No generated objects enter the collision grid.
+ for(let i=0;i<groundY.length;i++){
+  const [x,y]=groundY[i],q=rh1510Hash(i,7,seed);
+  if(q<.38)continue;
+  const u=x+(rh1510Hash(i,13,seed)-.5)*8,v=y+3+rh1510Hash(i,17,seed)*12;
+  const s=1.1+rh1510Hash(i,19,seed)*2.7;
+  g.fillStyle=green&&q>.63?'rgba(86,99,58,.30)':pale&&q>.60?'rgba(161,150,121,.19)':wood&&q>.57?'rgba(138,111,74,.23)':'rgba(92,86,72,.27)';
+  g.beginPath();g.moveTo(u-s,v);g.lineTo(u-.4*s,v-s*.48);g.lineTo(u+s,v-.15*s);g.lineTo(u+s*.55,v+s*.54);g.closePath();g.fill();
+  if(green&&q>.79){g.fillStyle='rgba(113,129,72,.33)';g.fillRect(u-1,v-1,1.4,2);}
+ }
+ // Worn entry apron: low, irregular paving sheen and softly worn approach.
+ // It is at the existing entrance, with no added step collision or height.
+ const dx=site.doorX-left,dy=site.doorY-top+5;
+ if(dx>12&&dx<w-12&&dy>0&&dy<h-8){
+  const wide=Math.min(27,Math.max(17,b.w*.056));
+  spot(dx,dy+10,wide+13,11,'rgba(35,38,32,.12)');
+  spot(dx,dy+12,wide+9,7,'rgba(151,142,115,.075)');
+  for(let n=-2;n<=2;n++){
+   const k=rh1510Hash(n+6,11,seed),x=dx+n*wide*.41,y=dy+5+k*3;
+   g.fillStyle='rgba(120,112,91,.19)';g.beginPath();
+   g.moveTo(x-5,y-2);g.lineTo(x+4,y-2.8);g.lineTo(x+4.8,y+2.5);g.lineTo(x-4.8,y+2);g.closePath();g.fill();
+   g.strokeStyle='rgba(44,45,36,.18)';g.lineWidth=.8;g.stroke();
+  }
+ }
+ return {canvas,left,top,n:w*h,im};
+}
+function rh1510GroundEntry(key,b,im,site,cx,cy){
+ if(!b||!rh1365Intersects(b,cx,cy,45)||!im?.complete||!im.naturalWidth)return;
+ const stamp=[b.left,b.top,b.w,b.h].join(':');
+ let a=rh1510GroundCache.get(key);
+ if(a&&(a.im!==im||a.stamp!==stamp)){rh1510GroundPixels-=a.n;rh1510GroundCache.delete(key);a=null;}
+ if(a){rh1510GroundCache.delete(key);rh1510GroundCache.set(key,a);}
+ else if(rh1510GroundBuilds<1){
+  rh1510GroundBuilds++;
+  try{
+   a=rh1510GroundBuild(b,im,site);a.stamp=stamp;
+   while(rh1510GroundPixels+a.n>1900000&&rh1510GroundCache.size){const k=rh1510GroundCache.keys().next().value;rh1510GroundPixels-=rh1510GroundCache.get(k).n;rh1510GroundCache.delete(k);}
+   rh1510GroundCache.set(key,a);rh1510GroundPixels+=a.n;
+  }catch(_){}
+ }
+ if(a)c.drawImage(a.canvas,a.left,a.top);
+}
+function rh1510GroundHome(o,b,im,cx,cy){
+ if(!b)return;
+ const d=o.door||o.doors?.[0]||(Number.isFinite(o.doorWorldOffset)?[o.x+o.doorWorldOffset,o.y]:null);
+ rh1510GroundEntry(o,b,im,{name:o.k,type:'home',doorX:d?.[0]??NaN,doorY:d?.[1]??NaN},cx,cy);
+}
+function rh1510Ground(cx,cy){
+ rh1510GroundBuilds=0;
+ rh1510AnnexApproach(cx,cy);
+ for(const s of sites){
+  if(s.type==='castle')continue; // the mountain-integrated castle has its own contacts
+  const b=rh1365SiteBounds(s);
+  const im=rh1510Upgrade(s)||(s.type==='temple'?rh117Images.temple:s.name==='Caster Guild'?rh193Art.mage:s.type==='cave'?rh193Art.cave:s.type==='future'?rh193Art.hall:rh1451SiteArt(s));
+  rh1510GroundEntry(s,b,im,s,cx,cy);
+ }
+ // Follow the gate's masonry feet, never paint across its open passage.
+ rh1510GroundEntry('forest-gate',{left:rh1407Gate.x,top:rh1407Gate.y,w:rh1407Gate.w,h:rh1407Gate.h},rh118Images.gate,{name:'Forest Gate',type:'landmark',doorX:NaN,doorY:NaN},cx,cy);
+ // The same irregular contact follows estate houses, outbuildings and passage
+ // structures so the shops and neighboring residential streets read as one town.
+ for(const o of rh1464Homes)if(o.large)rh1510GroundHome(o,rh1464Bounds(o),rh1510HomeUpgrade(o)||rh1464Art[o.k],cx,cy);
+ for(const o of rh1474Parts)rh1510GroundHome(o,rh1474Bounds(o),rh1474Art[o.k],cx,cy);
+ for(const o of rh189Houses)rh1510GroundHome(o,rh1365HouseBounds(o),rh1365HouseImage(o),cx,cy);
+ for(const o of rh187Annex)rh1510AnnexEntry(o,rh1399AnnexBounds(o),o.rebuilt1340?rh1340ServiceArt.herb:rh187Art[o.k],cx,cy);
+}
+
+// The four sparse overlays are generated from the town's actual painted ground,
+// aligned across original 720x650 chunks. They are lazily loaded, never cover
+// fallback terrain, and have no influence on movement or obstruction.
+const rh1510ShoulderImages=new Map();
+let rh1510ShoulderDraws=0;
+function rh1510ShoulderTile(x,y){
+ const i=Math.floor(x/2880),j=Math.floor(y/1300);
+ if(i<0||i>1||j<0||j>1)return null;
+ return {key:i+'-'+j,sx:(x-i*2880)/2,sy:(y-j*1300)/2};
+}
+function rh1510ShoulderDraw(g,x,y){
+ const z=rh1510ShoulderTile(x,y);
+ if(!z)return;
+ const src=rh1510ShoulderData[z.key];if(!src)return;
+ let im=rh1510ShoulderImages.get(z.key);
+ if(!im){im=rh1200Image();im.src=src;rh1510ShoulderImages.set(z.key,im);}
+ if(!im.complete||im.naturalWidth!==1440||im.naturalHeight!==650)return;
+ g.drawImage(im,z.sx,z.sy,360,325,x,y,720,650);
+ rh1510ShoulderDraws++;
+}
+function rh1510ShoulderReset(){rh1510ShoulderImages.clear();rh1510ShoulderDraws=0;}
+function rh1510StreetArtStatus(){
+ return {gateReady:!!rh118Images.gate?.complete&&rh118Images.gate.naturalWidth===1110,
+  shoulderTiles:Object.keys(rh1510ShoulderData).length,loadedShoulders:[...rh1510ShoulderImages.values()].filter(im=>im.complete&&im.naturalWidth===1440).length,
+  shoulderDraws:rh1510ShoulderDraws};
+}
+
+// Apron edges are individually worn by foot traffic, instead of outlined as
+// clean rectangular slabs. Erase only the ground-facing lip, not the wall
+// contact or the middle of a fitted foundation. Rasterized in its existing cache.
+function rh1510FoundationWear(g,runs,top,depth,seed){
+ g.save();g.globalCompositeOperation='destination-out';
+ for(const run of runs){
+  for(let i=0;i<run.length;i++){
+   const [x,y]=run[i],n=rh1510Hash(i,7,seed);
+   if(n<.25)continue;
+   const u=x+3*(rh1510Hash(i,8,seed)-.5),v=y-top+depth+2+n*2;
+   const rx=8+8*n,ry=5+5*n;
+   g.save();g.translate(u,v);g.scale(rx,ry);
+   const grad=g.createRadialGradient(0,0,0,0,0,1);
+   grad.addColorStop(0,'rgba(0,0,0,.77)');grad.addColorStop(.50,'rgba(0,0,0,.48)');grad.addColorStop(1,'rgba(0,0,0,0)');
+   g.fillStyle=grad;g.fillRect(-1,-1,2,2);g.restore();
+  }
+ }
+ g.restore();
+}
+
+// Civic buildings use the same door/footing coordinate as the existing town.
+// The hall's redesigned oak entrance, recessed stonework and moving lamps
+// receive dedicated artwork-aligned measurements, not the old window mask.
+function rh1510HallFit(s,im){
+ const w=s.w*.99,h=Math.max(s.h*.98,w*im.naturalHeight/im.naturalWidth),[u,v]=rh1510CivicMeta.hall.door;
+ return {left:s.doorX-w*u,top:s.doorY+6-h*v,w,h,base:s.doorY+6+h*(1-v)};
+}
+function rh1510HallGlass(x,y,w,h){rh1510WindowTint(rh1510CivicMeta.hall.windows,x,y,w,h);}
+function rh1510WindowTint(windows,x,y,w,h){
+ const night=rh1433Day().night;
+ c.save();
+ try{
+  for(const pane of windows){
+   const pts=pane.points;
+   c.save();c.beginPath();pts.forEach(([u,v],i)=>i?c.lineTo(x+w*u,y+h*v):c.moveTo(x+w*u,y+h*v));c.closePath();c.clip();
+   const left=Math.min(...pts.map(p=>p[0])),right=Math.max(...pts.map(p=>p[0])),top=Math.min(...pts.map(p=>p[1])),bottom=Math.max(...pts.map(p=>p[1]));
+   if(pane.lit){
+    // A warm occupied room becomes slightly more apparent after dusk.
+    c.fillStyle=`rgba(255,174,82,${.035+night*.095})`;
+   }else{
+    c.fillStyle=`rgba(33,44,54,${.04+night*.14})`;
+   }
+   c.fillRect(x+w*left,y+h*top,w*(right-left),h*(bottom-top));c.restore();
+  }
+ }finally{c.restore();}
+}
+function rh1510AnnexEntry(o,b,im,cx,cy){
+ if(!b)return;
+ const m=o.rebuilt1340?rh1510CivicMeta.activeHerb:rh1510CivicMeta[o.k];
+ if(!m){rh1510GroundHome(o,b,im,cx,cy);return;}
+ rh1510GroundEntry(o,b,im,{name:m.name,type:'annex',doorX:b.left+b.w*m.door[0],doorY:b.top+b.h*m.door[1]},cx,cy);
+}
+function rh1510AnnexGlass(o,x,y,w,h){
+ const m=o.rebuilt1340?rh1510CivicMeta.activeHerb:rh1510CivicMeta[o.k];
+ if(m?.windows)rh1510WindowTint(m.windows,x,y,w,h);
+}
+function rh1510AnnexSmoke(o,now,cx,cy){
+ const m=o.rebuilt1340?rh1510CivicMeta.activeHerb:rh1510CivicMeta[o.k],b=rh1399AnnexBounds(o);
+ if(!b||!m?.flue||!rh1246SmokeArt.every(a=>a.complete&&a.naturalWidth>1))return;
+ rh1424Plume(b.left+b.w*m.flue[0],b.top+b.h*m.flue[1],now,cx,cy,o.x+o.y,'house');
+}
+function rh1510CivicArtStatus(){
+ const hall=rh193Art.hall,site=sites.find(s=>s.type==='future'),fit=site&&rh1365SiteBounds(site);
+ const annexes=['store','supply','herb'].map(k=>{
+  const m=rh1510CivicMeta[k],im=rh187Art[k],placed=rh187Annex.filter(o=>o.k===k);
+  return {key:k,ready:rh187Ready(k)&&(k!=='herb'||!!rh1340ServiceArt.herb?.complete&&rh1340ServiceArt.herb.naturalWidth>1),
+   width:im.naturalWidth,height:im.naturalHeight,
+   instances:placed.map(o=>{const a=o.rebuilt1340?rh1340ServiceArt.herb:im,meta=o.rebuilt1340?rh1510CivicMeta.activeHerb:m;return {x:o.x,y:o.y,w:o.w,doorHeight:Math.round(o.w*a.naturalHeight/a.naturalWidth*meta.doorHeight),restored:!!o.civic1510};})};
+ });
+ return {hallReady:!!hall?.complete&&hall.naturalWidth>1,hallDoorHeight:fit?Math.round(fit.h*rh1510CivicMeta.hall.doorHeight):null,hallDoorAligned:fit?Math.abs(fit.left+fit.w*rh1510CivicMeta.hall.door[0]-site.doorX)<.01:false,annexes,placements:rh1510AnnexLots};
+}
+
+// The old generic annex array was retired by a previous map pass. Restore two
+// practical buildings only on genuinely unused frontage, without moving any
+// existing shop, home, garden, tree, resident path or gameplay destination.
+const rh1510AnnexLots=[];
+function rh1510RectsCross(a,b,pad=0){return a.l<b.r+pad&&a.r>b.l-pad&&a.t<b.b+pad&&a.b>b.t-pad;}
+function rh1510PathCross(rect,points,pad){
+ for(let i=1;i<points.length;i++){
+  const a=points[i-1],b=points[i],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/8));
+  if(Math.max(a[0],b[0])<rect.l-pad||Math.min(a[0],b[0])>rect.r+pad||Math.max(a[1],b[1])<rect.t-pad||Math.min(a[1],b[1])>rect.b+pad)continue;
+  for(let j=0;j<=n;j++){const q=j/n,x=a[0]+q*(b[0]-a[0]),y=a[1]+q*(b[1]-a[1]);if(x>rect.l-pad&&x<rect.r+pad&&y>rect.t-pad&&y<rect.b+pad)return true;}
+ }
+ return false;
+}
+function rh1510PlaceAnnexes(){
+ if(rh1510AnnexLots.length)return;
+ // Retain the original citizen paths, rather than allowing the new lot to
+ // cause a procedural route recalculation.
+ if(!rh171Routes)rh171Routes=rh171BuildRoutes();
+ if(!rh189Loops)rh189Loops=rh189BuildLoops();
+ const routes=[
+  ...rh1466Residents.map(o=>({points:o.points,pad:18})),
+  ...rh1467Frontages.map(o=>({points:o.points,pad:o.half+15})),
+  {points:rh1463Path,pad:44},
+  ...rh171Routes.filter(Boolean).map(o=>({points:[[o.a,o.y],[o.b,o.y]],pad:16})),
+  ...rh189Loops.filter(Boolean).map(points=>({points:[...points,points[0]].map(o=>[o.x,o.y]),pad:16}))
+ ];
+ const rectangles=rh1455Lanes.map(o=>({l:o.x,r:o.x+o.w,t:o.y,b:o.y+o.h}));
+ const scenery=()=>[
+  ...sites.map(s=>({l:Math.min(s.x,s.doorX-s.w*.55),r:Math.max(s.x+s.w,s.doorX+s.w*.55),t:Math.min(s.y,s.doorY-s.h)-12,b:s.doorY+20})),
+  ...[...rh1464Homes,...rh1474Parts,...rh189Houses,...rh187Annex].map(o=>{const x=o.x+(o.dx||0),h=o.h||o.w*.95;return {l:x-o.w/2,r:x+o.w/2,t:o.y-h-10,b:o.y+15};})
+ ];
+ // Prefer actual side streets adjoining a road, not the plaza center. Two
+ // compact footprints leave broad, traversable entrance approaches.
+ const candidates=[];
+ for(const y of [806,820,830,1418,1436,1454,1466,1638,1654,1668,1948,1966,1984,2002,2020,2036,2218,2240,2260,2280,2300,2320])
+  for(let x=185;x<=WORLD_W-185;x+=31)candidates.push([x,y]);
+ for(const [kind,target] of [['store',1160],['supply',5150]]){
+  const m=rh1510CivicMeta[kind],w=198,h=w*m.height/m.width,rx=84,ry=45,boxes=scenery();
+  const sorted=candidates.slice().sort((a,b)=>Math.abs(a[0]-target)+Math.abs(a[1]-1700)*.13-(Math.abs(b[0]-target)+Math.abs(b[1]-1700)*.13));
+  for(const [x,y] of sorted){
+   if(Math.abs(x-1800)<400||rh1298TempleReserve(x,y,105)||rh1299RoyalReserve(x,y,105)||rh1300GuildReserve(x,y,105)||rh1301MarketReserve(x,y,105))continue;
+   const door=x-w/2+w*m.door[0];
+   // The apron must lead to existing public paving, not an isolated field.
+   if(![30,50,75,105,135].some(d=>rhRoadAt(door,y+d)))continue;
+   if(rhRoadAt(x,y-ry-20)&&rhRoadAt(x-rx,y-ry-20)&&rhRoadAt(x+rx,y-ry-20))continue;
+   const sprite={l:x-w/2,t:y-h,r:x+w/2,b:y+10},foot={l:x-rx,t:y-ry,r:x+rx,b:y+12};
+   if(boxes.some(z=>rh1510RectsCross(sprite,z,12)))continue;
+   if(rectangles.some(z=>rh1510RectsCross(foot,z,16))||routes.some(z=>rh1510PathCross(foot,z.points,z.pad)))continue;
+   if(rh117Trees.some(o=>Math.abs(o.x-x)<w*.48+12&&o.y>y-h*.70&&o.y<y+22))continue;
+   if(sites.some(s=>Math.hypot(door-s.doorX,y-s.doorY)<165))continue;
+   let clear=true;
+   for(let yy=y-ry-12;yy<=y+27&&clear;yy+=9)for(let xx=x-rx-12;xx<=x+rx+12;xx+=9)if(blocked(xx,yy)){clear=false;break;}
+   if(!clear)continue;
+   // A continuous, 44-unit-wide approach from the existing paved street.
+   let approach=null;
+   for(const d of [34,50,75,105,135]){
+    if(!rhRoadAt(door,y+d))continue;
+    let ok=true;for(let yy=y+14;yy<=y+d&&ok;yy+=5)for(const dx of [-22,-11,0,11,22])if(blocked(door+dx,yy)){ok=false;break;}
+    if(ok){approach=d;break;}
+   }
+   if(approach===null)continue;
+   const o={k:kind,x,y,w,h,rx,ry,civic1510:true,approach,doorX:door,seed:15101+rh1510AnnexLots.length};
+   rh187Annex.push(o);
+   // The collision footprint is limited to the wall base; the entire existing
+   // resident/footpath network remains outside it by construction.
+   rh1510AnnexLots.push({kind,x,y,w,h:Math.round(h),doorX:Math.round(door),approach,protectedRoutes:routes.length});
+   break;
+  }
+ }
+}
+
+// A worn, ragged, world-space stone shoulder connects each new entrance to
+// public paving. It is purely visual and uses the same existing ground atlas.
+const rh1510AnnexApproaches=new Map();
+function rh1510AnnexApproach(cx,cy){
+ if(!rh191PaveArt?.complete||rh191PaveArt.naturalWidth<2)return;
+ for(const o of rh187Annex){
+  if(!o.civic1510)continue;
+  const x=Math.floor(o.doorX-32),y=o.y+1,w=64,h=o.approach+19;
+  if(x+w<cx||x>cx+W||y+h<cy||y>cy+H)continue;
+  let a=rh1510AnnexApproaches.get(o);
+  if(!a){a=rhSurface(w,h);const g=a.getContext('2d');rh1406Pave(g,rh191PaveArt,x,y,w,h,.46);
+   g.fillStyle='#635a4426';g.fillRect(0,0,w,h);rh1406Edge(g,w,h,x,y,17,Math.min(24,h*.31));
+   rh1510AnnexApproaches.set(o,a);
+  }
+  c.save();c.globalAlpha=.78;c.drawImage(a,x,y);c.restore();
+ }
+}
+
+// Market Court: blend the irregular paving edge into the actual east atlas.
+// This runs only during construction of the existing cached square canvas.
+function rh1510MarketSquareEdge(g,b,points){
+ const image=g.getImageData(0,0,b.w,b.h),d=image.data;
+ const field=rh1510Field(b.w,b.h,13,12,1510475),fine=rh1510Field(b.w,b.h,4,4,1510476);
+ const edges=points.map((p,i)=>{const q=points[(i+1)%points.length],dx=q[0]-p[0],dy=q[1]-p[1];return [p[0]-b.x,p[1]-b.y,dx,dy,dx*dx+dy*dy]});
+ for(let y=0;y<b.h;y++)for(let x=0;x<b.w;x++){
+  const j=y*b.w+x,i=j*4;if(!d[i+3])continue;
+  let dist=Infinity;
+  for(const [ax,ay,dx,dy,len] of edges){const t=rh1510Clamp(((x-ax)*dx+(y-ay)*dy)/len);dist=Math.min(dist,Math.hypot(x-ax-t*dx,y-ay-t*dy));}
+  const width=9+field[j]*17+fine[j]*5,edge=rh1510Clamp((dist-1.5)/width);
+  const fade=edge*edge*(3-2*edge),grime=(1-fade)*(.28+.72*field[j]);
+  // Natural weathered green grout and earthy color at the ragged stone margin.
+  d[i]=d[i]*(1-grime*.22)+88*grime*.22;d[i+1]=d[i+1]*(1-grime*.18)+94*grime*.18;d[i+2]=d[i+2]*(1-grime*.24)+55*grime*.24;
+  d[i+3]*=fade;
+ }
+ g.putImageData(image,0,0);
+}
+function rh1510MarketBounds(o){return {left:o.x-o.w/2,top:o.y-o.h+6,w:o.w,h:o.h};}
+const rh1510MarketContacts=new Map();
+function rh1510MarketGround(cx,cy){
+ for(const o of rh1475Furniture){
+  if(!rh1365Intersects(rh1510MarketBounds(o),cx,cy,45))continue;
+  let a=rh1510MarketContacts.get(o);
+  if(!a){
+   const w=Math.ceil(o.rx*2+76),h=Math.ceil(o.ry*2+62),can=rhSurface(w,h),g=can.getContext('2d');
+   const centerX=w/2,centerY=h/2,seed=Math.round(o.x+o.y);
+   // Old market furniture had shadows painted through the character layer.
+   // These ground-only contact beds stay under both scenery and characters.
+   g.save();g.translate(centerX,centerY);g.scale(o.rx+22,o.ry+18);
+   const soil=g.createRadialGradient(0,0,.20,0,0,1);
+   soil.addColorStop(0,'#27261564');soil.addColorStop(.55,'#403a2b37');soil.addColorStop(1,'#453a2400');
+   g.fillStyle=soil;g.fillRect(-1,-1,2,2);g.restore();
+   for(let i=0;i<48;i++){
+    const angle=rh1510Hash(i,1,seed)*Math.PI*2,r=.66+rh1510Hash(i,2,seed)*.54;
+    const x=centerX+Math.cos(angle)*(o.rx+12)*r,y=centerY+Math.sin(angle)*(o.ry+6)*r;
+    const d=1+rh1510Hash(i,3,seed)*2.3;
+    g.fillStyle=i%4===0?'#74775266':i%3===0?'#a7936b55':'#493c2b4d';
+    g.beginPath();g.ellipse(x,y,d,d*.45,angle,0,Math.PI*2);g.fill();
+   }
+   a={can,left:o.x-w/2,top:o.y-h/2};rh1510MarketContacts.set(o,a);
+  }
+  c.drawImage(a.can,a.left,a.top);
+ }
+}
+function rh1510MarketBuilding(o){return o.k==='rh1498warehouse'||o.k==='rh1498shelter';}
+function rh1510MarketGlass(o,b){
+ const m=rh1510MarketMeta[o.k];
+ if(m?.windows?.length)rh1510WindowTint(m.windows,b.left,b.top,b.w,b.h);
+}
+function rh1510MarketArtStatus(){
+ const keys=['stall0','stall1','well','cart','rh1498warehouse','rh1498shelter'];
+ return {assets:keys.map(key=>{
+  const im=rh1475Images[key]||rh1464Art[key],objects=key.startsWith('rh1498')?rh1464Homes:rh1475Furniture;
+  return {key,ready:!!im?.complete&&im.naturalWidth>1,instances:objects.filter(o=>o.k===key).map(o=>({x:o.x,y:o.y,w:o.w,h:o.h,flip:!!o.flip}))};
+ }),eastTiles:Object.keys(rh119ChunkData).filter(k=>k.startsWith('8:')).length,
+ eastReady:[...rh119ChunkImages.entries()].filter(([k,im])=>k.startsWith('8:')&&im.complete&&im.naturalWidth===720).map(([k])=>k),
+ squareReady:!!rh1475SquareArt,contactCount:rh1510MarketContacts.size};
+}

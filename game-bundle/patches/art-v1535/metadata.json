@@ -1,0 +1,260 @@
+{
+  "version": 1535,
+  "curtain": [
+    {
+      "file": "curtain-0.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 103862,
+      "sha256": "4b93c401d68ef895c80012ab8ad3621efef56c1685b2522294b4918e91690815",
+      "key": "0"
+    },
+    {
+      "file": "curtain-1.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 101634,
+      "sha256": "23b06ea8e6d61e8d90447589bc4af4e1093fd20c761b7cb7bd241d38a90b9fb1",
+      "key": "1"
+    },
+    {
+      "file": "curtain-2.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 101618,
+      "sha256": "1005b7e626898e5422ffc663701514500f56a5367ce9388cfe44e7a00ec7dee9",
+      "key": "2"
+    },
+    {
+      "file": "curtain-3.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 102564,
+      "sha256": "0329b3ecc4d1b70c2ca39a7c43a152d1549969fbf8bec3a78ce763e851d7fa2c",
+      "key": "3"
+    },
+    {
+      "file": "curtain-4.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 102038,
+      "sha256": "48a2b1b5a25c89e87afcf10c2ca1a3f8e5c31ef43f9763c43c602635fd087351",
+      "key": "4"
+    },
+    {
+      "file": "curtain-5.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 103596,
+      "sha256": "23cdaeac3e49a0ac025c8b0fd811606221781ada6893ec81af3eb4d14f853ab3",
+      "key": "5"
+    },
+    {
+      "file": "curtain-6.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 100578,
+      "sha256": "7953a1f75503b321b5c6c4f9e8df24ae0a9df28066b2cae6d64d5486ead71a56",
+      "key": "6"
+    },
+    {
+      "file": "curtain-7.webp",
+      "width": 480,
+      "height": 368,
+      "bytes": 104180,
+      "sha256": "34fb9b85a1038c7437bf07a7c57cef0e4d85b8f94846fc2b0246c31f49f074a2",
+      "key": "7"
+    }
+  ],
+  "side": [
+    {
+      "file": "side-0.webp",
+      "width": 130,
+      "height": 480,
+      "bytes": 41516,
+      "sha256": "969884074c78bfa1c33fe20943058a5ff310178b166922d88c69b0961f82efb6",
+      "key": "0"
+    },
+    {
+      "file": "side-1.webp",
+      "width": 130,
+      "height": 480,
+      "bytes": 41560,
+      "sha256": "b3d25f61ac165607da42346f83fa8507893d74ba80e9e5f4d29b12472fae8f04",
+      "key": "1"
+    },
+    {
+      "file": "side-2.webp",
+      "width": 130,
+      "height": 480,
+      "bytes": 41182,
+      "sha256": "91dbe224796d3427de403de8cecac4440b9f800bb4c76f2ba00ecb417fdf1d73",
+      "key": "2"
+    },
+    {
+      "file": "side-3.webp",
+      "width": 130,
+      "height": 480,
+      "bytes": 41728,
+      "sha256": "866fd553dc58f3da0f0373e3483ae976cce4a122e062b555dd599f481b349441",
+      "key": "3"
+    }
+  ],
+  "foot": [
+    {
+      "file": "foot-south-0.webp",
+      "width": 240,
+      "height": 39,
+      "bytes": 5782,
+      "sha256": "cce1d66c57bef76d9774d7ccd5df4892d646b6683002766ce15cd7340457398f",
+      "kind": "south",
+      "key": "0"
+    },
+    {
+      "file": "foot-west-0.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6300,
+      "sha256": "cf092c9d0ee06ebcf9655b9e5e7987dcaba4874810540e8e260e7c9f30dee4ae",
+      "kind": "west",
+      "key": "0"
+    },
+    {
+      "file": "foot-east-0.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6262,
+      "sha256": "926f1a257a45867a7a2553c50303ce612ada4ff0678760518703318332d9687f",
+      "kind": "east",
+      "key": "0"
+    },
+    {
+      "file": "foot-south-1.webp",
+      "width": 240,
+      "height": 39,
+      "bytes": 6000,
+      "sha256": "8db2eaefd78fc9442d1e45f5da98bf2f6db315d7e5730b9f053e4d6e68802138",
+      "kind": "south",
+      "key": "1"
+    },
+    {
+      "file": "foot-west-1.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6566,
+      "sha256": "cc9e6be9090c1bd6de8f26c64a47007f537e2f58588b650cd022a5271da1cc51",
+      "kind": "west",
+      "key": "1"
+    },
+    {
+      "file": "foot-east-1.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6442,
+      "sha256": "1d84292755ef096b3860c8fc4e9adc3c4885e49212555fab83d047fa6b146790",
+      "kind": "east",
+      "key": "1"
+    },
+    {
+      "file": "foot-south-2.webp",
+      "width": 240,
+      "height": 39,
+      "bytes": 6298,
+      "sha256": "4aa9d307eec560d21616ca8e63b39ad2c5392ff5715ffe3a790ac63574d5a9a0",
+      "kind": "south",
+      "key": "2"
+    },
+    {
+      "file": "foot-west-2.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6970,
+      "sha256": "d19ad059f0ae30b85061e6c908001cd51f9886a177660dbc7185973692de8a75",
+      "kind": "west",
+      "key": "2"
+    },
+    {
+      "file": "foot-east-2.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6744,
+      "sha256": "94bb0e372bc5675d06f444b8bc59a503a4c9ec01733d8ad2ffef15f254e3c8a0",
+      "kind": "east",
+      "key": "2"
+    },
+    {
+      "file": "foot-south-3.webp",
+      "width": 240,
+      "height": 39,
+      "bytes": 6334,
+      "sha256": "1d31fe366aaa87eea59d59a95bfdc2958131763586fcc34bb8e8c965634cf62a",
+      "kind": "south",
+      "key": "3"
+    },
+    {
+      "file": "foot-west-3.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 7010,
+      "sha256": "4570313060c9dec7bef4a15476c5de70f4bdf9df1eef12f6cf24eec1bc95c26b",
+      "kind": "west",
+      "key": "3"
+    },
+    {
+      "file": "foot-east-3.webp",
+      "width": 43,
+      "height": 240,
+      "bytes": 6834,
+      "sha256": "bf286f70162946420de7d2324692bf6ad9b093cc8aef18d8e2804cf20bc1490c",
+      "kind": "east",
+      "key": "3"
+    }
+  ],
+  "curtainSeamAlphaMAE": [
+    0.166,
+    0.087,
+    0.049,
+    0.0,
+    0.049,
+    0.087,
+    0.166,
+    0.0
+  ],
+  "sideSeamAlphaMAE": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "gateClip": [
+    [
+      0,
+      1450
+    ],
+    [
+      2150,
+      6460
+    ]
+  ],
+  "logicalCurtain": [
+    240,
+    184
+  ],
+  "logicalSide": [
+    65,
+    240
+  ],
+  "groundFoot": [
+    240,
+    39,
+    43,
+    240
+  ],
+  "runtimeWallReadbacks": 0,
+  "additionalDraws": 0,
+  "npcChanges": 0,
+  "prompts": [
+    "Long connected, weathered realistic limestone curtain wall, upper corbels, angular battlements and buttress courses, transparent background.",
+    "Straight overhead medieval rampart walkway, individually worn stone flags and crenellated parapets, transparent edges."
+  ]
+}

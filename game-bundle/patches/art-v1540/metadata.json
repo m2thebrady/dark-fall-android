@@ -1,0 +1,141 @@
+{
+  "version": 1540,
+  "models": [
+    {
+      "key": "spookOakTown1",
+      "file": "spookOakTown1.webp",
+      "width": 512,
+      "height": 488,
+      "bytes": 105000,
+      "sha256": "9edf02298412572a69b73bfa1ed1ca437d2a329bb56834361c79f84d9dc282fc",
+      "alphaBounds": [
+        4,
+        40,
+        437,
+        486
+      ],
+      "visibleHeight": 0.914,
+      "footOffset": 0.0
+    },
+    {
+      "key": "spookOakTown2",
+      "file": "spookOakTown2.webp",
+      "width": 512,
+      "height": 488,
+      "bytes": 94822,
+      "sha256": "cc4e95bf434406c710ef04fcf3a956264a3382237670908502ae50be3a336944",
+      "alphaBounds": [
+        86,
+        123,
+        507,
+        486
+      ],
+      "visibleHeight": 0.744,
+      "footOffset": 0.29
+    },
+    {
+      "key": "spookBeechTown1",
+      "file": "spookBeechTown1.webp",
+      "width": 532,
+      "height": 506,
+      "bytes": 118616,
+      "sha256": "f465864698a9f2b0f734c1a2093541b825d3f5a56a8c8ac49e2f4ae0824cbc99",
+      "alphaBounds": [
+        77,
+        59,
+        528,
+        504
+      ],
+      "visibleHeight": 0.879,
+      "footOffset": 0.45
+    },
+    {
+      "key": "spookBeechTown2",
+      "file": "spookBeechTown2.webp",
+      "width": 532,
+      "height": 506,
+      "bytes": 109548,
+      "sha256": "ea7fdea88346a352a3b11cf0aed74964d14de13b176825382157204bb0fc19ed",
+      "alphaBounds": [
+        103,
+        5,
+        484,
+        504
+      ],
+      "visibleHeight": 0.986,
+      "footOffset": -0.42
+    },
+    {
+      "key": "spookSpruceTown1",
+      "file": "spookSpruceTown1.webp",
+      "width": 416,
+      "height": 514,
+      "bytes": 84920,
+      "sha256": "be3bfd223e52d6bcb7dcbff297cd55dcb0c2cb199cd2ca5ef0f7afcfb3a213f5",
+      "alphaBounds": [
+        49,
+        5,
+        355,
+        512
+      ],
+      "visibleHeight": 0.986,
+      "footOffset": 0.25
+    },
+    {
+      "key": "spookSpruceTown2",
+      "file": "spookSpruceTown2.webp",
+      "width": 416,
+      "height": 514,
+      "bytes": 93464,
+      "sha256": "a1b5dfb00142c242b2afd560e08dd6a93a87dcf43aa0c30534826c1a09c6487d",
+      "alphaBounds": [
+        5,
+        64,
+        406,
+        513
+      ],
+      "visibleHeight": 0.874,
+      "footOffset": 0.0
+    },
+    {
+      "key": "spookPineTown1",
+      "file": "spookPineTown1.webp",
+      "width": 496,
+      "height": 500,
+      "bytes": 97956,
+      "sha256": "a6b783dee7d293035cdc583921fb07a33565526e32a2601bb02469e497203f41",
+      "alphaBounds": [
+        26,
+        43,
+        491,
+        498
+      ],
+      "visibleHeight": 0.91,
+      "footOffset": 0.39
+    },
+    {
+      "key": "spookPineTown2",
+      "file": "spookPineTown2.webp",
+      "width": 496,
+      "height": 500,
+      "bytes": 99762,
+      "sha256": "2c9e12b1b746ad091f0d48d84c70aeceae62264d8b95a033953ca44d39371d67",
+      "alphaBounds": [
+        42,
+        28,
+        492,
+        499
+      ],
+      "visibleHeight": 0.942,
+      "footOffset": 0.04
+    }
+  ],
+  "unchangedKeys": [
+    "spookOakTown0",
+    "spookBeechTown0",
+    "spookSpruceTown0",
+    "spookPineTown0"
+  ],
+  "newColliders": 0,
+  "newDrawLayers": 0
+}

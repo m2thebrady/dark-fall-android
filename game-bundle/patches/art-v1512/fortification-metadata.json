@@ -1,0 +1,57 @@
+{
+  "pottery": {
+    "file": "pottery.webp",
+    "height": 976,
+    "sourceBounds": [
+      12,
+      10,
+      810,
+      792
+    ],
+    "width": 1000
+  },
+  "spice": {
+    "file": "spice.webp",
+    "height": 976,
+    "sourceBounds": [
+      12,
+      10,
+      810,
+      792
+    ],
+    "width": 1000
+  },
+  "tower0": {
+    "file": "tower0.webp",
+    "height": 1000,
+    "sourceBounds": [
+      34,
+      25,
+      383,
+      576
+    ],
+    "width": 667
+  },
+  "tower1": {
+    "file": "tower1.webp",
+    "height": 1000,
+    "sourceBounds": [
+      34,
+      25,
+      383,
+      576
+    ],
+    "width": 667
+  },
+  "tower2": {
+    "file": "tower2.webp",
+    "height": 1000,
+    "sourceBounds": [
+      34,
+      25,
+      383,
+      576
+    ],
+    "width": 667
+  }
+}

@@ -1,0 +1,414 @@
+{
+  "version": 1537,
+  "plots": [
+    {
+      "name": "Northcourt kitchen garden",
+      "x": 3890,
+      "y": 1140,
+      "w": 173,
+      "h": 69,
+      "kind": "kitchen",
+      "roadClearance": 26.5,
+      "flip": false,
+      "tone": 0.82,
+      "old": [
+        3890,
+        1140,
+        135,
+        54
+      ],
+      "arrangement": "four crop beds with earth access strips",
+      "variant": "cabbage and leek"
+    },
+    {
+      "name": "Northcourt cottage verge",
+      "x": 4280,
+      "y": 1160,
+      "w": 151,
+      "h": 48,
+      "kind": "verge",
+      "roadClearance": 48.2,
+      "flip": true,
+      "tone": 0.87,
+      "old": [
+        4280,
+        1160,
+        135,
+        43
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "cottage flowers"
+    },
+    {
+      "name": "Gatehouse herb garden",
+      "x": 4640,
+      "y": 1330,
+      "w": 74,
+      "h": 30,
+      "kind": "herb",
+      "roadClearance": 5.3,
+      "flip": false,
+      "tone": 0.8,
+      "old": [
+        4640,
+        1330,
+        74,
+        30
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "medicinal herbs"
+    },
+    {
+      "name": "Gatehouse flowering verge",
+      "x": 4810,
+      "y": 1170,
+      "w": 172,
+      "h": 60,
+      "kind": "verge",
+      "roadClearance": 11.5,
+      "flip": false,
+      "tone": 0.85,
+      "old": [
+        4810,
+        1170,
+        154,
+        54
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "cottage flowers"
+    },
+    {
+      "name": "Longhouse kitchen plot",
+      "x": 5480,
+      "y": 1240,
+      "w": 173,
+      "h": 55,
+      "kind": "kitchen",
+      "roadClearance": 119.2,
+      "flip": true,
+      "tone": 0.82,
+      "old": [
+        5480,
+        1240,
+        135,
+        43
+      ],
+      "arrangement": "four crop beds with earth access strips",
+      "variant": "root vegetables"
+    },
+    {
+      "name": "Foundry cottage verge",
+      "x": 3950,
+      "y": 1870,
+      "w": 86,
+      "h": 30,
+      "kind": "verge",
+      "roadClearance": 5.3,
+      "flip": false,
+      "tone": 0.87,
+      "old": [
+        3950,
+        1870,
+        86,
+        30
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "native verge"
+    },
+    {
+      "name": "Craft herb garden",
+      "x": 4170,
+      "y": 1960,
+      "w": 172,
+      "h": 69,
+      "kind": "herb",
+      "roadClearance": 10,
+      "flip": false,
+      "tone": 0.8,
+      "old": [
+        4170,
+        1960,
+        154,
+        62
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "medicinal herbs"
+    },
+    {
+      "name": "South cottage kitchen garden",
+      "x": 4570,
+      "y": 2190,
+      "w": 135,
+      "h": 54,
+      "kind": "kitchen",
+      "roadClearance": 15,
+      "flip": true,
+      "tone": 0.85,
+      "old": [
+        4530,
+        2190,
+        135,
+        54
+      ],
+      "arrangement": "four crop beds with earth access strips",
+      "variant": "root vegetables"
+    },
+    {
+      "name": "South cottage yard edge",
+      "x": 4730,
+      "y": 2230,
+      "w": 135,
+      "h": 43,
+      "kind": "yard",
+      "roadClearance": 31.6,
+      "flip": false,
+      "tone": 0.82,
+      "old": [
+        4760,
+        2230,
+        135,
+        43
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "working yard"
+    },
+    {
+      "name": "East residence kitchen plot",
+      "x": 5000,
+      "y": 2180,
+      "w": 98,
+      "h": 39,
+      "kind": "kitchen",
+      "roadClearance": 5.3,
+      "flip": false,
+      "tone": 0.87,
+      "old": [
+        5000,
+        2180,
+        98,
+        39
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "cabbage and leek"
+    },
+    {
+      "name": "East residence flowering verge",
+      "x": 5410,
+      "y": 1960,
+      "w": 135,
+      "h": 54,
+      "kind": "verge",
+      "roadClearance": 15,
+      "flip": true,
+      "tone": 0.8,
+      "old": [
+        5430,
+        1960,
+        135,
+        54
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "cottage flowers"
+    },
+    {
+      "name": "South herb plot",
+      "x": 4290,
+      "y": 2270,
+      "w": 154,
+      "h": 62,
+      "kind": "herb",
+      "roadClearance": 36.5,
+      "flip": false,
+      "tone": 0.85,
+      "old": [
+        4310,
+        2270,
+        154,
+        62
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "medicinal herbs"
+    },
+    {
+      "name": "Merchant herb garden",
+      "x": 2450,
+      "y": 2210,
+      "w": 150,
+      "h": 60,
+      "kind": "herb",
+      "roadClearance": 26.2,
+      "flip": false,
+      "tone": 0.82,
+      "old": [
+        2490,
+        2190,
+        150,
+        60
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "medicinal herbs"
+    },
+    {
+      "name": "Western cottage verge",
+      "x": 1350,
+      "y": 2200,
+      "w": 135,
+      "h": 43,
+      "kind": "verge",
+      "roadClearance": 10.5,
+      "flip": true,
+      "tone": 0.87,
+      "old": [
+        1350,
+        2200,
+        135,
+        43
+      ],
+      "arrangement": "single ground-level bed",
+      "variant": "native verge"
+    },
+    {
+      "name": "Western kitchen garden",
+      "x": 1070,
+      "y": 1800,
+      "w": 197,
+      "h": 69,
+      "kind": "kitchen",
+      "roadClearance": 31.5,
+      "flip": false,
+      "tone": 0.8,
+      "old": [
+        1070,
+        1800,
+        154,
+        54
+      ],
+      "arrangement": "four crop beds with earth access strips",
+      "variant": "root vegetables"
+    }
+  ],
+  "tiles": [
+    {
+      "key": "1:2",
+      "file": "ground-1-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 195962,
+      "sha256": "48713e33815652440c21f1f574f122819071bd43a5a58e1aafdef8fb6c35e6c4",
+      "sourceSha256": "a45a71af6a9df7d24f7fae4ff2fde63db0e5c4cb207a63424e04ae34091e3303"
+    },
+    {
+      "key": "1:3",
+      "file": "ground-1-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 190080,
+      "sha256": "f6dfe4bd43ab1e9186aa29c6f496ee7a16cd6845f0c837f2224fae6c41df8aec",
+      "sourceSha256": "85f6e37c3dadb17024973a86bc4917aae2fcb3cf827606857afdf6fa6bee8a4c"
+    },
+    {
+      "key": "3:3",
+      "file": "ground-3-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 193198,
+      "sha256": "70854878a159a0a56845ad04f8b6e7a2d627b47e61d2dda7b32ae3dd30517c70",
+      "sourceSha256": "a911ac5748eed2777117561dcea48eebef9527dfcca3ff0c96f109f179fc3253"
+    },
+    {
+      "key": "5:1",
+      "file": "ground-5-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 171196,
+      "sha256": "51c5ee66815282edfc1baadc9fe6b9ce1e881cf1ed1eee8d4428fa9d4b0ec6f8",
+      "sourceSha256": "331d2df5d3d5306ad9f44c8cd4da72186791c78e5c9f4814d347d6ff1a9556e5"
+    },
+    {
+      "key": "5:2",
+      "file": "ground-5-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 190188,
+      "sha256": "1ae66290346f054b60a9a82058435bff2449c75a4dc419d39b05eebc3fb92d90",
+      "sourceSha256": "d31634852940608d7ffb94b2dc16dc92f57720182904f9d59970cd7365e133dc"
+    },
+    {
+      "key": "5:3",
+      "file": "ground-5-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 175558,
+      "sha256": "2b324f440c37097fc28469f3f2cfaca5133ba65bcc36d94ed6089ee5bbee5ac8",
+      "sourceSha256": "2771aff4469d8cf60887440630df3d4ed7a188810b34e736ab769ba27ab652ff"
+    },
+    {
+      "key": "6:1",
+      "file": "ground-6-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 165660,
+      "sha256": "e2d1c3010a65c0f3db4c018dcc21d6928800637f8e96a100259a4022d9c3f720",
+      "sourceSha256": "1148eb34567930272416498a996fc2b18d59bc2c17f545c92aeed16f18262904"
+    },
+    {
+      "key": "6:2",
+      "file": "ground-6-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 178002,
+      "sha256": "370a367fd78802b37fa414d767ae06b10825c8f4b53aecd33dd3d067c734f6f7",
+      "sourceSha256": "79964c791b10c0bcfe1d9f29a9ca4b456525af8bf8a2719d7b0ca990bc1e9852"
+    },
+    {
+      "key": "6:3",
+      "file": "ground-6-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 176000,
+      "sha256": "88d6690db7126c7cc9951e649f8efd3b51531e2145d5aa8aa5ebadce4367492b",
+      "sourceSha256": "77dd865cbc9221d21018faefd4aeccb39369f7c482c8989c1b614346df260bdd"
+    },
+    {
+      "key": "7:1",
+      "file": "ground-7-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 155040,
+      "sha256": "bd9f211dc5f20e42c40cdf1cc78095fc4b8ca24ca2d562a234f845b69180219c",
+      "sourceSha256": "b177fa5e2f55f5ca83a73358f657b3b63953fb13cfa413c9c2d39deefc6244a4"
+    },
+    {
+      "key": "7:2",
+      "file": "ground-7-2.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 164336,
+      "sha256": "1bc57038ea8d7ce7b264473d6b531faec156b183d7950d14624082278681dddd",
+      "sourceSha256": "fce6d70b692d62cfb294de371386bbc256e39ba442d83fb7e1211c5e8f87c524"
+    },
+    {
+      "key": "7:3",
+      "file": "ground-7-3.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 167004,
+      "sha256": "571855b963db1456bff73ca755849d7256688a5479b8ce66ae6322e539a90430",
+      "sourceSha256": "354979962087ecac34488535775b6d7eb8f57bfaf711a036620bab3e6dc84613"
+    }
+  ],
+  "variants": [
+    "cabbage and leek",
+    "medicinal herbs",
+    "cottage flowers",
+    "root vegetables",
+    "native verge",
+    "working yard"
+  ],
+  "expanded": 6,
+  "relocated": 5,
+  "newColliders": 0,
+  "npcChanges": 0,
+  "additionalDraws": 0,
+  "sourceAtlas": "six garden ground decals"
+}

@@ -1,0 +1,167 @@
+{
+  "version": 1532,
+  "regions": [
+    {
+      "key": "temple",
+      "name": "Temple of Light",
+      "review": [
+        560,
+        870
+      ],
+      "path": [
+        [
+          560,
+          695
+        ],
+        [
+          560,
+          1015
+        ]
+      ],
+      "tiles": [
+        "0:0",
+        "1:0",
+        "0:1",
+        "1:1"
+      ],
+      "overlay": {
+        "file": "temple-court.webp",
+        "width": 650,
+        "height": 258,
+        "bytes": 92888,
+        "sha256": "7d97f098b48a8fa77f583875c72d49681a34e88b609a30f63b7e63624ee7365a",
+        "seed": 13471,
+        "world": [
+          240,
+          623,
+          650,
+          258
+        ]
+      },
+      "material": "warm ashlar and chevron inlay"
+    },
+    {
+      "key": "observatory",
+      "name": "Caster Guild observatory",
+      "review": [
+        3092,
+        870
+      ],
+      "path": [
+        [
+          3080,
+          675
+        ],
+        [
+          3100,
+          1015
+        ]
+      ],
+      "tiles": [
+        "3:0",
+        "4:0",
+        "3:1",
+        "4:1"
+      ],
+      "overlay": {
+        "file": "observatory-court.webp",
+        "width": 650,
+        "height": 258,
+        "bytes": 90436,
+        "sha256": "602728e1c04a7b4ca6d20d7706b3e5f8c99ca5423cf694ee37743a431b099856",
+        "seed": 13472,
+        "world": [
+          2765,
+          625,
+          650,
+          258
+        ]
+      },
+      "material": "cool slate and compass inlay"
+    }
+  ],
+  "ground": [
+    {
+      "file": "ground-0-0.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 216194,
+      "sha256": "21ef76bc824900ed5dbc539cf76d24d60cec74d4df36f01bc319339c679820c9",
+      "key": "0:0"
+    },
+    {
+      "file": "ground-0-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 182856,
+      "sha256": "74c2de446e04069e792fdf57a52877c2cb441e477b85113b743ecf852783e202",
+      "key": "0:1"
+    },
+    {
+      "file": "ground-1-0.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 209482,
+      "sha256": "8e92048be3d897400b976402751f0098b3bcec453b94e59b804e741b8806a52c",
+      "key": "1:0"
+    },
+    {
+      "file": "ground-1-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 156080,
+      "sha256": "0624b7a766325bb84f5200c03da224fa6d23968c5056f6fb0fb80727a022295b",
+      "key": "1:1"
+    },
+    {
+      "file": "ground-3-0.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 220608,
+      "sha256": "2bf78cb08e41d9b0c36581659d7a6682f474bd3f47810c21411ce60c137a9ac9",
+      "key": "3:0"
+    },
+    {
+      "file": "ground-3-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 157602,
+      "sha256": "faf592e31667bccf0a4da4c3d4f04251c6f691a2a597528ead454fc57320ce7b",
+      "key": "3:1"
+    },
+    {
+      "file": "ground-4-0.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 218690,
+      "sha256": "7f9d2736f80b962be99d321873cb0dacf89d7538921bd2610bb1c284dbe56280",
+      "key": "4:0"
+    },
+    {
+      "file": "ground-4-1.webp",
+      "width": 720,
+      "height": 650,
+      "bytes": 180908,
+      "sha256": "ceec8210f6ac7fe9258caad5589f8a18e38147414489102f6812c85afdc2e98a",
+      "key": "4:1"
+    }
+  ],
+  "plant": {
+    "file": "cloister-botanical.webp",
+    "width": 768,
+    "height": 512,
+    "bytes": 244332,
+    "sha256": "fda0edb5789a604bccdeb1adf1a4d398046080e4a1460de4fae2a42434452a10"
+  },
+  "terraces": [
+    31,
+    32,
+    33,
+    34
+  ],
+  "materials": [
+    "worn honey-grey limestone",
+    "muted blue-grey slate",
+    "sage, ivy, white and violet flowers"
+  ]
+}

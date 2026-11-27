@@ -1,0 +1,90 @@
+{
+  "version": 1534,
+  "towers": [
+    {
+      "key": "tower0",
+      "name": "Buttressed battlement watchtower",
+      "file": "tower0.webp",
+      "width": 500,
+      "height": 995,
+      "bytes": 233920,
+      "sha256": "3db1cb7364c39d0d6d3359d4c37a27918768a3084519de31b79bef86f566816d",
+      "sourceBounds": [
+        43,
+        91,
+        471,
+        1009
+      ],
+      "alphaBounds": [
+        34,
+        34,
+        466,
+        965
+      ],
+      "baseWidthFraction": 0.864,
+      "worldAspect": 1.99
+    },
+    {
+      "key": "tower1",
+      "name": "Slate-roofed signal tower",
+      "file": "tower1.webp",
+      "width": 500,
+      "height": 1122,
+      "bytes": 222836,
+      "sha256": "308701e303e4fb27382d43cc273de14ee177c4eb0660a35d78a3b309d05ba78e",
+      "sourceBounds": [
+        548,
+        7,
+        960,
+        1004
+      ],
+      "alphaBounds": [
+        34,
+        38,
+        466,
+        1089
+      ],
+      "baseWidthFraction": 0.864,
+      "worldAspect": 2.244
+    },
+    {
+      "key": "tower2",
+      "name": "Stepped timber lookout",
+      "file": "tower2.webp",
+      "width": 500,
+      "height": 1084,
+      "bytes": 240042,
+      "sha256": "4a25c1782cb5dff1c20f1f80b3779937d9d5ae2b242413cb0f7661d3d0765fbe",
+      "sourceBounds": [
+        1049,
+        22,
+        1469,
+        1004
+      ],
+      "alphaBounds": [
+        34,
+        37,
+        466,
+        1052
+      ],
+      "baseWidthFraction": 0.862,
+      "worldAspect": 2.168
+    }
+  ],
+  "moves": [
+    {
+      "fromX": 5676,
+      "toX": 6376,
+      "y": 760
+    },
+    {
+      "fromX": 5676,
+      "toX": 6376,
+      "y": 1650
+    }
+  ],
+  "source": "Original three-model tower atlas",
+  "prompt": "Three medieval isolated watchtowers: buttressed angular battlements, slate signal roof and stepped timber lookout, photorealistic painterly materials, large reinforced human-scale doors, transparent cutouts.",
+  "groundPassesAdded": 0,
+  "npcChanges": 0
+}

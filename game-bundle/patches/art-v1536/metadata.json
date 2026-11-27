@@ -1,0 +1,71 @@
+{
+  "version": 1536,
+  "models": [
+    {
+      "key": "well",
+      "file": "well.webp",
+      "width": 646,
+      "height": 658,
+      "sourceBounds": [
+        31,
+        226,
+        587,
+        810
+      ],
+      "bytes": 78086,
+      "sha256": "d2ef4cd5ec9fb621f07eda27a315d0f3db52be4aaa9e739ac550f58a29fbb7a2",
+      "oldSourceSha256": "14462f889928cc1101a9bea71d7c859113d6052052edd22a9545ee8f5cd08b04"
+    },
+    {
+      "key": "rh1499bellCourt",
+      "file": "rh1499bellCourt.webp",
+      "width": 761,
+      "height": 1000,
+      "sourceBounds": [
+        58,
+        8,
+        580,
+        810
+      ],
+      "bytes": 122880,
+      "sha256": "6c91bf137124b693c1bc8cb36e9b0a104fd1f2aa3d678cf0308e16a2c7821195",
+      "oldSourceSha256": "2ad331d21e6571b718a944b7c3c1e00570ff7e2dc78c5c1c78360eee277d767d",
+      "passageAlphaClear": 1.0
+    },
+    {
+      "key": "rh1499notice",
+      "file": "rh1499notice.webp",
+      "width": 455,
+      "height": 588,
+      "sourceBounds": [
+        29,
+        204,
+        613,
+        810
+      ],
+      "bytes": 58670,
+      "sha256": "750f74ac8f87db1df315313fd82094bdf312bbf819e9471ae2878ad80b6eb533",
+      "oldSourceSha256": "3379df1c103fb12c800f9c68d8c7be3def3f9c105522b25143aba391d1342632"
+    }
+  ],
+  "ground": [
+    {
+      "key": "8:3",
+      "file": "ground-8-3.webp",
+      "width": 720,
+      "height": 650,
+      "sha256": "8a2857a7573b360db01d1eb88ebcce51f4a22dc8200855e922d3c71f27078056",
+      "bytes": 147446,
+      "sourceSha256": "775f9c441b621ba94d8d1e43817172b9d36f39f7c2b024ac731b2da93805a084",
+      "apron": [
+        5987,
+        1981,
+        116,
+        68
+      ]
+    }
+  ],
+  "newColliders": 0,
+  "npcChanges": 0,
+  "additionalDraws": 0
+}

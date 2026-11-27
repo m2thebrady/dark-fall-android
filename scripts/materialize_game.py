@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / "game-bundle"
@@ -32,8 +33,19 @@ def materialize():
                         digest.update(chunk)
                         total += len(chunk)
                         out.write(chunk)
+        base = manifest.get("base", manifest)
+        if digest.hexdigest() != base["sha256"] or total != base["bytes"]:
+            raise ValueError("Reconstructed base HTML does not match manifest")
+        if manifest.get("patches"):
+            content = Path(name).read_bytes()
+            for patch in manifest["patches"]:
+                path = BUNDLE / patch
+                content = runpy.run_path(str(path))["apply"](content)
+            Path(name).write_bytes(content)
+            total = len(content)
+            digest = hashlib.sha256(content)
         if digest.hexdigest() != manifest["sha256"] or total != manifest["bytes"]:
-            raise ValueError("Reconstructed HTML does not match manifest")
+            raise ValueError("Patched HTML does not match manifest")
         os.replace(name, DEST)
     finally:
         Path(name).unlink(missing_ok=True)

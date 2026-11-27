@@ -1,0 +1,147 @@
+{
+  "version": 1527,
+  "stalls": {
+    "spice": {
+      "file": "spice.webp",
+      "name": "Shingle-roof spice kiosk",
+      "width": 800,
+      "height": 710,
+      "sourceBounds": [
+        10,
+        6,
+        1341,
+        1163
+      ],
+      "worldBounds": [
+        205,
+        182
+      ],
+      "counterHeight": 51.3,
+      "roof": "aged split shingles",
+      "bytes": 219706,
+      "sha256": "ec60828542e47620036c604c3965ddbb320e0de7a310f7011a4bca85e64a13b3"
+    },
+    "pottery": {
+      "file": "pottery.webp",
+      "name": "Terracotta-roof pottery booth",
+      "width": 800,
+      "height": 711,
+      "sourceBounds": [
+        3,
+        1,
+        1290,
+        1216
+      ],
+      "worldBounds": [
+        207,
+        184
+      ],
+      "counterHeight": 53.2,
+      "roof": "weathered terracotta tile",
+      "bytes": 200474,
+      "sha256": "677ca5c901429dd3045b6fe8f08d64be4641453a2af7e6559695cebdbcba1f1c"
+    }
+  },
+  "aprons": [
+    {
+      "key": "spice",
+      "points": [
+        [
+          5711,
+          2078
+        ],
+        [
+          5743,
+          2044
+        ],
+        [
+          5900,
+          2046
+        ],
+        [
+          5927,
+          2069
+        ],
+        [
+          5921,
+          2097
+        ],
+        [
+          5893,
+          2114
+        ],
+        [
+          5743,
+          2117
+        ],
+        [
+          5715,
+          2101
+        ]
+      ],
+      "crop": [
+        410,
+        224,
+        631,
+        297
+      ]
+    },
+    {
+      "key": "pottery",
+      "points": [
+        [
+          6172,
+          2075
+        ],
+        [
+          6196,
+          2047
+        ],
+        [
+          6361,
+          2044
+        ],
+        [
+          6391,
+          2070
+        ],
+        [
+          6380,
+          2105
+        ],
+        [
+          6351,
+          2117
+        ],
+        [
+          6194,
+          2114
+        ],
+        [
+          6175,
+          2099
+        ]
+      ],
+      "crop": [
+        489,
+        255,
+        710,
+        328
+      ]
+    }
+  ],
+  "ground": [
+    {
+      "key": "7:3",
+      "file": "ground-7-3.webp",
+      "bytes": 153356,
+      "sha256": "1a7d029c45e85fab9cb37b6d072fee0649ee772a334dbb91087d39ce1e343949"
+    },
+    {
+      "key": "8:3",
+      "file": "ground-8-3.webp",
+      "bytes": 136862,
+      "sha256": "65a2a16dce7fc360caad9300a13c53dd21183ac6827ea684b050cac9c2eb447b"
+    }
+  ]
+}

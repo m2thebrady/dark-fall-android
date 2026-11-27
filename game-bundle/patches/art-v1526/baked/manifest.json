@@ -1,0 +1,78 @@
+{
+  "version": 1526,
+  "base_sha256": "18aff0ec5ac41e5bb727ad837c4664c68a8577acabdbdcf70c10f091018f1c9d",
+  "tiles": [
+    {
+      "key": "1:2",
+      "file": "ground-1-2.webp",
+      "bytes": 166996,
+      "sha256": "0439807adae605d326b159047dc4605f541361ed6f1c3318b4547a3816af2002"
+    },
+    {
+      "key": "1:3",
+      "file": "ground-1-3.webp",
+      "bytes": 162680,
+      "sha256": "e9b6dfd80c0b7c6a1b8190dfee30c2f3ead416123ec8a3350212a0d0caf56c1b"
+    },
+    {
+      "key": "3:3",
+      "file": "ground-3-3.webp",
+      "bytes": 159012,
+      "sha256": "3f0b20abf9bda0b6290456be6db812c24611f1574a888984ee059b483fdf7738"
+    },
+    {
+      "key": "5:1",
+      "file": "ground-5-1.webp",
+      "bytes": 149876,
+      "sha256": "29306623d43e115b78be1b079d42e9e5eead01e07a8f6a61855bc1dd593cf4d3"
+    },
+    {
+      "key": "5:2",
+      "file": "ground-5-2.webp",
+      "bytes": 162590,
+      "sha256": "0ae15479f9dcb90fc87d01fb6ea8372e6a9eba167946032206e169a95ed2be9d"
+    },
+    {
+      "key": "5:3",
+      "file": "ground-5-3.webp",
+      "bytes": 156540,
+      "sha256": "177522acbc6b2c7cf2c33ba0f98d3aa8db9d87ef5f0721e567982d79ae938389"
+    },
+    {
+      "key": "6:1",
+      "file": "ground-6-1.webp",
+      "bytes": 146728,
+      "sha256": "60fe9ac1a6ec867af240a5461bb00cdccf0fe9d0da249a70f69101db2a236e63"
+    },
+    {
+      "key": "6:2",
+      "file": "ground-6-2.webp",
+      "bytes": 160618,
+      "sha256": "3f95ab15123275b116b3f92e7c78bb255eb0fb0b31b94cce2af40eda72983571"
+    },
+    {
+      "key": "6:3",
+      "file": "ground-6-3.webp",
+      "bytes": 158140,
+      "sha256": "512e166458e8b6b4bffb0f9e9036b0e3bcefbe55a61fd139903a70aee06c3fa8"
+    },
+    {
+      "key": "7:1",
+      "file": "ground-7-1.webp",
+      "bytes": 140098,
+      "sha256": "8da898cf03ffeda8b3e63a8b2b6eee901122f49129cd6b3062c0834aba133a29"
+    },
+    {
+      "key": "7:2",
+      "file": "ground-7-2.webp",
+      "bytes": 161202,
+      "sha256": "ddbacc1f30fe957eaad806992b8a4da7056bec6675e75123ea81a42dd8970359"
+    },
+    {
+      "key": "7:3",
+      "file": "ground-7-3.webp",
+      "bytes": 152130,
+      "sha256": "5cda826bfa3c44822a73e6c7c2fca5496de4d0064299b007dba1e9a6cd874864"
+    }
+  ]
+}

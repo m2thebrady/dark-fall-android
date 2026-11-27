@@ -22,7 +22,10 @@ jobs:
       - name: Install browser test runner
         run: |
           npm install --no-save playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
+          # Hosted Ubuntu already includes browser libraries. Install OS packages
+          # only when the actual browser launch proves they are required.
+          node --input-type=module -e "import {chromium} from 'playwright'; const b=await chromium.launch({headless:true});await b.close();" || npx playwright install-deps chromium
       - name: Materialize verified bundled game
         run: python3 scripts/materialize_game.py
       - name: Run browser startup test
@@ -36,4 +39,12 @@ jobs:
           name: dark-fall-browser-smoke
           path: browser-smoke-results/
           if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload playable HTML test build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dark-fall-playable-html
+          path: app/src/main/assets/index.html
+          if-no-files-found: error
           retention-days: 14
